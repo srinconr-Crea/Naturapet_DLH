@@ -1,0 +1,7 @@
+project_name: poc_genie_clientes
+area_name: area1
+data_domain: clientes
+storage_account: stclienteexample
+storage_container: datos
+workspace_host: https://adb-xxxxxxxxxxxxxxxx.xx.azuredatabricks.net
+

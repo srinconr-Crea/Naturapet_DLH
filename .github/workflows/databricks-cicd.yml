@@ -1,0 +1,110 @@
+name: databricks-cicd
+
+on:
+  push:
+    branches:
+      - develop
+      - qa
+      - main
+  pull_request:
+    branches:
+      - develop
+      - qa
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  resolve-target:
+    runs-on: ubuntu-latest
+    outputs:
+      environment_name: ${{ steps.resolve.outputs.environment_name }}
+      target_name: ${{ steps.resolve.outputs.target_name }}
+    steps:
+      - name: Resolve target from branch
+        id: resolve
+        shell: bash
+        run: |
+          BRANCH_NAME="${{ github.base_ref }}"
+          if [[ -z "$BRANCH_NAME" ]]; then
+            BRANCH_NAME="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ "$BRANCH_NAME" == "develop" ]]; then
+            echo "environment_name=dev" >> "$GITHUB_OUTPUT"
+            echo "target_name=dev" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            echo "environment_name=qa" >> "$GITHUB_OUTPUT"
+            echo "target_name=qa" >> "$GITHUB_OUTPUT"
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "environment_name=prod" >> "$GITHUB_OUTPUT"
+            echo "target_name=prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unsupported branch ${BRANCH_NAME}" >&2
+            exit 1
+          fi
+
+  validate:
+    needs: resolve-target
+    runs-on: ubuntu-latest
+    environment: ${{ needs.resolve-target.outputs.environment_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Configure Databricks auth
+        shell: bash
+        run: |
+          echo "DATABRICKS_HOST=${{ vars.DATABRICKS_HOST }}" >> "$GITHUB_ENV"
+          echo "DATABRICKS_AUTH_TYPE=github-oidc" >> "$GITHUB_ENV"
+          if [[ -n "${{ vars.DATABRICKS_CLIENT_ID }}" ]]; then
+            echo "DATABRICKS_CLIENT_ID=${{ vars.DATABRICKS_CLIENT_ID }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Validate bundle
+        shell: bash
+        run: |
+          databricks bundle validate \
+            --target "${{ needs.resolve-target.outputs.target_name }}" \
+            --var="project_name=${{ vars.PROJECT_NAME }},area_name=${{ vars.AREA_NAME }},data_domain=${{ vars.DATA_DOMAIN }},storage_account=${{ vars.STORAGE_ACCOUNT }},storage_container=${{ vars.STORAGE_CONTAINER }},workspace_host=${{ vars.DATABRICKS_HOST }}"
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs:
+      - resolve-target
+      - validate
+    runs-on: ubuntu-latest
+    environment: ${{ needs.resolve-target.outputs.environment_name }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Databricks CLI
+        uses: databricks/setup-cli@main
+
+      - name: Configure Databricks auth
+        shell: bash
+        run: |
+          echo "DATABRICKS_HOST=${{ vars.DATABRICKS_HOST }}" >> "$GITHUB_ENV"
+          echo "DATABRICKS_AUTH_TYPE=github-oidc" >> "$GITHUB_ENV"
+          if [[ -n "${{ vars.DATABRICKS_CLIENT_ID }}" ]]; then
+            echo "DATABRICKS_CLIENT_ID=${{ vars.DATABRICKS_CLIENT_ID }}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Deploy bundle
+        shell: bash
+        run: |
+          databricks bundle deploy \
+            --target "${{ needs.resolve-target.outputs.target_name }}" \
+            --var="project_name=${{ vars.PROJECT_NAME }},area_name=${{ vars.AREA_NAME }},data_domain=${{ vars.DATA_DOMAIN }},storage_account=${{ vars.STORAGE_ACCOUNT }},storage_container=${{ vars.STORAGE_CONTAINER }},workspace_host=${{ vars.DATABRICKS_HOST }}"

@@ -1,0 +1,61 @@
+bundle:
+  name: proyecto-databricks-adls-github
+
+include:
+  - resources/**/*.yml
+
+variables:
+  project_name:
+    description: Nombre corto del proyecto
+    default: poc_genie_clientes
+  area_name:
+    description: Area funcional del proyecto
+    default: area1
+  data_domain:
+    description: Dominio de datos del proyecto
+    default: clientes
+  catalog_name:
+    description: Catalogo UC por ambiente
+  schema_bronze:
+    description: Schema bronze del area
+  storage_account:
+    description: Cuenta ADLS Gen2
+  storage_container:
+    description: Contenedor ADLS del proyecto
+  external_base_path:
+    description: Ruta base del entorno en ADLS
+  workspace_host:
+    description: URL del workspace Databricks
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: ${var.workspace_host}
+      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+    variables:
+      catalog_name: dev
+      schema_bronze: ${var.area_name}_bronze
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/dev/${var.data_domain}
+
+  qa:
+    mode: production
+    workspace:
+      host: ${var.workspace_host}
+      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+    variables:
+      catalog_name: qa
+      schema_bronze: ${var.area_name}_bronze
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/qa/${var.data_domain}
+
+  prod:
+    mode: production
+    workspace:
+      host: ${var.workspace_host}
+      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+    variables:
+      catalog_name: prod
+      schema_bronze: ${var.area_name}_bronze
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/prod/${var.data_domain}
+

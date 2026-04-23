@@ -1,0 +1,5 @@
+job_name: monthly_file_refresh
+description: Carga mensual de archivos hacia la capa bronze externa en ADLS
+cron_expression: 0 0 6 1 * ?
+timezone_id: America/Bogota
+

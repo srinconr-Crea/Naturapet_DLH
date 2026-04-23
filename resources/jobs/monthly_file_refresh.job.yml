@@ -1,0 +1,38 @@
+resources:
+  jobs:
+    monthly_file_refresh:
+      name: ${bundle.target}-${var.project_name}-monthly-file-refresh
+      description: Job base para actualizar archivos de frecuencia mensual
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      schedule:
+        quartz_cron_expression: 0 0 6 1 * ?
+        timezone_id: America/Bogota
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: ingest_monthly_files
+          job_cluster_key: monthly_job_cluster
+          spark_python_task:
+            python_file: src/notebooks/monthly_file_refresh.py
+            parameters:
+              - --catalog
+              - ${var.catalog_name}
+              - --schema
+              - ${var.schema_bronze}
+              - --external-base-path
+              - ${var.external_base_path}
+              - --table-name
+              - monthly_client_files
+      job_clusters:
+        - job_cluster_key: monthly_job_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+            data_security_mode: SINGLE_USER
+            runtime_engine: STANDARD
+      tags:
+        environment: ${bundle.target}
+        domain: ${var.data_domain}
+        frequency: monthly

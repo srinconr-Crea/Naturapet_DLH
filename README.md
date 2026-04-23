@@ -27,6 +27,19 @@ La base sigue estas decisiones:
 |-- resources/
 |   `-- jobs/
 |       `-- monthly_file_refresh.job.yml
+|-- notebooks/
+|   |-- area1/
+|   |   |-- bronze/
+|   |   |-- silver/
+|   |   `-- gold/
+|   |-- area2/
+|   |   |-- bronze/
+|   |   |-- silver/
+|   |   `-- gold/
+|   `-- area3/
+|       |-- bronze/
+|       |-- silver/
+|       `-- gold/
 |-- src/
 |   |-- notebooks/
 |   |   `-- monthly_file_refresh.py

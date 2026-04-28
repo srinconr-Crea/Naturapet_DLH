@@ -17,10 +17,10 @@ def main():
     target_table = f"{args.catalog}.{args.schema}.{args.table_name}"
     target_path = f"{args.external_base_path}/{args.schema}/{args.table_name}"
 
-    # Placeholder: reemplazar por la logica real de lectura mensual.
+    # Placeholder inicial: reemplazar por la logica real de lectura mensual de Naturapet.
     df = spark.createDataFrame(
         [
-            ("monthly-run", "pending-source-definition"),
+            ("monthly-run", "pending-naturapet-source-definition"),
         ],
         ["process_name", "status"],
     ).withColumn("load_timestamp", F.current_timestamp())
@@ -38,4 +38,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

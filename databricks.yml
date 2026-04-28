@@ -1,61 +1,75 @@
 bundle:
-  name: proyecto-databricks-adls-github
+  name: Naturapet_DLH
 
 include:
   - resources/**/*.yml
 
 variables:
   project_name:
-    description: Nombre corto del proyecto
-    default: poc_genie_clientes
-  area_name:
-    description: Area funcional del proyecto
-    default: area1
-  data_domain:
-    description: Dominio de datos del proyecto
-    default: clientes
+    description: Nombre del bundle y del workspace path del proyecto
+    default: Naturapet_DLH
+  domain_name:
+    description: Dominio de datos a desplegar
+    default: comercial
+  data_layer:
+    description: Capa de datos a desplegar
+    default: bronze
+  data_year:
+    description: Anio de particion configurado para las rutas base
+    default: "2026"
+  data_month:
+    description: Mes de particion configurado para las rutas base
+    default: "01"
   catalog_name:
     description: Catalogo UC por ambiente
-  schema_bronze:
-    description: Schema bronze del area
+  schema_name:
+    description: Schema UC del dominio y capa
   storage_account:
     description: Cuenta ADLS Gen2
+    default: demodldb
   storage_container:
     description: Contenedor ADLS del proyecto
+    default: democodex
   external_base_path:
-    description: Ruta base del entorno en ADLS
-  workspace_host:
-    description: URL del workspace Databricks
-
+    description: Ruta base de tablas delta externas en ADLS
+  raw_base_path:
+    description: Ruta base de aterrizaje raw en ADLS
+  historic_base_path:
+    description: Ruta base del historico en ADLS
 targets:
   dev:
     mode: development
     default: true
     workspace:
-      host: ${var.workspace_host}
+      host: https://adb-7405606739630987.7.azuredatabricks.net
       root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
     variables:
-      catalog_name: dev
-      schema_bronze: ${var.area_name}_bronze
-      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/dev/${var.data_domain}
+      catalog_name: naturapet_dev
+      schema_name: ${var.domain_name}_${var.data_layer}
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/dev/${var.domain_name}/${var.data_layer}/${var.data_year}/${var.data_month}
+      raw_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/raw/dev/${var.domain_name}/${var.data_year}/${var.data_month}
+      historic_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/historic/${var.domain_name}/${var.data_year}/${var.data_month}
 
   qa:
     mode: production
     workspace:
-      host: ${var.workspace_host}
+      host: https://adb-7405606739630987.7.azuredatabricks.net
       root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
     variables:
-      catalog_name: qa
-      schema_bronze: ${var.area_name}_bronze
-      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/qa/${var.data_domain}
+      catalog_name: naturapet_qa
+      schema_name: ${var.domain_name}_${var.data_layer}
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/qa/${var.domain_name}/${var.data_layer}/${var.data_year}/${var.data_month}
+      raw_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/raw/qa/${var.domain_name}/${var.data_year}/${var.data_month}
+      historic_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/historic/${var.domain_name}/${var.data_year}/${var.data_month}
 
   prod:
     mode: production
     workspace:
-      host: ${var.workspace_host}
+      host: https://adb-7405606739630987.7.azuredatabricks.net
       root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
     variables:
-      catalog_name: prod
-      schema_bronze: ${var.area_name}_bronze
-      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/prod/${var.data_domain}
-
+      catalog_name: naturapet_prod
+      schema_name: ${var.domain_name}_${var.data_layer}
+      external_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/external/prod/${var.domain_name}/${var.data_layer}/${var.data_year}/${var.data_month}
+      raw_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/raw/prod/${var.domain_name}/${var.data_year}/${var.data_month}
+      historic_base_path: abfss://${var.storage_container}@${var.storage_account}.dfs.core.windows.net/historic/${var.domain_name}/${var.data_year}/${var.data_month}

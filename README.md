@@ -1,16 +1,25 @@
-# Proyecto base Databricks + ADLS + GitHub
+# Naturapet_DLH
 
-Este repositorio es un esqueleto inicial para un proyecto de Azure Databricks almacenado en GitHub y desplegado con Databricks Asset Bundles.
+Repositorio base del proyecto `Naturapet_DLH` para Azure Databricks, ADLS Gen2 y GitHub Actions usando Databricks Asset Bundles.
 
-La base sigue estas decisiones:
+## Configuracion inicial aplicada
 
-- Ambientes operativos: `dev`, `qa`, `prod`
-- Ramas de promoción: `develop` -> `dev`, `qa` -> `qa`, `main` -> `prod`
-- Frecuencia inicial del proceso: mensual
-- Despliegue por GitHub Actions con OIDC o secrets por environment
-- Estructura de almacenamiento alineada con ADLS Gen2 bajo `/external/<ambiente>/...`
+- Workspace Databricks: `https://adb-7405606739630987.7.azuredatabricks.net`
+- Storage account: `demodldb`
+- Contenedor: `democodex`
+- Catalogos por ambiente: `naturapet_dev`, `naturapet_qa`, `naturapet_prod`
+- Dominios de datos: `comercial`, `finanzas`, `gobierno`, `operaciones`, `shared`
+- Schemas por dominio: `*_bronze`, `*_silver`, `*_gold`
 
-## Estructura
+## Estructura de almacenamiento
+
+Rutas base configuradas en formato `abfss://`:
+
+- `external`: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<dominio>/<capa>/2026/<mes>`
+- `raw`: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<dominio>/2026/<mes>`
+- `historic`: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<dominio>/2026/<mes>`
+
+## Estructura del repositorio
 
 ```text
 .
@@ -28,15 +37,23 @@ La base sigue estas decisiones:
 |   `-- jobs/
 |       `-- monthly_file_refresh.job.yml
 |-- notebooks/
-|   |-- area1/
+|   |-- comercial/
 |   |   |-- bronze/
 |   |   |-- silver/
 |   |   `-- gold/
-|   |-- area2/
+|   |-- finanzas/
 |   |   |-- bronze/
 |   |   |-- silver/
 |   |   `-- gold/
-|   `-- area3/
+|   |-- gobierno/
+|   |   |-- bronze/
+|   |   |-- silver/
+|   |   `-- gold/
+|   |-- operaciones/
+|   |   |-- bronze/
+|   |   |-- silver/
+|   |   `-- gold/
+|   `-- shared/
 |       |-- bronze/
 |       |-- silver/
 |       `-- gold/
@@ -47,48 +64,34 @@ La base sigue estas decisiones:
 |       `-- file_ingestion.py
 |-- tests/
 |   `-- test_project_structure.py
-|-- databricks.yml
-`-- .gitignore
+`-- databricks.yml
 ```
 
-## Qué debes completar antes de usarlo en cliente
+## CI/CD esperado
 
-1. Reemplazar valores de ejemplo en `conf/environments/*.yml`.
-2. Crear en GitHub los environments `dev`, `qa` y `prod`.
-3. Cargar secrets y variables por environment.
-4. Ajustar nombres reales de workspace, catálogos, schemas, rutas ADLS y service principal.
-5. Validar localmente con Databricks CLI.
+- Push a `develop`: valida y despliega a `dev`
+- Push a `qa`: valida y despliega a `qa`
+- Pull request hacia `main`: valida el bundle y los tests
+- Push a `main` despues de aprobar y hacer merge del PR: valida y despliega a `prod`
 
-## Variables esperadas en GitHub Environments
+La aprobacion humana para produccion queda soportada por la regla del pull request y por las protecciones del environment `prod` en GitHub.
+
+## Secrets requeridos en GitHub Environments
 
 - `DATABRICKS_HOST`
-- `DATABRICKS_CLIENT_ID` o configuración OIDC aprobada
-- `DATABRICKS_TENANT_ID` si aplica en tu modelo de autenticación
-- `PROJECT_NAME`
-- `AREA_NAME`
-- `DATA_DOMAIN`
-- `STORAGE_ACCOUNT`
-- `STORAGE_CONTAINER`
+- `DATABRICKS_CLIENT_ID`
 
-## Flujo recomendado
-
-1. Desarrollo en `develop`.
-2. Merge aprobado hacia `qa`.
-3. Pruebas y UAT en `qa`.
-4. Merge aprobado hacia `main`.
-5. Despliegue a `prod` desde GitHub Actions con aprobación del environment.
-
-## Comandos útiles
+## Comandos utiles
 
 ```powershell
 databricks bundle validate --target dev
 databricks bundle deploy --target dev
 databricks bundle validate --target qa
+databricks bundle deploy --target qa
 databricks bundle validate --target prod
+databricks bundle deploy --target prod
 ```
 
-## Nota importante
+## Pendiente funcional
 
-Este proyecto deja un job mensual mínimo como punto de partida. La lógica de negocio todavía es placeholder y está preparada para que la completes cuando definas la fuente real de archivos, el patrón de ingesta y las validaciones de negocio.
-
-Los archivos bajo `conf/environments/` quedan como plantilla documental para levantar el proyecto con el cliente, pero el workflow base de GitHub Actions toma sus valores desde variables configuradas en cada GitHub Environment.
+La logica del job `monthly_file_refresh` sigue siendo un placeholder tecnico. Falta reemplazarla por la lectura real de archivos Naturapet, reglas de transformacion y validaciones de negocio antes de usarlo en productivo.

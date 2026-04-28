@@ -1,7 +1,41 @@
-project_name: poc_genie_clientes
-area_name: area1
-data_domain: clientes
-storage_account: stclienteexample
-storage_container: datos
-workspace_host: https://adb-xxxxxxxxxxxxxxxx.xx.azuredatabricks.net
-
+environment_name: qa
+project_name: Naturapet_DLH
+catalog_name: naturapet_qa
+workspace_host: https://adb-7405606739630987.7.azuredatabricks.net
+workspace_root_path: /Workspace/Shared/Naturapet_DLH/qa
+storage_account: demodldb
+storage_container: democodex
+default_domain: comercial
+default_layer: bronze
+default_year: "2026"
+default_month: "01"
+paths:
+  external_root: abfss://democodex@demodldb.dfs.core.windows.net/external/qa
+  raw_root: abfss://democodex@demodldb.dfs.core.windows.net/raw/qa
+  historic_root: abfss://democodex@demodldb.dfs.core.windows.net/historic
+domains:
+  comercial:
+    bronze_schema: comercial_bronze
+    silver_schema: comercial_silver
+    gold_schema: comercial_gold
+  finanzas:
+    bronze_schema: finanzas_bronze
+    silver_schema: finanzas_silver
+    gold_schema: finanzas_gold
+  gobierno:
+    bronze_schema: gobierno_bronze
+    silver_schema: gobierno_silver
+    gold_schema: gobierno_gold
+  operaciones:
+    bronze_schema: operaciones_bronze
+    silver_schema: operaciones_silver
+    gold_schema: operaciones_gold
+  shared:
+    bronze_schema: shared_bronze
+    silver_schema: shared_silver
+    gold_schema: shared_gold
+path_examples:
+  external_comercial_bronze: abfss://democodex@demodldb.dfs.core.windows.net/external/qa/comercial/bronze/2026/01
+  external_shared_gold: abfss://democodex@demodldb.dfs.core.windows.net/external/qa/shared/gold/2026/01
+  raw_comercial: abfss://democodex@demodldb.dfs.core.windows.net/raw/qa/comercial/2026/01
+  historic_finanzas: abfss://democodex@demodldb.dfs.core.windows.net/historic/finanzas/2026/01

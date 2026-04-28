@@ -2,7 +2,7 @@ resources:
   jobs:
     monthly_file_refresh:
       name: ${bundle.target}-${var.project_name}-monthly-file-refresh
-      description: Job base para actualizar archivos de frecuencia mensual
+      description: Job inicial de Naturapet para actualizar archivos mensuales en la capa delta externa
       max_concurrent_runs: 1
       queue:
         enabled: true
@@ -19,11 +19,11 @@ resources:
               - --catalog
               - ${var.catalog_name}
               - --schema
-              - ${var.schema_bronze}
+              - ${var.schema_name}
               - --external-base-path
               - ${var.external_base_path}
               - --table-name
-              - monthly_client_files
+              - monthly_naturapet_files
       job_clusters:
         - job_cluster_key: monthly_job_cluster
           new_cluster:
@@ -34,5 +34,6 @@ resources:
             runtime_engine: STANDARD
       tags:
         environment: ${bundle.target}
-        domain: ${var.data_domain}
+        domain: ${var.domain_name}
+        layer: ${var.data_layer}
         frequency: monthly

@@ -102,9 +102,10 @@ Cada dominio tiene dos notebooks Databricks `.ipynb` en `notebooks/<dominio>/bro
 La logica reutilizable vive en `src/common/`:
 
 - `config.py`: arma rutas `raw`, `external` e `historic` a partir de `abfss://democodex@demodldb.dfs.core.windows.net` y del ambiente.
-- `io.py`: descubre archivos por area y mueve archivos a `historic`.
+- `io.py`: descubre archivos por area, detecta el tipo de archivo y mueve archivos a `historic`.
 - `schema.py`: normaliza nombre de tabla, valida columnas y conforma tipos/campos usando `data_dictionary.csv`.
 - `delta_load.py`: crea o actualiza tablas Delta y mantiene auditoria de cargues.
+- `validation.py`: aplica validaciones tecnicas como archivo no vacio y coherencia entre `mes_carga` y el folder mensual.
 - `notebook_runner.py`: punto de entrada compartido para los notebooks `.ipynb`.
 
 ### Convenciones de carga
@@ -114,5 +115,6 @@ La logica reutilizable vive en `src/common/`:
 - Ruta raw por area: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<area>/2026/...`.
 - Ruta external por tabla Delta: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<area>/bronze/2026/<tabla>`.
 - Ruta historic por archivo procesado: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<area>/2026/...`.
+- Deteccion de formato: el flujo soporta `csv`, `json` y `parquet`; para este dataset Naturapet los archivos esperados son `csv`.
 - Las columnas de negocio se ordenan y tipan según `data_dictionary.csv`; luego se agregan columnas técnicas `_np_*`.
 - Si una tabla no tiene PK declarada en `data_dictionary.csv`, el merge usa `_np_record_hash`.

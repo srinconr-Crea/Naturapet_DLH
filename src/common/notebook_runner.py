@@ -23,7 +23,7 @@ from src.common.io import (
     dumps_task_value,
     move_file_to_historic,
     path_exists,
-    read_csv_with_schema,
+    read_source_file,
 )
 from src.common.schema import (
     build_primary_key_map,
@@ -32,6 +32,11 @@ from src.common.schema import (
     normalize_table_name,
     validate_expected_columns,
     with_hash_key_if_needed,
+)
+from src.common.validation import (
+    validate_mes_carga_alignment,
+    validate_non_empty_dataframe,
+    validate_table_known_or_allowed,
 )
 
 
@@ -64,14 +69,23 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
         load_id = str(uuid.uuid4())
 
         try:
-            dataframe = read_csv_with_schema(
+            validate_table_known_or_allowed(table_name, dictionary_map)
+            dataframe = read_source_file(
                 spark=spark,
                 path=source_file["source_path"],
+                source_format=source_file["source_format"],
                 schema=None,
                 header=True,
             )
+            validate_non_empty_dataframe(dataframe, table_name)
             validate_expected_columns(dataframe, table_name, dictionary_map)
             dataframe = conform_to_dictionary(dataframe, table_name, dictionary_map)
+            validate_mes_carga_alignment(
+                dataframe,
+                table_name,
+                config["data_year"],
+                source_file["source_month"],
+            )
             dataframe = add_ingestion_metadata(
                 dataframe,
                 area=config["area"],
@@ -107,6 +121,7 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
                         source_month=source_file["source_month"],
                         source_path=source_file["source_path"],
                         source_file_name=source_file["source_file_name"],
+                        source_format=source_file["source_format"],
                         target_table=target_table,
                         target_path=target_path,
                         record_count=record_count,
@@ -125,6 +140,7 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
                     "source_file_name": source_file["source_file_name"],
                     "source_month": source_file["source_month"],
                     "load_mode": source_file["load_mode"],
+                    "source_format": source_file["source_format"],
                     "record_count": record_count,
                     "target_table": target_table,
                     "target_path": target_path,
@@ -143,6 +159,7 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
                         source_month=source_file["source_month"],
                         source_path=source_file["source_path"],
                         source_file_name=source_file["source_file_name"],
+                        source_format=source_file["source_format"],
                         target_table=target_table,
                         target_path=target_path,
                         record_count=None,

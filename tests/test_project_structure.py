@@ -7,6 +7,7 @@ from src.common.config import (
     build_raw_file_path,
     get_config,
 )
+from src.common.io import detect_file_format
 from src.common.schema import normalize_table_name
 
 
@@ -100,3 +101,9 @@ def test_normalize_monthly_table_name():
         normalize_table_name("fact_ventas_cabecera_01.csv", "01")
         == "fact_ventas_cabecera"
     )
+
+
+def test_detect_file_format():
+    assert detect_file_format("fact_ventas_cabecera_01.csv") == "csv"
+    assert detect_file_format("fact_ventas.json") == "json"
+    assert detect_file_format("fact_ventas.parquet") == "parquet"

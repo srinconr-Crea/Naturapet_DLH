@@ -58,10 +58,14 @@ Rutas base configuradas en formato `abfss://`:
 |       |-- silver/
 |       `-- gold/
 |-- src/
-|   |-- notebooks/
-|   |   `-- monthly_file_refresh.py
-|   `-- utilities/
-|       `-- file_ingestion.py
+|   `-- common/
+|       |-- config.py
+|       |-- delta_load.py
+|       |-- io.py
+|       |-- notebook_entry.py
+|       |-- notebook_runner.py
+|       |-- schema.py
+|       `-- validation.py
 |-- tests/
 |   `-- test_project_structure.py
 `-- databricks.yml
@@ -108,6 +112,21 @@ La logica reutilizable vive en `src/common/`:
 - `validation.py`: aplica validaciones tecnicas como archivo no vacio y coherencia entre `mes_carga` y el folder mensual.
 - `notebook_runner.py`: punto de entrada compartido para los notebooks `.ipynb`.
 
+### Flujo general de bronze
+
+Los notebooks de `bronze` funcionan igual en todas las areas. Lo que cambia es el dominio que procesan; la logica comun arma las rutas por ambiente, descubre archivos en `raw`, valida la estructura con `data_dictionary.csv`, hace `merge` a Delta y luego archiva los archivos exitosos.
+
+```mermaid
+flowchart LR
+    A["raw/<env>/<area>/2026"] --> B["load_to_delta.ipynb"]
+    B --> C["leer data_dictionary.csv"]
+    C --> D["validar y tipar columnas"]
+    D --> E["merge delta en external/<env>/<area>/bronze/2026/<tabla>"]
+    E --> F["auditoria bronze"]
+    F --> G["archive_to_historic.ipynb"]
+    G --> H["historic/<area>/2026/..."]
+```
+
 ### Convenciones de carga
 
 - Catalogos por ambiente: `naturapet_dev`, `naturapet_qa`, `naturapet_prod`.
@@ -118,3 +137,11 @@ La logica reutilizable vive en `src/common/`:
 - Deteccion de formato: el flujo soporta `csv`, `json` y `parquet`; para este dataset Naturapet los archivos esperados son `csv`.
 - Las columnas de negocio se ordenan y tipan según `data_dictionary.csv`; luego se agregan columnas técnicas `_np_*`.
 - Si una tabla no tiene PK declarada en `data_dictionary.csv`, el merge usa `_np_record_hash`.
+
+## Trabajo con ramas
+
+- `develop` es la rama operativa para cambios que deben desplegar a `dev`.
+- `qa` se usa para promocionar cambios al ambiente `qa`.
+- `main` se usa para promocionar cambios al ambiente `prod`.
+
+Si quieres revisar algo manualmente antes de empujar, puedes crear una rama local temporal desde `develop`, validar el diff y luego integrar esos cambios de vuelta a `develop`. En este trabajo los cambios finales quedaron integrados y publicados directamente en `develop`.

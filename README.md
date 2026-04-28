@@ -94,22 +94,25 @@ databricks bundle deploy --target prod
 
 ## Carga bronze implementada
 
-Cada dominio tiene dos notebooks en `notebooks/<dominio>/bronze/`:
+Cada dominio tiene dos notebooks Databricks `.ipynb` en `notebooks/<dominio>/bronze/`:
 
-- `load_to_delta.py`: descubre archivos en `raw/<ambiente>/<dominio>/2026`, hace `merge` incremental para carpetas mensuales (`01`, `02`, `03`) y `merge` completo para archivos ubicados directamente en `2026`.
-- `archive_to_historic.py`: mueve a `historic/<dominio>/2026/...` solo los archivos con carga exitosa registrada en la tabla de auditoria `bronze_file_load_audit`.
+- `load_to_delta.ipynb`: lee archivos desde `raw/<ambiente>/<dominio>/2026`, valida columnas contra `gobierno/2026/data_dictionary.csv`, hace `merge` incremental para archivos mensuales y upsert completo para archivos ubicados directamente en `2026`.
+- `archive_to_historic.ipynb`: mueve a `historic/<dominio>/2026/...` solo los archivos con carga exitosa registrada en la auditoria bronze.
 
-La logica compartida vive en:
+La logica reutilizable vive en `src/common/`:
 
-- `notebooks/shared/bronze/_common.py`
-- `notebooks/shared/bronze/_load_domain_bronze.py`
-- `notebooks/shared/bronze/_archive_domain_raw.py`
+- `config.py`: arma rutas `raw`, `external` e `historic` a partir de `abfss://democodex@demodldb.dfs.core.windows.net` y del ambiente.
+- `io.py`: descubre archivos por area y mueve archivos a `historic`.
+- `schema.py`: normaliza nombre de tabla, valida columnas y conforma tipos/campos usando `data_dictionary.csv`.
+- `delta_load.py`: crea o actualiza tablas Delta y mantiene auditoria de cargues.
+- `notebook_runner.py`: punto de entrada compartido para los notebooks `.ipynb`.
 
 ### Convenciones de carga
 
-- Tabla destino por archivo fuente, ubicada en el schema bronze del dominio correspondiente.
 - Catalogos por ambiente: `naturapet_dev`, `naturapet_qa`, `naturapet_prod`.
-- Ruta externa por tabla: `abfss://.../external/<ambiente>/<dominio>/bronze/2026/<tabla>`.
-- Archivos mensuales: se identifican por carpeta y por sufijo `_01`, `_02`, `_03`, pero se consolidan en la misma tabla delta.
-- Archivos sin carpeta mensual: se cargan como refresco completo tipo upsert, insertando o actualizando solo registros nuevos.
-- Llaves de `merge`: se derivan desde `raw/<ambiente>/gobierno/2026/data_dictionary.csv`; si una tabla no tiene PK declarada se usa un hash de fila.
+- Schemas bronze por area: `comercial_bronze`, `finanzas_bronze`, `gobierno_bronze`, `operaciones_bronze`, `shared_bronze`.
+- Ruta raw por area: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<area>/2026/...`.
+- Ruta external por tabla Delta: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<area>/bronze/2026/<tabla>`.
+- Ruta historic por archivo procesado: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<area>/2026/...`.
+- Las columnas de negocio se ordenan y tipan según `data_dictionary.csv`; luego se agregan columnas técnicas `_np_*`.
+- Si una tabla no tiene PK declarada en `data_dictionary.csv`, el merge usa `_np_record_hash`.

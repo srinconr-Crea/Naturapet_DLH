@@ -1,52 +1,102 @@
-from src.utilities.file_ingestion import (
-    IngestionConfig,
-    AUDIT_TABLE_NAME,
-    build_audit_table_path,
+import os
+
+from src.common.config import (
+    build_audit_table_fqn,
+    build_bronze_table_path,
     build_historic_file_path,
-    build_table_path,
-    normalize_table_name,
+    build_raw_file_path,
+    get_config,
 )
+from src.common.schema import normalize_table_name
 
 
-def test_build_table_path():
-    config = IngestionConfig(
-        catalog="naturapet_dev",
-        schema="comercial_bronze",
-        table_name="fact_ventas_cabecera",
-        external_base_path="abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze",
-        data_year="2026",
-    )
+def test_get_config_defaults():
+    original_env = os.environ.copy()
+    try:
+        os.environ["APP_ENV"] = "dev"
+        os.environ["AREA"] = "comercial"
+        config = get_config()
 
-    assert (
-        build_table_path(config)
-        == "abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze/2026/fact_ventas_cabecera"
-    )
+        assert config["catalog"] == "naturapet_dev"
+        assert config["bronze_schema"] == "comercial_bronze"
+        assert (
+            config["raw_year_path"]
+            == "abfss://democodex@demodldb.dfs.core.windows.net/raw/dev/comercial/2026"
+        )
+        assert (
+            config["bronze_year_root"]
+            == "abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze/2026"
+        )
+    finally:
+        os.environ.clear()
+        os.environ.update(original_env)
+
+
+def test_build_raw_file_path():
+    original_env = os.environ.copy()
+    try:
+        os.environ["APP_ENV"] = "dev"
+        os.environ["AREA"] = "comercial"
+        config = get_config()
+
+        assert (
+            build_raw_file_path(config, r"comercial\2026\01\fact_ventas_cabecera_01.csv")
+            == "abfss://democodex@demodldb.dfs.core.windows.net/raw/dev/comercial/2026/01/fact_ventas_cabecera_01.csv"
+        )
+    finally:
+        os.environ.clear()
+        os.environ.update(original_env)
+
+
+def test_build_bronze_table_path():
+    original_env = os.environ.copy()
+    try:
+        os.environ["APP_ENV"] = "dev"
+        os.environ["AREA"] = "comercial"
+        config = get_config()
+
+        assert (
+            build_bronze_table_path(config, "fact_ventas_cabecera")
+            == "abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze/2026/fact_ventas_cabecera"
+        )
+    finally:
+        os.environ.clear()
+        os.environ.update(original_env)
+
+
+def test_build_historic_monthly_file_path():
+    original_env = os.environ.copy()
+    try:
+        os.environ["APP_ENV"] = "dev"
+        os.environ["AREA"] = "comercial"
+        config = get_config()
+
+        assert (
+            build_historic_file_path(config, "fact_ventas_cabecera_01.csv", "01")
+            == "abfss://democodex@demodldb.dfs.core.windows.net/historic/comercial/2026/01/fact_ventas_cabecera_01.csv"
+        )
+    finally:
+        os.environ.clear()
+        os.environ.update(original_env)
+
+
+def test_build_audit_table_fqn():
+    original_env = os.environ.copy()
+    try:
+        os.environ["APP_ENV"] = "dev"
+        os.environ["AREA"] = "comercial"
+        config = get_config()
+
+        assert build_audit_table_fqn(config) == (
+            "`naturapet_dev`.`comercial_bronze`.`bronze_file_load_audit`"
+        )
+    finally:
+        os.environ.clear()
+        os.environ.update(original_env)
 
 
 def test_normalize_monthly_table_name():
     assert (
         normalize_table_name("fact_ventas_cabecera_01.csv", "01")
         == "fact_ventas_cabecera"
-    )
-
-
-def test_build_historic_monthly_file_path():
-    assert (
-        build_historic_file_path(
-            "abfss://democodex@demodldb.dfs.core.windows.net/historic/comercial",
-            "2026",
-            "fact_ventas_cabecera_01.csv",
-            "01",
-        )
-        == "abfss://democodex@demodldb.dfs.core.windows.net/historic/comercial/2026/01/fact_ventas_cabecera_01.csv"
-    )
-
-
-def test_build_audit_table_path():
-    assert (
-        build_audit_table_path(
-            "abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze",
-            "2026",
-        )
-        == f"abfss://democodex@demodldb.dfs.core.windows.net/external/dev/comercial/bronze/2026/_control/{AUDIT_TABLE_NAME}"
     )

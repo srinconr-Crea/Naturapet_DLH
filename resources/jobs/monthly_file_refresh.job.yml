@@ -14,7 +14,7 @@ resources:
         - task_key: shared_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/load_to_delta.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/load_to_delta.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -26,7 +26,7 @@ resources:
             - task_key: shared_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/archive_to_historic.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/archive_to_historic.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -38,7 +38,7 @@ resources:
             - task_key: shared_archive_to_historic
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/load_to_delta.py
+            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/load_to_delta.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -50,7 +50,7 @@ resources:
             - task_key: comercial_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/archive_to_historic.py
+            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/archive_to_historic.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -62,7 +62,7 @@ resources:
             - task_key: comercial_archive_to_historic
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/load_to_delta.py
+            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/load_to_delta.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -74,7 +74,7 @@ resources:
             - task_key: finanzas_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/archive_to_historic.py
+            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/archive_to_historic.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -86,7 +86,7 @@ resources:
             - task_key: finanzas_archive_to_historic
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/load_to_delta.py
+            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/load_to_delta.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -98,7 +98,7 @@ resources:
             - task_key: operaciones_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/archive_to_historic.py
+            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/archive_to_historic.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -110,7 +110,7 @@ resources:
             - task_key: operaciones_archive_to_historic
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/load_to_delta.py
+            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/load_to_delta.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -122,7 +122,7 @@ resources:
             - task_key: gobierno_load_to_delta
           job_cluster_key: monthly_job_cluster
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/archive_to_historic.py
+            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/archive_to_historic.ipynb
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}

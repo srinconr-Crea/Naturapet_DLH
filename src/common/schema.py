@@ -1,14 +1,16 @@
 from typing import Dict, List, Tuple
 
-from pyspark.sql import DataFrame, functions as F
-from pyspark.sql import types as T
 
+def _require_pyspark():
+    from pyspark.sql import functions as F
+    from pyspark.sql import types as T
 
-CSV_TO_SPARK_TYPE = {
-    "object": T.StringType(),
-    "int64": T.LongType(),
-    "float64": T.DoubleType(),
-}
+    csv_to_spark_type = {
+        "object": T.StringType(),
+        "int64": T.LongType(),
+        "float64": T.DoubleType(),
+    }
+    return F, T, csv_to_spark_type
 
 
 def normalize_table_name(file_name: str, month: str = "") -> str:
@@ -39,12 +41,13 @@ def build_primary_key_map(
     return primary_keys
 
 
-def build_spark_schema(entries: List[Dict[str, str]]) -> T.StructType:
+def build_spark_schema(entries: List[Dict[str, str]]):
+    _, T, csv_to_spark_type = _require_pyspark()
     return T.StructType(
         [
             T.StructField(
                 entry["campo"],
-                CSV_TO_SPARK_TYPE.get(entry["tipo_dato_csv"], T.StringType()),
+                csv_to_spark_type.get(entry["tipo_dato_csv"], T.StringType()),
                 True,
             )
             for entry in entries
@@ -53,7 +56,7 @@ def build_spark_schema(entries: List[Dict[str, str]]) -> T.StructType:
 
 
 def validate_expected_columns(
-    dataframe: DataFrame,
+    dataframe,
     table_name: str,
     dictionary_map: Dict[str, List[Dict[str, str]]],
 ) -> None:
@@ -72,28 +75,30 @@ def validate_expected_columns(
 
 
 def conform_to_dictionary(
-    dataframe: DataFrame,
+    dataframe,
     table_name: str,
     dictionary_map: Dict[str, List[Dict[str, str]]],
-) -> DataFrame:
+):
     if table_name not in dictionary_map:
         return dataframe
 
+    F, T, csv_to_spark_type = _require_pyspark()
     entries = dictionary_map[table_name]
     select_expressions = []
     for entry in entries:
         column_name = entry["campo"]
-        spark_type = CSV_TO_SPARK_TYPE.get(entry["tipo_dato_csv"], T.StringType())
+        spark_type = csv_to_spark_type.get(entry["tipo_dato_csv"], T.StringType())
         select_expressions.append(F.col(column_name).cast(spark_type).alias(column_name))
 
     return dataframe.select(*select_expressions)
 
 
 def with_hash_key_if_needed(
-    dataframe: DataFrame,
+    dataframe,
     table_name: str,
     primary_key_map: Dict[str, List[str]],
-) -> Tuple[DataFrame, List[str]]:
+) -> Tuple[object, List[str]]:
+    F, _, _ = _require_pyspark()
     merge_keys = [
         key for key in primary_key_map.get(table_name, []) if key in dataframe.columns
     ]

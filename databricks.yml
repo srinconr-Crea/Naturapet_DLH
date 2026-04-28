@@ -4,6 +4,13 @@ bundle:
 include:
   - resources/**/*.yml
 
+sync:
+  include:
+    - notebooks/**/*
+    - src/**/*
+    - conf/**/*
+    - resources/**/*
+
 variables:
   project_name:
     description: Nombre del bundle y del workspace path del proyecto

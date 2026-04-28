@@ -1,7 +1,5 @@
 from typing import Dict, List, Optional
 
-from pyspark.sql import DataFrame, functions as F
-
 
 ALLOW_SCHEMA_INFERENCE_TABLES = {"manifest"}
 
@@ -21,19 +19,21 @@ def validate_table_known_or_allowed(
     )
 
 
-def validate_non_empty_dataframe(dataframe: DataFrame, table_name: str) -> None:
+def validate_non_empty_dataframe(dataframe, table_name: str) -> None:
     if dataframe.limit(1).count() == 0:
         raise ValueError(f"El archivo origen para {table_name} no contiene registros.")
 
 
 def validate_mes_carga_alignment(
-    dataframe: DataFrame,
+    dataframe,
     table_name: str,
     source_year: str,
     source_month: Optional[str],
 ) -> None:
     if not source_month or "mes_carga" not in dataframe.columns:
         return
+
+    from pyspark.sql import functions as F
 
     expected_value = f"{source_year}-{source_month}"
     mismatched = (

@@ -2,8 +2,6 @@ import json
 import re
 from typing import Dict, List
 
-from pyspark.sql import DataFrame
-
 
 MONTH_PATTERN = re.compile(r"^(0[1-9]|1[0-2])$")
 SUPPORTED_SOURCE_FORMATS = {"csv", "json", "parquet"}
@@ -84,7 +82,7 @@ def read_csv_with_schema(
     path: str,
     schema=None,
     header: bool = True,
-) -> DataFrame:
+):
     reader = spark.read.option("header", str(header).lower())
     if schema is not None:
         reader = reader.schema(schema)
@@ -93,7 +91,7 @@ def read_csv_with_schema(
     return reader.csv(path)
 
 
-def read_json_with_schema(spark, path: str, schema=None) -> DataFrame:
+def read_json_with_schema(spark, path: str, schema=None):
     reader = spark.read
     if schema is not None:
         reader = reader.schema(schema)
@@ -102,7 +100,7 @@ def read_json_with_schema(spark, path: str, schema=None) -> DataFrame:
     return reader.json(path)
 
 
-def read_parquet_with_schema(spark, path: str, schema=None) -> DataFrame:
+def read_parquet_with_schema(spark, path: str, schema=None):
     reader = spark.read
     if schema is not None:
         reader = reader.schema(schema)
@@ -115,7 +113,7 @@ def read_source_file(
     source_format: str,
     schema=None,
     header: bool = True,
-) -> DataFrame:
+):
     if source_format == "csv":
         return read_csv_with_schema(
             spark=spark,

@@ -49,7 +49,7 @@ targets:
     default: true
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: ~/.bundle/${var.project_name}/${bundle.target}
     variables:
       catalog_name: naturapet_dev
       schema_name: ${var.domain_name}_${var.data_layer}

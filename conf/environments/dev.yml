@@ -2,7 +2,7 @@ environment_name: dev
 project_name: Naturapet_DLH
 catalog_name: naturapet_dev
 workspace_host: https://adb-7405606739630987.7.azuredatabricks.net
-workspace_root_path: /Workspace/Shared/Naturapet_DLH/dev
+workspace_root_path: ~/.bundle/Naturapet_DLH/dev
 storage_account: demodldb
 storage_container: democodex
 default_domain: comercial

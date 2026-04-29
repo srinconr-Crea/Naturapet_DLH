@@ -1,5 +1,9 @@
-import os
 import json
+import importlib
+import os
+import sys
+from types import ModuleType
+from unittest.mock import MagicMock
 
 from src.common.config import (
     build_audit_table_fqn,
@@ -163,3 +167,98 @@ def test_dumps_task_value_compacts_large_payload():
     assert len(result["processed_files_sample"]) == 10
     assert result["processed_files_omitted"] == 2
     assert result["failed_files_sample"][0]["error"].endswith("...(truncado)")
+
+
+def _import_delta_load_with_fake_delta():
+    original_delta = sys.modules.get("delta")
+    original_delta_tables = sys.modules.get("delta.tables")
+    original_module = sys.modules.get("src.common.delta_load")
+
+    fake_delta = ModuleType("delta")
+    fake_delta_tables = ModuleType("delta.tables")
+    fake_delta_tables.DeltaTable = MagicMock()
+    fake_delta.tables = fake_delta_tables
+
+    sys.modules["delta"] = fake_delta
+    sys.modules["delta.tables"] = fake_delta_tables
+    sys.modules.pop("src.common.delta_load", None)
+
+    try:
+        module = importlib.import_module("src.common.delta_load")
+    finally:
+        sys.modules.pop("src.common.delta_load", None)
+        if original_module is not None:
+            sys.modules["src.common.delta_load"] = original_module
+        if original_delta is not None:
+            sys.modules["delta"] = original_delta
+        else:
+            sys.modules.pop("delta", None)
+        if original_delta_tables is not None:
+            sys.modules["delta.tables"] = original_delta_tables
+        else:
+            sys.modules.pop("delta.tables", None)
+
+    return module, fake_delta_tables.DeltaTable
+
+
+def test_create_or_merge_delta_new_table_uses_merge_schema_without_session_conf():
+    delta_load, _ = _import_delta_load_with_fake_delta()
+    writer = MagicMock()
+    writer.format.return_value = writer
+    writer.mode.return_value = writer
+    writer.option.return_value = writer
+    writer.partitionBy.return_value = writer
+
+    dataframe = MagicMock()
+    dataframe.write = writer
+
+    spark = MagicMock()
+    delta_load.table_exists = MagicMock(return_value=False)
+
+    delta_load.create_or_merge_delta(
+        spark=spark,
+        dataframe=dataframe,
+        target_table="catalog.schema.table",
+        target_path="/tmp/table",
+        merge_keys=["id"],
+    )
+
+    spark.conf.set.assert_not_called()
+    writer.option.assert_any_call("mergeSchema", "true")
+    writer.option.assert_any_call("path", "/tmp/table")
+    writer.partitionBy.assert_called_once_with(
+        "_np_source_year",
+        "_np_source_month",
+    )
+    writer.saveAsTable.assert_called_once_with("catalog.schema.table")
+
+
+def test_create_or_merge_delta_existing_table_merges_without_session_conf():
+    delta_load, delta_table_class = _import_delta_load_with_fake_delta()
+    merge_builder = MagicMock()
+    merge_builder.whenMatchedUpdateAll.return_value = merge_builder
+    merge_builder.whenNotMatchedInsertAll.return_value = merge_builder
+
+    delta_table_instance = MagicMock()
+    delta_table_instance.alias.return_value = delta_table_instance
+    delta_table_instance.merge.return_value = merge_builder
+    delta_table_class.forPath.return_value = delta_table_instance
+
+    dataframe = MagicMock()
+    dataframe.alias.return_value = "source_df"
+
+    spark = MagicMock()
+    delta_load.table_exists = MagicMock(return_value=True)
+
+    delta_load.create_or_merge_delta(
+        spark=spark,
+        dataframe=dataframe,
+        target_table="catalog.schema.table",
+        target_path="/tmp/table",
+        merge_keys=["id"],
+    )
+
+    spark.conf.set.assert_not_called()
+    delta_table_class.forPath.assert_called_once_with(spark, "/tmp/table")
+    delta_table_instance.merge.assert_called_once()
+    merge_builder.execute.assert_called_once_with()

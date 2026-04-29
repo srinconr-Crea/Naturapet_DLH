@@ -66,12 +66,11 @@ def create_or_merge_delta(
     target_path: str,
     merge_keys: List[str],
 ) -> None:
-    spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
-
     if not table_exists(spark, target_table):
         (
             dataframe.write.format("delta")
             .mode("overwrite")
+            .option("mergeSchema", "true")
             .option("path", target_path)
             .partitionBy("_np_source_year", "_np_source_month")
             .saveAsTable(target_table)

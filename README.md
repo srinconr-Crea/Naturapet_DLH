@@ -78,7 +78,7 @@ Rutas base configuradas en formato `abfss://`:
 - Pull request hacia `main`: valida el bundle y los tests
 - Push a `main` despues de aprobar y hacer merge del PR: valida y despliega a `prod`
 
-En Databricks Asset Bundles, el target `dev` usa `mode: development` y por eso publica en un `root_path` de usuario: `~/.bundle/Naturapet_DLH/dev`. Los targets `qa` y `prod` siguen usando `/Workspace/Shared/Naturapet_DLH/<target>`.
+En Databricks Asset Bundles, el target `dev` publica ahora en un path compartido: `/Workspace/Shared/Naturapet_DLH/dev`. Esto evita despliegues por usuario en CI/CD y asegura que el job de `develop` siempre actualice la misma copia ejecutable. Los targets `qa` y `prod` tambien usan `/Workspace/Shared/Naturapet_DLH/<target>`.
 
 La aprobacion humana para produccion queda soportada por la regla del pull request y por las protecciones del environment `prod` en GitHub.
 

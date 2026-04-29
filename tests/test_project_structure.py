@@ -14,6 +14,10 @@ from src.common.config import (
 )
 from src.common.io import TASK_VALUE_MAX_BYTES, detect_file_format, dumps_task_value
 from src.common.schema import normalize_table_name
+from src.common.validation import (
+    build_mes_carga_regex,
+    matches_expected_mes_carga_text,
+)
 
 
 def test_get_config_defaults():
@@ -112,6 +116,20 @@ def test_detect_file_format():
     assert detect_file_format("fact_ventas_cabecera_01.csv") == "csv"
     assert detect_file_format("fact_ventas.json") == "json"
     assert detect_file_format("fact_ventas.parquet") == "parquet"
+
+
+def test_matches_expected_mes_carga_text_accepts_equivalent_month_formats():
+    assert matches_expected_mes_carga_text("2026-01", "2026-01") is True
+    assert matches_expected_mes_carga_text("2026-01-01", "2026-01") is True
+    assert matches_expected_mes_carga_text("2026-01 00:00:00", "2026-01") is True
+    assert matches_expected_mes_carga_text(" 2026-01 ", "2026-01") is True
+
+
+def test_matches_expected_mes_carga_text_rejects_other_month_values():
+    assert matches_expected_mes_carga_text("2026-02", "2026-01") is False
+    assert matches_expected_mes_carga_text("202601", "2026-01") is False
+    assert matches_expected_mes_carga_text("2026-0101", "2026-01") is False
+    assert build_mes_carga_regex("2026-01") == r"^2026\-01($|[^0-9])"
 
 
 def test_dumps_task_value_keeps_small_payload():

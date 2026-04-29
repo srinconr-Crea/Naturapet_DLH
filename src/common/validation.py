@@ -2,7 +2,11 @@ import re
 from typing import Dict, List, Optional
 
 
-ALLOW_SCHEMA_INFERENCE_TABLES = {"manifest"}
+ALLOW_SCHEMA_INFERENCE_TABLES = {
+    "manifest",
+    "data_dictionary",
+    "resumen_mensual_validacion",
+}
 
 
 def validate_table_known_or_allowed(

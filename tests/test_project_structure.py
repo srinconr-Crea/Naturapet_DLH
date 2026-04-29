@@ -15,8 +15,10 @@ from src.common.config import (
 from src.common.io import TASK_VALUE_MAX_BYTES, detect_file_format, dumps_task_value
 from src.common.schema import normalize_table_name
 from src.common.validation import (
+    ALLOW_SCHEMA_INFERENCE_TABLES,
     build_mes_carga_regex,
     matches_expected_mes_carga_text,
+    validate_table_known_or_allowed,
 )
 
 
@@ -116,6 +118,14 @@ def test_detect_file_format():
     assert detect_file_format("fact_ventas_cabecera_01.csv") == "csv"
     assert detect_file_format("fact_ventas.json") == "json"
     assert detect_file_format("fact_ventas.parquet") == "parquet"
+
+
+def test_validate_table_known_or_allowed_accepts_government_metadata_tables():
+    assert "data_dictionary" in ALLOW_SCHEMA_INFERENCE_TABLES
+    assert "resumen_mensual_validacion" in ALLOW_SCHEMA_INFERENCE_TABLES
+
+    validate_table_known_or_allowed("data_dictionary", {})
+    validate_table_known_or_allowed("resumen_mensual_validacion", {})
 
 
 def test_matches_expected_mes_carga_text_accepts_equivalent_month_formats():

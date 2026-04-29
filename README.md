@@ -139,6 +139,11 @@ flowchart LR
 - Deteccion de formato: el flujo soporta `csv`, `json` y `parquet`; para este dataset Naturapet los archivos esperados son `csv`.
 - Las columnas de negocio se ordenan y tipan según `data_dictionary.csv`; luego se agregan columnas técnicas `_np_*`.
 - Si una tabla no tiene PK declarada en `data_dictionary.csv`, el merge usa `_np_record_hash`.
+- El job `monthly_file_refresh` esta definido para ejecutar notebooks sobre serverless jobs compute, por lo que no crea clusters dedicados en cada corrida.
+
+### Requisito de ejecucion en Databricks
+
+Estos notebooks usan Python, Spark y `dbutils`, por lo que no deben ejecutarse sobre un SQL warehouse tradicional. Si el workspace no tiene serverless jobs compute habilitado, la alternativa correcta es configurar un `existing_cluster_id` con permisos de uso para la identidad que ejecuta el job.
 
 ## Trabajo con ramas
 

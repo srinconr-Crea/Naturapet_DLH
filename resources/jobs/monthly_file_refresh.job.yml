@@ -12,7 +12,6 @@ resources:
         pause_status: UNPAUSED
       tasks:
         - task_key: shared_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/shared/bronze/load_to_delta
             base_parameters:
@@ -24,7 +23,6 @@ resources:
         - task_key: shared_archive_to_historic
           depends_on:
             - task_key: shared_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/shared/bronze/archive_to_historic
             base_parameters:
@@ -36,7 +34,6 @@ resources:
         - task_key: comercial_load_to_delta
           depends_on:
             - task_key: shared_archive_to_historic
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/load_to_delta
             base_parameters:
@@ -48,7 +45,6 @@ resources:
         - task_key: comercial_archive_to_historic
           depends_on:
             - task_key: comercial_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/archive_to_historic
             base_parameters:
@@ -60,7 +56,6 @@ resources:
         - task_key: finanzas_load_to_delta
           depends_on:
             - task_key: comercial_archive_to_historic
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/load_to_delta
             base_parameters:
@@ -72,7 +67,6 @@ resources:
         - task_key: finanzas_archive_to_historic
           depends_on:
             - task_key: finanzas_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/archive_to_historic
             base_parameters:
@@ -84,7 +78,6 @@ resources:
         - task_key: operaciones_load_to_delta
           depends_on:
             - task_key: finanzas_archive_to_historic
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/load_to_delta
             base_parameters:
@@ -96,7 +89,6 @@ resources:
         - task_key: operaciones_archive_to_historic
           depends_on:
             - task_key: operaciones_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/archive_to_historic
             base_parameters:
@@ -108,7 +100,6 @@ resources:
         - task_key: gobierno_load_to_delta
           depends_on:
             - task_key: operaciones_archive_to_historic
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/load_to_delta
             base_parameters:
@@ -120,7 +111,6 @@ resources:
         - task_key: gobierno_archive_to_historic
           depends_on:
             - task_key: gobierno_load_to_delta
-          job_cluster_key: monthly_job_cluster
           notebook_task:
             notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/archive_to_historic
             base_parameters:
@@ -129,14 +119,6 @@ resources:
               storage_account: ${var.storage_account}
               storage_container: ${var.storage_container}
               data_year: ${var.data_year}
-      job_clusters:
-        - job_cluster_key: monthly_job_cluster
-          new_cluster:
-            spark_version: 15.4.x-scala2.12
-            node_type_id: Standard_DS3_v2
-            num_workers: 1
-            data_security_mode: SINGLE_USER
-            runtime_engine: STANDARD
       tags:
         environment: ${bundle.target}
         domain: ${var.domain_name}

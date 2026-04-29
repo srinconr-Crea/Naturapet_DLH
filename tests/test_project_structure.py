@@ -172,6 +172,8 @@ def test_dumps_task_value_compacts_large_payload():
 def _import_delta_load_with_fake_delta():
     original_delta = sys.modules.get("delta")
     original_delta_tables = sys.modules.get("delta.tables")
+    original_pyspark = sys.modules.get("pyspark")
+    original_pyspark_sql = sys.modules.get("pyspark.sql")
     original_module = sys.modules.get("src.common.delta_load")
 
     fake_delta = ModuleType("delta")
@@ -179,8 +181,34 @@ def _import_delta_load_with_fake_delta():
     fake_delta_tables.DeltaTable = MagicMock()
     fake_delta.tables = fake_delta_tables
 
+    fake_pyspark = ModuleType("pyspark")
+    fake_pyspark_sql = ModuleType("pyspark.sql")
+    fake_functions = ModuleType("pyspark.sql.functions")
+    fake_types = ModuleType("pyspark.sql.types")
+
+    fake_pyspark_sql.DataFrame = object
+    fake_pyspark_sql.functions = fake_functions
+    fake_pyspark_sql.types = fake_types
+
+    fake_types.StructType = MagicMock(side_effect=lambda fields: ("StructType", fields))
+    fake_types.StructField = MagicMock(
+        side_effect=lambda name, data_type, nullable: (
+            "StructField",
+            name,
+            data_type,
+            nullable,
+        )
+    )
+    fake_types.StringType = MagicMock(return_value="StringType")
+    fake_types.LongType = MagicMock(return_value="LongType")
+    fake_types.TimestampType = MagicMock(return_value="TimestampType")
+
+    fake_pyspark.sql = fake_pyspark_sql
+
     sys.modules["delta"] = fake_delta
     sys.modules["delta.tables"] = fake_delta_tables
+    sys.modules["pyspark"] = fake_pyspark
+    sys.modules["pyspark.sql"] = fake_pyspark_sql
     sys.modules.pop("src.common.delta_load", None)
 
     try:
@@ -197,6 +225,14 @@ def _import_delta_load_with_fake_delta():
             sys.modules["delta.tables"] = original_delta_tables
         else:
             sys.modules.pop("delta.tables", None)
+        if original_pyspark is not None:
+            sys.modules["pyspark"] = original_pyspark
+        else:
+            sys.modules.pop("pyspark", None)
+        if original_pyspark_sql is not None:
+            sys.modules["pyspark.sql"] = original_pyspark_sql
+        else:
+            sys.modules.pop("pyspark.sql", None)
 
     return module, fake_delta_tables.DeltaTable
 

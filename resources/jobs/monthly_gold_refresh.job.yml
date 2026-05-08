@@ -1,0 +1,68 @@
+resources:
+  jobs:
+    monthly_gold_refresh:
+      name: ${bundle.target}-${var.project_name}-monthly-gold-refresh
+      description: Orquestacion Gold de NaturaPet para marts de negocio, KPIs ejecutivos y validaciones mensuales
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      schedule:
+        quartz_cron_expression: 0 0 7 1 * ?
+        timezone_id: America/Bogota
+        pause_status: UNPAUSED
+      tasks:
+        - task_key: comercial_gold_marts
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/01_comercial_marts.py
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: operaciones_gold_marts
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/02_operaciones_marts.py
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: finanzas_objetivos_gold
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/03_finanzas_objetivos.py
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: kpis_ejecutivos_gold
+          depends_on:
+            - task_key: comercial_gold_marts
+            - task_key: operaciones_gold_marts
+            - task_key: finanzas_objetivos_gold
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/04_kpis_ejecutivos.py
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: gold_quality_checks
+          depends_on:
+            - task_key: kpis_ejecutivos_gold
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/05_quality_checks.py
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+      tags:
+        environment: ${bundle.target}
+        layer: gold
+        frequency: monthly

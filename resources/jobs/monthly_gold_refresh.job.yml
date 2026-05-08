@@ -13,7 +13,7 @@ resources:
       tasks:
         - task_key: comercial_gold_marts
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/gold/01_comercial_marts.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/01_comercial_marts
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -22,7 +22,7 @@ resources:
               data_year: ${var.data_year}
         - task_key: operaciones_gold_marts
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/gold/02_operaciones_marts.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/02_operaciones_marts
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -31,7 +31,7 @@ resources:
               data_year: ${var.data_year}
         - task_key: finanzas_objetivos_gold
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/gold/03_finanzas_objetivos.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/03_finanzas_objetivos
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -44,7 +44,7 @@ resources:
             - task_key: operaciones_gold_marts
             - task_key: finanzas_objetivos_gold
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/gold/04_kpis_ejecutivos.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/04_kpis_ejecutivos
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -55,7 +55,7 @@ resources:
           depends_on:
             - task_key: kpis_ejecutivos_gold
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/gold/05_quality_checks.py
+            notebook_path: ${workspace.file_path}/notebooks/shared/gold/05_quality_checks
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}

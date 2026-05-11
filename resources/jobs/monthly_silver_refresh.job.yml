@@ -108,7 +108,7 @@ resources:
           depends_on:
             - task_key: comercial_03_domain_normalization
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/silver/04_business_derivations
+            notebook_path: ${workspace.file_path}/notebooks/comercial/silver/04_business_derivations
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -168,7 +168,7 @@ resources:
           depends_on:
             - task_key: finanzas_03_domain_normalization
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/silver/04_business_derivations
+            notebook_path: ${workspace.file_path}/notebooks/finanzas/silver/04_business_derivations
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -228,7 +228,7 @@ resources:
           depends_on:
             - task_key: operaciones_03_domain_normalization
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/silver/04_business_derivations
+            notebook_path: ${workspace.file_path}/notebooks/operaciones/silver/04_business_derivations
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}
@@ -288,7 +288,7 @@ resources:
           depends_on:
             - task_key: gobierno_03_domain_normalization
           notebook_task:
-            notebook_path: ${workspace.file_path}/notebooks/shared/silver/04_business_derivations
+            notebook_path: ${workspace.file_path}/notebooks/gobierno/silver/04_business_derivations
             base_parameters:
               environment: ${bundle.target}
               catalog_name: ${var.catalog_name}

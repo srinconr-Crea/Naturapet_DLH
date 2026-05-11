@@ -1,0 +1,28 @@
+resources:
+  jobs:
+    monthly_data_mesh_refresh:
+      name: ${bundle.target}-${var.project_name}-monthly-data-mesh-refresh
+      description: "Orquestacion unificada Data Mesh de Naturapet: Bronze completo, luego Silver completo y luego Gold completo"
+      max_concurrent_runs: 1
+      queue:
+        enabled: true
+      tasks:
+        - task_key: bronze_incremental
+          run_job_task:
+            job_id: ${resources.jobs.monthly_file_refresh.id}
+
+        - task_key: silver_incremental
+          depends_on:
+            - task_key: bronze_incremental
+          run_job_task:
+            job_id: ${resources.jobs.monthly_silver_refresh.id}
+
+        - task_key: gold_full
+          depends_on:
+            - task_key: silver_incremental
+          run_job_task:
+            job_id: ${resources.jobs.monthly_gold_refresh.id}
+      tags:
+        environment: ${bundle.target}
+        layer: data_mesh
+        frequency: monthly

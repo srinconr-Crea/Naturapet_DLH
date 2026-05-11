@@ -43,6 +43,9 @@ variables:
     description: Ruta base de aterrizaje raw en ADLS
   historic_base_path:
     description: Ruta base del historico en ADLS
+  github_actions_service_principal_name:
+    description: Application ID del service principal usado por GitHub Actions para desplegar y administrar jobs
+    default: 474767ec-ddc8-416e-ad38-e5a63375a89f
 targets:
   dev:
     default: true

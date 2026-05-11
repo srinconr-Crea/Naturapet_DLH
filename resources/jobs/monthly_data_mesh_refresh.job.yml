@@ -6,6 +6,11 @@ resources:
       max_concurrent_runs: 1
       queue:
         enabled: true
+      run_as:
+        service_principal_name: ${var.github_actions_service_principal_name}
+      permissions:
+        - service_principal_name: ${var.github_actions_service_principal_name}
+          level: CAN_MANAGE
       tasks:
         - task_key: bronze_incremental
           run_job_task:

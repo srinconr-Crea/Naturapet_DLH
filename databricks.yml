@@ -48,7 +48,7 @@ targets:
     default: true
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_dev
       schema_name: ${var.domain_name}_${var.data_layer}
@@ -60,7 +60,7 @@ targets:
     mode: production
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_qa
       schema_name: ${var.domain_name}_${var.data_layer}
@@ -72,7 +72,7 @@ targets:
     mode: production
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_prod
       schema_name: ${var.domain_name}_${var.data_layer}

@@ -84,6 +84,8 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
+        with:
+          version: 0.297.2
 
       - name: Configure Databricks auth
         shell: bash
@@ -109,6 +111,8 @@ jobs:
 
       - name: Setup Databricks CLI
         uses: databricks/setup-cli@main
+        with:
+          version: 0.297.2
 
       - name: Configure Databricks auth
         shell: bash

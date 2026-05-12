@@ -164,6 +164,39 @@ def build_merge_condition(merge_keys: List[str]) -> str:
     return " AND ".join([f"target.`{key}` <=> source.`{key}`" for key in merge_keys])
 
 
+def _sql_type(data_type) -> str:
+    return data_type.simpleString()
+
+
+def _quote_identifier(name: str) -> str:
+    return f"`{name.replace('`', '``')}`"
+
+
+def align_to_target_schema(spark, dataframe: DataFrame, target_table: str) -> DataFrame:
+    target_fields = spark.table(target_table).schema.fields
+    for field in target_fields:
+        if field.name not in dataframe.columns:
+            dataframe = dataframe.withColumn(field.name, F.lit(None).cast(field.dataType))
+    return dataframe
+
+
+def add_missing_target_columns(spark, dataframe: DataFrame, target_table: str) -> None:
+    target_columns = {field.name for field in spark.table(target_table).schema.fields}
+    missing_fields = [
+        field
+        for field in dataframe.schema.fields
+        if field.name not in target_columns
+    ]
+    if not missing_fields:
+        return
+
+    column_definitions = ", ".join(
+        f"{_quote_identifier(field.name)} {_sql_type(field.dataType)}"
+        for field in missing_fields
+    )
+    spark.sql(f"ALTER TABLE {target_table} ADD COLUMNS ({column_definitions})")
+
+
 def resolve_merge_keys(table_name: str, columns: List[str]) -> List[str]:
     keys = [key for key in PRIMARY_KEYS.get(table_name, []) if key in columns]
     if keys:
@@ -204,7 +237,8 @@ def merge_silver_table(
         )
         return
 
-    spark.conf.set("spark.databricks.delta.schema.autoMerge.enabled", "true")
+    dataframe = align_to_target_schema(spark, dataframe, target_table)
+    add_missing_target_columns(spark, dataframe, target_table)
     (
         DeltaTable.forName(spark, target_table)
         .alias("target")

@@ -99,18 +99,40 @@ def with_hash_key_if_needed(
     primary_key_map: Dict[str, List[str]],
 ) -> Tuple[object, List[str]]:
     F, _, _ = _require_pyspark()
+    from pyspark.sql import Window
+
+    def latest_by_keys(input_dataframe, keys: List[str]):
+        order_columns = []
+        if "_np_ingestion_ts" in input_dataframe.columns:
+            order_columns.append(F.col("_np_ingestion_ts").desc_nulls_last())
+        for column_name in ["_np_source_path", "_np_source_file_name"]:
+            if column_name in input_dataframe.columns:
+                order_columns.append(F.col(column_name).desc_nulls_last())
+        if not order_columns:
+            order_columns = [F.lit(1)]
+        window_spec = Window.partitionBy(*[F.col(key) for key in keys]).orderBy(
+            *order_columns
+        )
+        return (
+            input_dataframe.withColumn("_np_row_priority", F.row_number().over(window_spec))
+            .filter(F.col("_np_row_priority") == 1)
+            .drop("_np_row_priority")
+        )
+
     merge_keys = [
         key for key in primary_key_map.get(table_name, []) if key in dataframe.columns
     ]
     if merge_keys:
-        return dataframe.dropDuplicates(merge_keys), merge_keys
+        return latest_by_keys(dataframe, merge_keys), merge_keys
 
+    volatile_columns = {"_np_ingestion_ts"}
     hash_columns = [
         F.coalesce(F.col(column_name).cast("string"), F.lit("<null>"))
         for column_name in dataframe.columns
+        if column_name not in volatile_columns
     ]
     dataframe = dataframe.withColumn(
         "_np_record_hash",
         F.sha2(F.concat_ws("||", *hash_columns), 256),
     )
-    return dataframe.dropDuplicates(["_np_record_hash"]), ["_np_record_hash"]
+    return latest_by_keys(dataframe, ["_np_record_hash"]), ["_np_record_hash"]

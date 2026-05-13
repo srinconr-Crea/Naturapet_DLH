@@ -1,154 +1,167 @@
 # Naturapet_DLH
 
-Repositorio base del proyecto `Naturapet_DLH` para Azure Databricks, ADLS Gen2 y GitHub Actions usando Databricks Asset Bundles.
+Repositorio del Data Lakehouse de Naturapet sobre Azure Databricks, ADLS Gen2, Unity Catalog y Databricks Asset Bundles. El proyecto implementa un flujo mensual por dominios de datos con capas Bronze, Silver y Gold, mas un job orquestador de Data Mesh para encadenar el refresco completo.
 
-## Configuracion inicial aplicada
+## Alcance actual
 
 - Workspace Databricks: `https://adb-7405606739630987.7.azuredatabricks.net`
+- Bundle: `Naturapet_DLH`
+- Ruta de despliegue por target: `/Workspace/Naturapet_BI/<target>`
 - Storage account: `demodldb`
 - Contenedor: `democodex`
 - Catalogos por ambiente: `naturapet_dev`, `naturapet_qa`, `naturapet_prod`
-- Dominios de datos: `comercial`, `finanzas`, `gobierno`, `operaciones`, `shared`
-- Schemas por dominio: `*_bronze`, `*_silver`, `*_gold`
+- Dominios: `shared`, `comercial`, `finanzas`, `operaciones`, `gobierno`
+- Capas publicadas por dominio: `bronze`, `silver`, `gold`
+- Schemas esperados: `<dominio>_bronze`, `<dominio>_silver`, `<dominio>_gold`
 
-## Estructura de almacenamiento
+## Arquitectura Data Mesh
 
-Rutas base configuradas en formato `abfss://`:
+El proyecto esta organizado como un Data Mesh por dominios. Cada dominio conserva responsabilidad sobre sus entidades y transformaciones, mientras `shared` concentra dimensiones y logica comun reutilizable. Las capas siguen este contrato:
 
-- `external`: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<dominio>/<capa>/2026/<mes>`
-- `raw`: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<dominio>/2026/<mes>`
-- `historic`: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<dominio>/2026/<mes>`
+- Bronze: aterrizaje tecnico desde `raw`, validacion contra diccionario, carga Delta externa y auditoria de archivos.
+- Silver: estandarizacion de esquema, correccion de nulos, normalizacion de dominios, derivaciones de negocio y controles de calidad.
+- Gold: marts de negocio, objetivos, metricas ejecutivas y validaciones finales para consumo analitico.
 
-## Estructura del repositorio
+El job `monthly_data_mesh_refresh` representa la orquestacion unificada del mesh: ejecuta primero Bronze completo, luego Silver completo y finalmente Gold completo. Esto permite correr el flujo end-to-end sin duplicar la definicion interna de cada capa.
+
+```mermaid
+flowchart LR
+    A["raw/<env>/<dominio>/<anio>/<mes>"] --> B["Bronze: Delta externa + auditoria"]
+    B --> C["Silver: estandarizacion + calidad"]
+    C --> D["Gold: marts + KPIs"]
+    D --> E["Consumo analitico por dominio"]
+```
+
+## Operacion de jobs
+
+Los jobs estan definidos en `resources/jobs/` y se despliegan con Databricks Asset Bundles. Todos tienen `max_concurrent_runs: 1` y cola habilitada para evitar corridas simultaneas sobre la misma ventana mensual.
+
+| Job | Horario | Tipo de carga | Proposito |
+| --- | --- | --- | --- |
+| `monthly_file_refresh` | Dia 1 de cada mes, 06:00 `America/Bogota` | Incremental por archivos mensuales y archivado de exitosos | Carga Bronze para `shared`, `comercial`, `finanzas`, `operaciones` y `gobierno`. |
+| `monthly_silver_refresh` | Dia 1 de cada mes, 06:30 `America/Bogota` | Incremental por tablas con auditoria Silver | Ejecuta cinco pasos por dominio: esquema, nulos, normalizacion, derivaciones y calidad. |
+| `monthly_gold_refresh` | Dia 1 de cada mes, 07:00 `America/Bogota` | Refresco de marts Gold por dominio | Genera marts comerciales, operacionales, financieros, objetivos y KPIs ejecutivos. |
+| `monthly_data_mesh_refresh` | Sin schedule propio en el bundle | Orquestacion end-to-end por subjobs | Llama Bronze, luego Silver, luego Gold usando `run_job_task`. |
+
+Expresiones cron Quartz configuradas:
+
+```text
+monthly_file_refresh   0 0 6 1 * ?
+monthly_silver_refresh 0 30 6 1 * ?
+monthly_gold_refresh   0 0 7 1 * ?
+```
+
+El orquestador `monthly_data_mesh_refresh` corre con el service principal configurado en `github_actions_service_principal_name` y tiene permiso `CAN_MANAGE` sobre el job. Al no tener `schedule`, se deja listo para ejecucion bajo demanda o para ser invocado por automatizaciones externas.
+
+## Flujo de datos
+
+### Bronze
+
+Cada dominio tiene notebooks en `notebooks/<dominio>/bronze/`:
+
+- `load_to_delta.ipynb`: lee archivos desde `raw/<ambiente>/<dominio>/<anio>`, valida columnas contra el diccionario de datos, aplica tipos, agrega columnas tecnicas `_np_*` y hace merge/upsert hacia tablas Delta externas.
+- `archive_to_historic.ipynb`: mueve a `historic/<dominio>/<anio>/...` los archivos con carga exitosa registrada en la auditoria Bronze.
+
+La logica comun vive en `src/common/`:
+
+- `config.py`: arma rutas `raw`, `external` e `historic`.
+- `io.py`: descubre archivos, identifica formato y mueve archivos a historico.
+- `schema.py`: normaliza nombres, valida columnas y aplica tipos.
+- `delta_load.py`: crea o actualiza tablas Delta y mantiene auditoria de carga.
+- `validation.py`: aplica validaciones tecnicas.
+- `notebook_runner.py`: punto de entrada compartido para notebooks Bronze.
+
+### Silver
+
+Silver reutiliza notebooks compartidos para los pasos transversales y notebooks especificos cuando la derivacion depende del dominio:
+
+- `01_schema_standardization.ipynb`
+- `02_null_corrections.ipynb`
+- `03_domain_normalization.ipynb`
+- `04_business_derivations.ipynb`
+- `05_quality_checks.ipynb`
+
+La utilidad `src/common/silver_incremental.py` centraliza auditoria, watermarks, seleccion de tablas y merges incrementales. Cada dominio escribe en `external/<ambiente>/<dominio>/silver/<anio>`.
+
+### Gold
+
+Gold crea productos analiticos listos para consumo:
+
+- `notebooks/comercial/gold/01_comercial_marts.ipynb`: ventas, ventas por producto, devoluciones y marketing mensual.
+- `notebooks/operaciones/gold/02_operaciones_marts.ipynb`: inventario y logistica mensual.
+- `notebooks/finanzas/gold/03_finanzas_objetivos.ipynb`: finanzas y objetivos mensuales.
+- `notebooks/shared/gold/04_kpis_ejecutivos.ipynb`: KPIs ejecutivos consolidados.
+- `notebooks/gobierno/gold/05_quality_checks.ipynb`: controles finales de calidad Gold.
+
+## Estructura principal
 
 ```text
 .
-|-- .github/
-|   `-- workflows/
-|       `-- databricks-cicd.yml
+|-- .github/workflows/databricks-cicd.yml
 |-- conf/
 |   |-- environments/
-|   |   |-- dev.yml
-|   |   |-- qa.yml
-|   |   `-- prod.yml
 |   `-- jobs/
-|       `-- monthly_file_refresh.yml
-|-- resources/
-|   `-- jobs/
-|       `-- monthly_file_refresh.job.yml
+|-- databricks.yml
 |-- notebooks/
 |   |-- comercial/
-|   |   |-- bronze/
-|   |   |-- silver/
-|   |   `-- gold/
 |   |-- finanzas/
-|   |   |-- bronze/
-|   |   |-- silver/
-|   |   `-- gold/
 |   |-- gobierno/
-|   |   |-- bronze/
-|   |   |-- silver/
-|   |   `-- gold/
 |   |-- operaciones/
-|   |   |-- bronze/
-|   |   |-- silver/
-|   |   `-- gold/
 |   `-- shared/
-|       |-- bronze/
-|       |-- silver/
-|       `-- gold/
+|-- resources/jobs/
+|   |-- monthly_data_mesh_refresh.job.yml
+|   |-- monthly_file_refresh.job.yml
+|   |-- monthly_gold_refresh.job.yml
+|   `-- monthly_silver_refresh.job.yml
 |-- src/
-|   `-- common/
-|       |-- config.py
-|       |-- delta_load.py
-|       |-- io.py
-|       |-- notebook_entry.py
-|       |-- notebook_runner.py
-|       |-- schema.py
-|       `-- validation.py
-|-- tests/
-|   `-- test_project_structure.py
-`-- databricks.yml
+|   |-- common/
+|   `-- utilities/
+`-- tests/
 ```
 
-## CI/CD esperado
+## Rutas de almacenamiento
 
-- Push a `develop`: valida y despliega a `dev`
-- Push a `qa`: valida y despliega a `qa`
-- Pull request hacia `main`: valida el bundle y los tests
-- Push a `main` despues de aprobar y hacer merge del PR: valida y despliega a `prod`
+Las rutas base se resuelven desde variables del bundle:
 
-En Databricks Asset Bundles, el target `dev` publica ahora en un path compartido: `/Workspace/Shared/Naturapet_DLH/dev`. Esto evita despliegues por usuario en CI/CD y asegura que el job de `develop` siempre actualice la misma copia ejecutable. Los targets `qa` y `prod` tambien usan `/Workspace/Shared/Naturapet_DLH/<target>`.
+- `external`: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<dominio>/<capa>/<anio>/<mes>`
+- `raw`: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<dominio>/<anio>/<mes>`
+- `historic`: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<dominio>/<anio>/<mes>`
 
-La aprobacion humana para produccion queda soportada por la regla del pull request y por las protecciones del environment `prod` en GitHub.
+## CI/CD
 
-## Secrets requeridos en GitHub Environments
+El workflow `.github/workflows/databricks-cicd.yml` resuelve el target a partir de la rama:
+
+- Push a `develop`: valida tests, valida bundle y despliega a `dev`.
+- Push a `qa`: valida tests, valida bundle y despliega a `qa`.
+- Pull request hacia `main`: valida tests y bundle sin desplegar.
+- Push a `main`: valida y despliega a `prod` usando el environment de GitHub correspondiente.
+
+Secrets requeridos por environment:
 
 - `DATABRICKS_HOST`
 - `DATABRICKS_CLIENT_ID`
 
 ## Comandos utiles
 
+En local, usar siempre el perfil `CREA_DEV`:
+
 ```powershell
-databricks bundle validate --target dev
-databricks bundle deploy --target dev
-databricks bundle validate --target qa
-databricks bundle deploy --target qa
-databricks bundle validate --target prod
-databricks bundle deploy --target prod
+databricks bundle validate --target dev --profile CREA_DEV
+databricks bundle summary --target dev --profile CREA_DEV
+databricks bundle plan --target dev --profile CREA_DEV
 ```
 
-## Carga bronze implementada
+Los despliegues y ejecuciones de jobs deben hacerse solo con aprobacion humana:
 
-Cada dominio tiene dos notebooks Databricks `.ipynb` en `notebooks/<dominio>/bronze/`:
-
-- `load_to_delta.ipynb`: lee archivos desde `raw/<ambiente>/<dominio>/2026`, valida columnas contra `gobierno/2026/data_dictionary.csv`, hace `merge` incremental para archivos mensuales y upsert completo para archivos ubicados directamente en `2026`.
-- `archive_to_historic.ipynb`: mueve a `historic/<dominio>/2026/...` solo los archivos con carga exitosa registrada en la auditoria bronze.
-
-La logica reutilizable vive en `src/common/`:
-
-- `config.py`: arma rutas `raw`, `external` e `historic` a partir de `abfss://democodex@demodldb.dfs.core.windows.net` y del ambiente.
-- `io.py`: descubre archivos por area, detecta el tipo de archivo y mueve archivos a `historic`.
-- `schema.py`: normaliza nombre de tabla, valida columnas y conforma tipos/campos usando `data_dictionary.csv`.
-- `delta_load.py`: crea o actualiza tablas Delta y mantiene auditoria de cargues.
-- `validation.py`: aplica validaciones tecnicas como archivo no vacio y coherencia entre `mes_carga` y el folder mensual.
-- `notebook_runner.py`: punto de entrada compartido para los notebooks `.ipynb`.
-
-### Flujo general de bronze
-
-Los notebooks de `bronze` funcionan igual en todas las areas. Lo que cambia es el dominio que procesan; la logica comun arma las rutas por ambiente, descubre archivos en `raw`, valida la estructura con `data_dictionary.csv`, hace `merge` a Delta y luego archiva los archivos exitosos.
-
-```mermaid
-flowchart LR
-    A["raw/<env>/<area>/2026"] --> B["load_to_delta.ipynb"]
-    B --> C["leer data_dictionary.csv"]
-    C --> D["validar y tipar columnas"]
-    D --> E["merge delta en external/<env>/<area>/bronze/2026/<tabla>"]
-    E --> F["auditoria bronze"]
-    F --> G["archive_to_historic.ipynb"]
-    G --> H["historic/<area>/2026/..."]
+```powershell
+databricks bundle deploy --target dev --profile CREA_DEV
+databricks bundle run monthly_data_mesh_refresh --target dev --profile CREA_DEV
 ```
-
-### Convenciones de carga
-
-- Catalogos por ambiente: `naturapet_dev`, `naturapet_qa`, `naturapet_prod`.
-- Schemas bronze por area: `comercial_bronze`, `finanzas_bronze`, `gobierno_bronze`, `operaciones_bronze`, `shared_bronze`.
-- Ruta raw por area: `abfss://democodex@demodldb.dfs.core.windows.net/raw/<ambiente>/<area>/2026/...`.
-- Ruta external por tabla Delta: `abfss://democodex@demodldb.dfs.core.windows.net/external/<ambiente>/<area>/bronze/2026/<tabla>`.
-- Ruta historic por archivo procesado: `abfss://democodex@demodldb.dfs.core.windows.net/historic/<area>/2026/...`.
-- Deteccion de formato: el flujo soporta `csv`, `json` y `parquet`; para este dataset Naturapet los archivos esperados son `csv`.
-- Las columnas de negocio se ordenan y tipan según `data_dictionary.csv`; luego se agregan columnas técnicas `_np_*`.
-- Si una tabla no tiene PK declarada en `data_dictionary.csv`, el merge usa `_np_record_hash`.
-- El job `monthly_file_refresh` esta definido para ejecutar notebooks sobre serverless jobs compute, por lo que no crea clusters dedicados en cada corrida.
-
-### Requisito de ejecucion en Databricks
-
-Estos notebooks usan Python, Spark y `dbutils`, por lo que no deben ejecutarse sobre un SQL warehouse tradicional. Si el workspace no tiene serverless jobs compute habilitado, la alternativa correcta es configurar un `existing_cluster_id` con permisos de uso para la identidad que ejecuta el job.
 
 ## Trabajo con ramas
 
-- `develop` es la rama operativa para cambios que deben desplegar a `dev`.
+- `develop` es la rama operativa para cambios que despliegan a `dev`.
 - `qa` se usa para promocionar cambios al ambiente `qa`.
 - `main` se usa para promocionar cambios al ambiente `prod`.
 
-Si quieres revisar algo manualmente antes de empujar, puedes crear una rama local temporal desde `develop`, validar el diff y luego integrar esos cambios de vuelta a `develop`. En este trabajo los cambios finales quedaron integrados y publicados directamente en `develop`.
+Para cambios de produccion, preparar primero el plan y comandos sugeridos; no desplegar a `prod` sin aprobacion explicita.

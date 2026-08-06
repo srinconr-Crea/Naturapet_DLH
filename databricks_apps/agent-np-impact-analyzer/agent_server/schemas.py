@@ -2,7 +2,7 @@
 
 from typing import Protocol
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, RootModel
 
 
 class RepositoryContext(BaseModel):
@@ -26,6 +26,24 @@ class RepositoryFile(BaseModel):
     size_bytes: int
     truncated: bool = False
     redacted: bool = False
+
+
+class SearchMatch(BaseModel):
+    relative_path: str
+    line_number: int
+    excerpt: str
+
+
+class SearchResult(BaseModel):
+    query: str
+    matches: list[SearchMatch]
+    files_scanned: int
+    limit_reached: bool = False
+    warnings: list[str] = Field(default_factory=list)
+
+
+class RepositoryTreeResult(RootModel[list[RepositoryEntry]]):
+    """JSON-array response used by the repository tree tool."""
 
 
 class RepositoryGateway(Protocol):

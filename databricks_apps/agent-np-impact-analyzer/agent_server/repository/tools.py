@@ -58,53 +58,54 @@ def search_text(
 
     normalized_query = query.casefold()
     matches: list[SearchMatch] = []
-    files_scanned = 0
+    file_entries = [
+        entry
+        for entry in repository.list_tree(relative_path)
+        if entry.object_type.upper() == "FILE"
+    ]
+    files_to_scan = file_entries[: config.max_files]
+    files_truncated = len(file_entries) > len(files_to_scan)
+    per_file_truncated = False
+    global_results_truncated = False
 
-    for entry in repository.list_tree(relative_path)[: config.max_files]:
-        if entry.object_type.upper() != "FILE":
-            continue
-        if len(matches) >= config.max_results:
-            break
-
-        files_scanned += 1
-        file_matches = 0
-
+    for entry in files_to_scan:
+        file_candidates: list[SearchMatch] = []
         if normalized_query in entry.relative_path.casefold():
-            matches.append(
+            file_candidates.append(
                 SearchMatch(
                     relative_path=entry.relative_path,
                     line_number=1,
                     excerpt=entry.relative_path[: config.max_excerpt_chars],
                 )
             )
-            file_matches += 1
-
-        if file_matches >= config.max_results_per_file or len(matches) >= config.max_results:
-            continue
 
         repository_file = repository.read_file(entry.relative_path)
         for line_number, line in enumerate(repository_file.content.splitlines(), start=1):
-            if normalized_query not in line.casefold():
-                continue
-            matches.append(
-                SearchMatch(
-                    relative_path=repository_file.relative_path,
-                    line_number=line_number,
-                    excerpt=line[: config.max_excerpt_chars],
+            if normalized_query in line.casefold():
+                file_candidates.append(
+                    SearchMatch(
+                        relative_path=repository_file.relative_path,
+                        line_number=line_number,
+                        excerpt=line[: config.max_excerpt_chars],
+                    )
                 )
-            )
-            file_matches += 1
-            if (
-                file_matches >= config.max_results_per_file
-                or len(matches) >= config.max_results
-            ):
-                break
 
-    limit_reached = len(matches) >= config.max_results
+        if len(file_candidates) > config.max_results_per_file:
+            per_file_truncated = True
+        file_candidates = file_candidates[: config.max_results_per_file]
+        remaining_results = config.max_results - len(matches)
+        if len(file_candidates) > remaining_results:
+            global_results_truncated = True
+        if remaining_results > 0:
+            matches.extend(file_candidates[:remaining_results])
+
+    limit_reached = (
+        files_truncated or per_file_truncated or global_results_truncated
+    )
     return SearchResult(
         query=query,
         matches=matches,
-        files_scanned=files_scanned,
+        files_scanned=len(files_to_scan),
         limit_reached=limit_reached,
         warnings=["SEARCH_LIMIT_REACHED"] if limit_reached else [],
     )

@@ -142,6 +142,8 @@ class EvidenceItem(ImpactAnalysisModel):
 
     @model_validator(mode="after")
     def line_range_is_ordered(self) -> "EvidenceItem":
+        if self.line_end is not None and self.line_start is None:
+            raise ValueError("line_start is required when line_end is provided")
         if (
             self.line_start is not None
             and self.line_end is not None

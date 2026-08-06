@@ -128,6 +128,17 @@ def test_evidence_rejects_line_end_before_line_start():
         )
 
 
+def test_evidence_rejects_line_end_without_line_start():
+    with pytest.raises(ValidationError, match="line_start"):
+        EvidenceItem(
+            relative_path="src/module.py",
+            line_end=8,
+            excerpt="contenido",
+            finding="Hallazgo",
+            kind=EvidenceKind.DIRECT,
+        )
+
+
 def test_finalize_analysis_adds_verified_context_and_markdown(sample_draft, repository_context):
     result = finalize_analysis(sample_draft, repository_context)
 

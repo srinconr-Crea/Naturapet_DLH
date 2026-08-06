@@ -48,13 +48,12 @@ def test_repository_modules_expose_no_mutating_sdk_calls():
     assert forbidden_calls == []
 
 
-def test_production_modules_do_not_import_or_call_user_authorization_helpers():
-    """The App agent cannot reach the legacy OBO helper retained in utils.py."""
-    agent_server_dir = Path(__file__).parents[1] / "agent_server"
+def _find_obo_violations(agent_server_dir: Path) -> list[str]:
     violations: list[str] = []
+    legacy_utils = agent_server_dir / "utils.py"
 
     for source_path in agent_server_dir.rglob("*.py"):
-        if source_path.name == "utils.py":
+        if source_path == legacy_utils:
             continue
         tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
         for node in ast.walk(tree):
@@ -77,4 +76,25 @@ def test_production_modules_do_not_import_or_call_user_authorization_helpers():
                 if called_name in FORBIDDEN_OBO_NAMES:
                     violations.append(f"{source_path.name}:{node.lineno}:{called_name}")
 
-    assert violations == []
+    return violations
+
+
+def test_production_modules_do_not_import_or_call_user_authorization_helpers():
+    """The App agent cannot reach the legacy OBO helper retained in utils.py."""
+    agent_server_dir = Path(__file__).parents[1] / "agent_server"
+
+    assert _find_obo_violations(agent_server_dir) == []
+
+
+def test_obo_guard_scans_nested_utils_modules_but_exempts_legacy_utils(tmp_path):
+    """Only agent_server/utils.py is legacy; a nested utils.py remains production code."""
+    (tmp_path / "utils.py").write_text(
+        "from mlflow.genai.agent_server import get_request_headers\n", encoding="utf-8"
+    )
+    nested_utils = tmp_path / "subdir" / "utils.py"
+    nested_utils.parent.mkdir()
+    nested_utils.write_text(
+        "from mlflow.genai.agent_server import get_request_headers\n", encoding="utf-8"
+    )
+
+    assert _find_obo_violations(tmp_path) == ["utils.py:1:get_request_headers"]

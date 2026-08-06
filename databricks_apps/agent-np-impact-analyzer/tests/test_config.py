@@ -1,3 +1,7 @@
+from pathlib import Path
+
+from ruamel.yaml import YAML
+
 from agent_server.config import RepositoryConfig
 
 
@@ -10,3 +14,12 @@ def test_repository_config_has_fixed_limits():
     assert config.max_files == 200
     assert config.max_file_bytes == 1_048_576
     assert config.max_results == 30
+
+
+def test_bundle_explicitly_disables_user_api_scopes():
+    bundle_path = Path(__file__).parents[1] / "databricks.yml"
+    bundle = YAML(typ="safe").load(bundle_path)
+
+    app = bundle["resources"]["apps"]["np_impact_analyzer"]
+
+    assert app["user_api_scopes"] == []

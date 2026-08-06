@@ -29,6 +29,7 @@ class FakeRepositoryGateway:
         self,
         entries: list[RepositoryEntry] | None = None,
         contents: dict[str, str] | None = None,
+        tree_limit_reached: bool = False,
     ):
         self.entries = entries or [
             RepositoryEntry(
@@ -43,6 +44,7 @@ class FakeRepositoryGateway:
             )
         }
         self.read_paths: list[str] = []
+        self.tree_limit_reached = tree_limit_reached
 
     def get_context(self) -> RepositoryContext:
         return RepositoryContext(
@@ -56,8 +58,10 @@ class FakeRepositoryGateway:
 
     def list_tree(
         self, relative_path: str = "", max_depth: int | None = None
-    ) -> list[RepositoryEntry]:
-        return self.entries
+    ) -> RepositoryTreeResult:
+        return RepositoryTreeResult(
+            entries=self.entries, limit_reached=self.tree_limit_reached
+        )
 
     def read_file(self, relative_path: str) -> RepositoryFile:
         self.read_paths.append(relative_path)
@@ -113,11 +117,9 @@ def test_search_does_not_report_global_limit_when_result_count_is_exact(
 
 def test_search_reports_file_scan_limit_only_when_extra_files_exist(config):
     gateway = FakeRepositoryGateway(
-        entries=[
-            RepositoryEntry(relative_path="first.py", object_type="FILE"),
-            RepositoryEntry(relative_path="second.py", object_type="FILE"),
-        ],
+        entries=[RepositoryEntry(relative_path="first.py", object_type="FILE")],
         contents={"first.py": "needle\n", "second.py": "needle\n"},
+        tree_limit_reached=True,
     )
 
     result = search_text(
@@ -129,6 +131,29 @@ def test_search_reports_file_scan_limit_only_when_extra_files_exist(config):
     assert gateway.read_paths == ["first.py"]
     assert result.limit_reached is True
     assert "SEARCH_LIMIT_REACHED" in result.warnings
+
+
+def test_search_stops_reading_after_reaching_global_limit(config):
+    gateway = FakeRepositoryGateway(
+        entries=[
+            RepositoryEntry(relative_path="first.py", object_type="FILE"),
+            RepositoryEntry(relative_path="second.py", object_type="FILE"),
+        ],
+        contents={
+            "first.py": "needle one\nneedle two\n",
+            "second.py": "needle three\n",
+        },
+    )
+
+    result = search_text(
+        gateway,
+        config.model_copy(update={"max_results": 1, "max_results_per_file": 1}),
+        "needle",
+    )
+
+    assert len(result.matches) == 1
+    assert gateway.read_paths == ["first.py"]
+    assert result.limit_reached is True
 
 
 def test_search_does_not_report_file_scan_limit_without_extra_files(config):
@@ -158,6 +183,21 @@ def test_search_reports_per_file_limit_only_when_additional_matches_exist(config
     assert len(result.matches) == 2
     assert result.limit_reached is True
     assert "SEARCH_LIMIT_REACHED" in result.warnings
+    assert len(result.matches) <= 2
+
+
+def test_search_never_creates_more_than_the_per_file_limit(config):
+    gateway = FakeRepositoryGateway(
+        entries=[RepositoryEntry(relative_path="needle.py", object_type="FILE")],
+        contents={"needle.py": "needle in content\n"},
+    )
+
+    result = search_text(
+        gateway, config.model_copy(update={"max_results_per_file": 0}), "needle"
+    )
+
+    assert result.matches == []
+    assert result.limit_reached is True
 
 
 def test_search_does_not_report_per_file_limit_when_matches_are_exact(config):
@@ -220,7 +260,8 @@ def test_tool_wrappers_use_the_run_context_and_return_json(fake_gateway, config)
     search = json.loads(search_repository_text.__wrapped__(wrapper, "margen_pct"))
 
     assert context["repo_id"] == config.repo_id
-    assert tree[0]["relative_path"].endswith("04_business_derivations.ipynb")
+    assert tree["entries"][0]["relative_path"].endswith("04_business_derivations.ipynb")
+    assert tree["limit_reached"] is False
     assert repository_file["content"].startswith("venta_neta")
     assert search["matches"][0]["line_number"] == 2
 
@@ -228,7 +269,7 @@ def test_tool_wrappers_use_the_run_context_and_return_json(fake_gateway, config)
 def test_tool_result_schemas_and_safe_errors_are_sdk_serializable(
     fake_gateway, config
 ):
-    tree = RepositoryTreeResult(fake_gateway.list_tree()).model_dump_json()
+    tree = fake_gateway.list_tree().model_dump_json()
     search = SearchResult.model_validate(
         {
             "query": "margen_pct",
@@ -253,7 +294,7 @@ def test_tool_result_schemas_and_safe_errors_are_sdk_serializable(
     )
     generic = safe_tool_error(wrapper, RuntimeError("token=do-not-expose"))
 
-    assert json.loads(tree)[0]["object_type"] == "FILE"
+    assert json.loads(tree)["entries"][0]["object_type"] == "FILE"
     assert json.loads(search)["query"] == "margen_pct"
     assert json.loads(guarded) == {
         "error": {"code": "PATH_NOT_ALLOWED", "message": "safe path error"}

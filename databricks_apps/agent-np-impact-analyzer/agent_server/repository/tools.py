@@ -9,7 +9,6 @@ from agent_server.config import RepositoryConfig
 from agent_server.repository.errors import RepositoryAccessError
 from agent_server.schemas import (
     RepositoryContext,
-    RepositoryEntry,
     RepositoryFile,
     RepositoryGateway,
     RepositoryTreeResult,
@@ -58,46 +57,60 @@ def search_text(
 
     normalized_query = query.casefold()
     matches: list[SearchMatch] = []
+    tree = repository.list_tree(relative_path)
     file_entries = [
         entry
-        for entry in repository.list_tree(relative_path)
+        for entry in tree.entries
         if entry.object_type.upper() == "FILE"
     ]
-    files_to_scan = file_entries[: config.max_files]
-    files_truncated = len(file_entries) > len(files_to_scan)
+    files_truncated = tree.limit_reached
     per_file_truncated = False
     global_results_truncated = False
+    files_scanned = 0
 
-    for entry in files_to_scan:
-        file_candidates: list[SearchMatch] = []
+    for entry in file_entries:
+        if len(matches) >= config.max_results:
+            break
+
+        file_matches = 0
+        reached_global_limit = False
         if normalized_query in entry.relative_path.casefold():
-            file_candidates.append(
-                SearchMatch(
-                    relative_path=entry.relative_path,
-                    line_number=1,
-                    excerpt=entry.relative_path[: config.max_excerpt_chars],
-                )
-            )
-
-        repository_file = repository.read_file(entry.relative_path)
-        for line_number, line in enumerate(repository_file.content.splitlines(), start=1):
-            if normalized_query in line.casefold():
-                file_candidates.append(
+            if file_matches >= config.max_results_per_file:
+                per_file_truncated = True
+            else:
+                matches.append(
                     SearchMatch(
-                        relative_path=repository_file.relative_path,
-                        line_number=line_number,
-                        excerpt=line[: config.max_excerpt_chars],
+                        relative_path=entry.relative_path,
+                        line_number=1,
+                        excerpt=entry.relative_path[: config.max_excerpt_chars],
                     )
                 )
+                file_matches += 1
+                reached_global_limit = len(matches) >= config.max_results
 
-        if len(file_candidates) > config.max_results_per_file:
-            per_file_truncated = True
-        file_candidates = file_candidates[: config.max_results_per_file]
-        remaining_results = config.max_results - len(matches)
-        if len(file_candidates) > remaining_results:
-            global_results_truncated = True
-        if remaining_results > 0:
-            matches.extend(file_candidates[:remaining_results])
+        repository_file = repository.read_file(entry.relative_path)
+        files_scanned += 1
+        for line_number, line in enumerate(repository_file.content.splitlines(), start=1):
+            if normalized_query not in line.casefold():
+                continue
+            if reached_global_limit:
+                global_results_truncated = True
+                break
+            if file_matches >= config.max_results_per_file:
+                per_file_truncated = True
+                break
+            matches.append(
+                SearchMatch(
+                    relative_path=repository_file.relative_path,
+                    line_number=line_number,
+                    excerpt=line[: config.max_excerpt_chars],
+                )
+            )
+            file_matches += 1
+            reached_global_limit = len(matches) >= config.max_results
+
+        if global_results_truncated or reached_global_limit:
+            break
 
     limit_reached = (
         files_truncated or per_file_truncated or global_results_truncated
@@ -105,7 +118,7 @@ def search_text(
     return SearchResult(
         query=query,
         matches=matches,
-        files_scanned=len(files_to_scan),
+        files_scanned=files_scanned,
         limit_reached=limit_reached,
         warnings=["SEARCH_LIMIT_REACHED"] if limit_reached else [],
     )
@@ -126,10 +139,10 @@ def list_repository_tree(
     max_depth: int | None = None,
 ) -> str:
     """List allowed repository file metadata inside a bounded relative path."""
-    entries: list[RepositoryEntry] = wrapper.context.repository.list_tree(
+    tree: RepositoryTreeResult = wrapper.context.repository.list_tree(
         relative_path, max_depth
     )
-    return RepositoryTreeResult(entries).model_dump_json()
+    return tree.model_dump_json()
 
 
 @function_tool(failure_error_function=safe_tool_error)

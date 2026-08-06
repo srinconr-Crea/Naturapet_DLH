@@ -59,12 +59,13 @@ def test_list_tree_recurses_within_bounds_and_excludes_disallowed_files(
     ]
     client = DatabricksRepositoryClient(fake_workspace_client, config)
 
-    entries = client.list_tree()
+    tree = client.list_tree()
 
-    assert [(entry.relative_path, entry.object_type) for entry in entries] == [
+    assert [(entry.relative_path, entry.object_type) for entry in tree.entries] == [
         ("README.md", "FILE"),
         ("notebooks/silver.py", "FILE"),
     ]
+    assert tree.limit_reached is False
     assert fake_workspace_client.workspace.list.call_count == 2
 
 
@@ -81,9 +82,10 @@ def test_list_tree_skips_an_out_of_root_returned_directory(fake_workspace_client
         [SimpleNamespace(path="/Workspace/Users/other", object_type="DIRECTORY", size=None)]
     )
 
-    entries = DatabricksRepositoryClient(fake_workspace_client, config).list_tree()
+    tree = DatabricksRepositoryClient(fake_workspace_client, config).list_tree()
 
-    assert entries == []
+    assert tree.entries == []
+    assert tree.limit_reached is False
     fake_workspace_client.workspace.list.assert_called_once_with(config.root)
 
 
@@ -105,10 +107,28 @@ def test_list_tree_bounds_directory_only_and_rejected_candidates(
         ),
     ]
 
-    entries = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
+    tree = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
 
-    assert entries == []
+    assert tree.entries == []
     assert fake_workspace_client.workspace.list.call_count <= bounded_config.max_files
+
+
+def test_list_tree_reports_when_candidate_bound_omits_a_known_child(
+    fake_workspace_client, config
+):
+    bounded_config = config.model_copy(update={"max_files": 1})
+    root = bounded_config.root
+    fake_workspace_client.workspace.list.return_value = iter(
+        [
+            SimpleNamespace(path=f"{root}/first.py", object_type="FILE", size=1),
+            SimpleNamespace(path=f"{root}/second.py", object_type="FILE", size=1),
+        ]
+    )
+
+    tree = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
+
+    assert [entry.relative_path for entry in tree.entries] == ["first.py"]
+    assert tree.limit_reached is True
 
 
 def test_read_file_uses_only_workspace_download(fake_workspace_client, config):

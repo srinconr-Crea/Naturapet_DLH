@@ -2,7 +2,7 @@
 
 from typing import Protocol
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, Field
 
 
 class RepositoryContext(BaseModel):
@@ -42,8 +42,11 @@ class SearchResult(BaseModel):
     warnings: list[str] = Field(default_factory=list)
 
 
-class RepositoryTreeResult(RootModel[list[RepositoryEntry]]):
-    """JSON-array response used by the repository tree tool."""
+class RepositoryTreeResult(BaseModel):
+    """Bounded repository tree and whether traversal omitted known work."""
+
+    entries: list[RepositoryEntry]
+    limit_reached: bool = False
 
 
 class RepositoryGateway(Protocol):
@@ -52,7 +55,7 @@ class RepositoryGateway(Protocol):
 
     def list_tree(
         self, relative_path: str = "", max_depth: int | None = None
-    ) -> list[RepositoryEntry]:
+    ) -> RepositoryTreeResult:
         raise NotImplementedError
 
     def read_file(self, relative_path: str) -> RepositoryFile:

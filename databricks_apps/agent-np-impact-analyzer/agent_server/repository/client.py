@@ -17,6 +17,7 @@ from agent_server.schemas import (
     RepositoryContext,
     RepositoryEntry,
     RepositoryFile,
+    RepositoryTreeResult,
 )
 
 
@@ -67,7 +68,7 @@ class DatabricksRepositoryClient:
 
     def list_tree(
         self, relative_path: str = "", max_depth: int | None = None
-    ) -> list[RepositoryEntry]:
+    ) -> RepositoryTreeResult:
         """List allowed files under a bounded subtree of the configured root."""
         normalized_start = self._validate_directory_path(relative_path)
         depth_limit = self.config.max_depth if max_depth is None else min(
@@ -84,14 +85,19 @@ class DatabricksRepositoryClient:
         entries: list[RepositoryEntry] = []
         visited_directories = 0
         visited_candidates = 0
+        limit_reached = False
 
-        while pending and visited_directories < self.config.max_files:
+        while pending:
+            if visited_directories >= self.config.max_files:
+                limit_reached = True
+                break
             current_path, depth = pending.popleft()
             visited_directories += 1
             try:
                 children = self.workspace_client.workspace.list(current_path)
                 for child in children:
                     if visited_candidates >= self.config.max_files:
+                        limit_reached = True
                         break
                     visited_candidates += 1
                     child_path = str(getattr(child, "path", ""))
@@ -105,8 +111,6 @@ class DatabricksRepositoryClient:
                                 continue
                             pending.append((self._absolute_path(child_relative), depth + 1))
                         continue
-                    if len(entries) >= self.config.max_files:
-                        break
                     if object_type != "FILE":
                         continue
                     relative = self._relative_path(child_path)
@@ -128,7 +132,7 @@ class DatabricksRepositoryClient:
             except Exception as error:
                 raise self._read_error() from error
 
-        return entries
+        return RepositoryTreeResult(entries=entries, limit_reached=limit_reached)
 
     def read_file(self, relative_path: str) -> RepositoryFile:
         """Read one allowed UTF-8 file, bounded by policy and redacted in memory."""

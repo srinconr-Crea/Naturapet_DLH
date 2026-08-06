@@ -18,7 +18,9 @@
 - Authorized Git URL: `https://github.com/srinconr-Crea/Naturapet_DLH.git`.
 - Authorized provider: `gitHub`.
 - Authorized branch: `practica-margen-silver`.
-- Preserve model `databricks-gpt-5-2` and MLflow experiment `195642121347837`.
+- Use the live READY endpoint `databricks-claude-sonnet-4-6` and preserve MLflow
+  experiment `195642121347837`. This replaces `databricks-gpt-5-2`, which returned
+  `ENDPOINT_NOT_FOUND` during live validation; the user approved the replacement.
 - Maximum 200 searched files, 1,048,576 bytes per file, 30 search matches, 5 matches per file, depth 12, and 500 characters per evidence excerpt.
 - Allowed extensions: `.py`, `.ipynb`, `.sql`, `.yml`, `.yaml`, `.json`, `.toml`, `.md`, `.txt`.
 - Do not expose tools for import, upload, update, delete, execute, run, Git mutation, Jobs, SQL, Genie, Unity Catalog, secrets, or storage.
@@ -812,7 +814,7 @@ Mock `Runner.run` and the repository gateway. Assert:
 def test_create_agent_is_np_impact_analyzer():
     agent = create_agent()
     assert agent.name == "Naturapet Impact Analyzer"
-    assert agent.model == "databricks-gpt-5-2"
+    assert agent.model == "databricks-claude-sonnet-4-6"
     assert agent.output_type is ImpactAnalysisDraft
     assert {tool.name for tool in agent.tools} == EXPECTED_TOOL_NAMES
 
@@ -843,7 +845,7 @@ def create_agent() -> Agent[AnalysisRunContext]:
     return Agent[AnalysisRunContext](
         name="Naturapet Impact Analyzer",
         instructions=IMPACT_ANALYZER_INSTRUCTIONS,
-        model="databricks-gpt-5-2",
+        model="databricks-claude-sonnet-4-6",
         tools=REPOSITORY_TOOLS,
         output_type=ImpactAnalysisDraft,
     )

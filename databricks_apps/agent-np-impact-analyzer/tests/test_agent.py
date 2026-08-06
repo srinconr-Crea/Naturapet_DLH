@@ -61,7 +61,7 @@ def test_create_agent_is_np_impact_analyzer():
     agent = create_agent()
 
     assert agent.name == "Naturapet Impact Analyzer"
-    assert agent.model == "databricks-gpt-5-2"
+    assert agent.model == "databricks-claude-sonnet-4-6"
     assert agent.output_type is ImpactAnalysisDraft
     assert {tool.name for tool in agent.tools} == EXPECTED_TOOL_NAMES
 

@@ -55,7 +55,7 @@ def create_agent() -> Agent[AnalysisRunContext]:
     return Agent[AnalysisRunContext](
         name="Naturapet Impact Analyzer",
         instructions=IMPACT_ANALYZER_INSTRUCTIONS,
-        model="databricks-gpt-5-2",
+        model="databricks-claude-sonnet-4-6",
         tools=REPOSITORY_TOOLS,
         output_type=ImpactAnalysisDraft,
     )

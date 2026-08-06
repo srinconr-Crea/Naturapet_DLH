@@ -44,6 +44,10 @@ resources:
           experiment:
             experiment_id: "195642121347837"
             permission: CAN_EDIT
+        - name: llm
+          serving_endpoint:
+            name: databricks-claude-sonnet-4-6
+            permission: CAN_QUERY
 
 targets:
   dev:

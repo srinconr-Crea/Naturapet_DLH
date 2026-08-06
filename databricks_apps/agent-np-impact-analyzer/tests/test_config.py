@@ -23,3 +23,19 @@ def test_bundle_omits_user_api_scopes_for_app_only_non_obo_identity():
     app = bundle["resources"]["apps"]["np_impact_analyzer"]
 
     assert "user_api_scopes" not in app
+
+
+def test_bundle_grants_app_query_access_to_the_live_llm_endpoint():
+    bundle_path = Path(__file__).parents[1] / "databricks.yml"
+    bundle = YAML(typ="safe").load(bundle_path)
+    resources = bundle["resources"]["apps"]["np_impact_analyzer"]["resources"]
+
+    llm_resource = next(resource for resource in resources if resource["name"] == "llm")
+
+    assert llm_resource == {
+        "name": "llm",
+        "serving_endpoint": {
+            "name": "databricks-claude-sonnet-4-6",
+            "permission": "CAN_QUERY",
+        },
+    }

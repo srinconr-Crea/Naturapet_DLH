@@ -29,6 +29,14 @@ and expose no import, upload, update, delete, deployment, execution, job, or
 Git-mutation operation. The deployed App uses its own service-principal
 identity; it does not use on-behalf-of-user authorization.
 
+## Runtime model
+
+The App uses the live, READY serving endpoint `databricks-claude-sonnet-4-6`.
+The bundle declares it as the `llm` resource with `CAN_QUERY` permission for
+the App identity. This replaces the unavailable `databricks-gpt-5-2` endpoint,
+which returned `ENDPOINT_NOT_FOUND` during live validation; the replacement was
+chosen with user approval. The agent does not set `temperature` or `top_p`.
+
 ## Response contract
 
 The canonical JSON is returned in `custom_outputs.analysis` and validates as

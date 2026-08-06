@@ -9,9 +9,10 @@ from agent_server.config import RepositoryConfig
 from agent_server.repository.errors import RepositoryAccessError
 from agent_server.schemas import (
     RepositoryContext,
+    RepositoryEntriesResult,
     RepositoryFile,
     RepositoryGateway,
-    RepositoryTreeResult,
+    RepositorySearchGateway,
     SearchMatch,
     SearchResult,
 )
@@ -44,7 +45,7 @@ def safe_tool_error(
 
 
 def search_text(
-    repository: RepositoryGateway,
+    repository: RepositorySearchGateway,
     config: RepositoryConfig,
     query: str,
     relative_path: str = "",
@@ -57,7 +58,7 @@ def search_text(
 
     normalized_query = query.casefold()
     matches: list[SearchMatch] = []
-    tree = repository.list_tree(relative_path)
+    tree = repository.list_tree_result(relative_path)
     file_entries = [
         entry
         for entry in tree.entries
@@ -68,7 +69,7 @@ def search_text(
     global_results_truncated = False
     files_scanned = 0
 
-    for entry in file_entries:
+    for entry_index, entry in enumerate(file_entries):
         if len(matches) >= config.max_results:
             break
 
@@ -87,6 +88,10 @@ def search_text(
                 )
                 file_matches += 1
                 reached_global_limit = len(matches) >= config.max_results
+
+        if reached_global_limit and entry_index < len(file_entries) - 1:
+            global_results_truncated = True
+            break
 
         repository_file = repository.read_file(entry.relative_path)
         files_scanned += 1
@@ -139,10 +144,10 @@ def list_repository_tree(
     max_depth: int | None = None,
 ) -> str:
     """List allowed repository file metadata inside a bounded relative path."""
-    tree: RepositoryTreeResult = wrapper.context.repository.list_tree(
+    entries = wrapper.context.repository.list_tree(
         relative_path, max_depth
     )
-    return tree.model_dump_json()
+    return RepositoryEntriesResult(entries).model_dump_json()
 
 
 @function_tool(failure_error_function=safe_tool_error)

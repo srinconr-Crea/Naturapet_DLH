@@ -68,8 +68,14 @@ class DatabricksRepositoryClient:
 
     def list_tree(
         self, relative_path: str = "", max_depth: int | None = None
+    ) -> list[RepositoryEntry]:
+        """List allowed files while preserving the public repository gateway contract."""
+        return self.list_tree_result(relative_path, max_depth).entries
+
+    def list_tree_result(
+        self, relative_path: str = "", max_depth: int | None = None
     ) -> RepositoryTreeResult:
-        """List allowed files under a bounded subtree of the configured root."""
+        """List allowed files and report whether bounded traversal omitted work."""
         normalized_start = self._validate_directory_path(relative_path)
         depth_limit = self.config.max_depth if max_depth is None else min(
             max_depth, self.config.max_depth

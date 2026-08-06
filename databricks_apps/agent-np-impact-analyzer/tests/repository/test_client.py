@@ -59,13 +59,13 @@ def test_list_tree_recurses_within_bounds_and_excludes_disallowed_files(
     ]
     client = DatabricksRepositoryClient(fake_workspace_client, config)
 
-    tree = client.list_tree()
+    entries = client.list_tree()
 
-    assert [(entry.relative_path, entry.object_type) for entry in tree.entries] == [
+    assert isinstance(entries, list)
+    assert [(entry.relative_path, entry.object_type) for entry in entries] == [
         ("README.md", "FILE"),
         ("notebooks/silver.py", "FILE"),
     ]
-    assert tree.limit_reached is False
     assert fake_workspace_client.workspace.list.call_count == 2
 
 
@@ -82,10 +82,9 @@ def test_list_tree_skips_an_out_of_root_returned_directory(fake_workspace_client
         [SimpleNamespace(path="/Workspace/Users/other", object_type="DIRECTORY", size=None)]
     )
 
-    tree = DatabricksRepositoryClient(fake_workspace_client, config).list_tree()
+    entries = DatabricksRepositoryClient(fake_workspace_client, config).list_tree()
 
-    assert tree.entries == []
-    assert tree.limit_reached is False
+    assert entries == []
     fake_workspace_client.workspace.list.assert_called_once_with(config.root)
 
 
@@ -107,9 +106,9 @@ def test_list_tree_bounds_directory_only_and_rejected_candidates(
         ),
     ]
 
-    tree = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
+    entries = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
 
-    assert tree.entries == []
+    assert entries == []
     assert fake_workspace_client.workspace.list.call_count <= bounded_config.max_files
 
 
@@ -125,7 +124,9 @@ def test_list_tree_reports_when_candidate_bound_omits_a_known_child(
         ]
     )
 
-    tree = DatabricksRepositoryClient(fake_workspace_client, bounded_config).list_tree()
+    tree = DatabricksRepositoryClient(
+        fake_workspace_client, bounded_config
+    ).list_tree_result()
 
     assert [entry.relative_path for entry in tree.entries] == ["first.py"]
     assert tree.limit_reached is True

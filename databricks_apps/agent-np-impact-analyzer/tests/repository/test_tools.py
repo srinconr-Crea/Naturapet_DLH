@@ -17,6 +17,7 @@ from agent_server.repository.tools import (
 )
 from agent_server.schemas import (
     RepositoryContext,
+    RepositoryEntriesResult,
     RepositoryEntry,
     RepositoryFile,
     RepositoryTreeResult,
@@ -57,6 +58,11 @@ class FakeRepositoryGateway:
         )
 
     def list_tree(
+        self, relative_path: str = "", max_depth: int | None = None
+    ) -> list[RepositoryEntry]:
+        return self.entries
+
+    def list_tree_result(
         self, relative_path: str = "", max_depth: int | None = None
     ) -> RepositoryTreeResult:
         return RepositoryTreeResult(
@@ -154,6 +160,24 @@ def test_search_stops_reading_after_reaching_global_limit(config):
     assert len(result.matches) == 1
     assert gateway.read_paths == ["first.py"]
     assert result.limit_reached is True
+
+
+def test_search_reports_global_limit_for_path_matches_with_known_entries(config):
+    gateway = FakeRepositoryGateway(
+        entries=[
+            RepositoryEntry(relative_path="needle-one.py", object_type="FILE"),
+            RepositoryEntry(relative_path="needle-two.py", object_type="FILE"),
+        ],
+        contents={"needle-one.py": "", "needle-two.py": ""},
+    )
+
+    result = search_text(
+        gateway, config.model_copy(update={"max_results": 1}), "needle"
+    )
+
+    assert len(result.matches) == 1
+    assert result.limit_reached is True
+    assert "needle-two.py" not in gateway.read_paths
 
 
 def test_search_does_not_report_file_scan_limit_without_extra_files(config):
@@ -260,8 +284,7 @@ def test_tool_wrappers_use_the_run_context_and_return_json(fake_gateway, config)
     search = json.loads(search_repository_text.__wrapped__(wrapper, "margen_pct"))
 
     assert context["repo_id"] == config.repo_id
-    assert tree["entries"][0]["relative_path"].endswith("04_business_derivations.ipynb")
-    assert tree["limit_reached"] is False
+    assert tree[0]["relative_path"].endswith("04_business_derivations.ipynb")
     assert repository_file["content"].startswith("venta_neta")
     assert search["matches"][0]["line_number"] == 2
 
@@ -269,7 +292,7 @@ def test_tool_wrappers_use_the_run_context_and_return_json(fake_gateway, config)
 def test_tool_result_schemas_and_safe_errors_are_sdk_serializable(
     fake_gateway, config
 ):
-    tree = fake_gateway.list_tree().model_dump_json()
+    tree = RepositoryEntriesResult(fake_gateway.list_tree()).model_dump_json()
     search = SearchResult.model_validate(
         {
             "query": "margen_pct",
@@ -294,7 +317,7 @@ def test_tool_result_schemas_and_safe_errors_are_sdk_serializable(
     )
     generic = safe_tool_error(wrapper, RuntimeError("token=do-not-expose"))
 
-    assert json.loads(tree)["entries"][0]["object_type"] == "FILE"
+    assert json.loads(tree)[0]["object_type"] == "FILE"
     assert json.loads(search)["query"] == "margen_pct"
     assert json.loads(guarded) == {
         "error": {"code": "PATH_NOT_ALLOWED", "message": "safe path error"}

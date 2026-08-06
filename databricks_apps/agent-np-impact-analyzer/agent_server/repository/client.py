@@ -53,20 +53,23 @@ class DatabricksRepositoryClient:
                 "The configured repository branch is not allowed.",
             )
 
-        return RepositoryContext(
-            repo_id=repository.id,
-            path=path,
-            url=repository.url,
-            provider=repository.provider,
-            branch=repository.branch,
-            head_commit_id=repository.head_commit_id,
-        )
+        try:
+            return RepositoryContext(
+                repo_id=repository.id,
+                path=path,
+                url=repository.url,
+                provider=repository.provider,
+                branch=repository.branch,
+                head_commit_id=repository.head_commit_id,
+            )
+        except Exception as error:
+            raise self._read_error() from error
 
     def list_tree(
         self, relative_path: str = "", max_depth: int | None = None
     ) -> list[RepositoryEntry]:
         """List allowed files under a bounded subtree of the configured root."""
-        normalized_start = "" if not relative_path else normalize_relative_path(relative_path)
+        normalized_start = self._validate_directory_path(relative_path)
         depth_limit = self.config.max_depth if max_depth is None else min(
             max_depth, self.config.max_depth
         )
@@ -79,17 +82,28 @@ class DatabricksRepositoryClient:
         start_path = self._absolute_path(normalized_start)
         pending = deque([(start_path, 0)])
         entries: list[RepositoryEntry] = []
+        visited_directories = 0
+        visited_candidates = 0
 
-        while pending and len(entries) < self.config.max_files:
+        while pending and visited_directories < self.config.max_files:
             current_path, depth = pending.popleft()
+            visited_directories += 1
             try:
                 children = self.workspace_client.workspace.list(current_path)
                 for child in children:
+                    if visited_candidates >= self.config.max_files:
+                        break
+                    visited_candidates += 1
                     child_path = str(getattr(child, "path", ""))
                     object_type = self._object_type(child)
                     if object_type == "DIRECTORY":
                         if depth < depth_limit:
-                            pending.append((child_path, depth + 1))
+                            try:
+                                child_relative = self._relative_path(child_path)
+                                child_relative = self._validate_directory_path(child_relative)
+                            except RepositoryAccessError:
+                                continue
+                            pending.append((self._absolute_path(child_relative), depth + 1))
                         continue
                     if len(entries) >= self.config.max_files:
                         break
@@ -124,6 +138,11 @@ class DatabricksRepositoryClient:
             status = self.workspace_client.workspace.get_status(absolute_path)
             reported_size = getattr(status, "size", None)
             normalized = validate_file_policy(normalized, reported_size, self.config)
+            if self._object_type(status) != "FILE":
+                raise RepositoryAccessError(
+                    RepositoryErrorCode.FILE_TYPE_NOT_ALLOWED,
+                    "The requested file type is not allowed.",
+                )
             with self.workspace_client.workspace.download(
                 absolute_path, format=ExportFormat.AUTO
             ) as stream:
@@ -171,6 +190,17 @@ class DatabricksRepositoryClient:
                 RepositoryErrorCode.PATH_NOT_ALLOWED,
                 "The requested repository path is not allowed.",
             ) from error
+
+    def _validate_directory_path(self, relative_path: str) -> str:
+        if not relative_path:
+            return ""
+        normalized = normalize_relative_path(relative_path)
+        if ".git" in {part.lower() for part in PurePosixPath(normalized).parts}:
+            raise RepositoryAccessError(
+                RepositoryErrorCode.FILE_TYPE_NOT_ALLOWED,
+                "The requested file type is not allowed.",
+            )
+        return normalized
 
     def _object_type(self, entry: Any) -> str:
         value = getattr(entry, "object_type", "")

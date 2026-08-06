@@ -1,58 +1,73 @@
-# Task 8: pre-deploy scope alignment
+# Task 8: provider-compatible App scope configuration
 
 ## Cause probable
 
-The existing App retained the default user API scopes
-`iam.access-control:read` and `iam.current-user:read`, even though this agent
-runs under its App service-principal identity and its production modules do
-not use on-behalf-of-user authorization.
+The deployment provider cannot reconcile an explicitly empty App
+`user_api_scopes` list. The authorized deployment failed because the planned
+value was `[]` while the provider read back `null`:
+
+```text
+.user_api_scopes was [] but now null
+```
+
+This is a provider consistency issue, not an indication that the App needs
+user authorization or that its service-principal identity changed.
 
 ## Evidence found
 
-- Live evidence supplied for the pre-deploy review: `databricks apps get
-  agent-np-impact-analyzer --profile CREA_DEV` reported
-  `effective_user_api_scopes: [iam.access-control:read, iam.current-user:read]`.
-- `README.md` states that the deployed App uses its own service-principal
-  identity and does not use OBO.
-- `tests/test_read_only_surface.py` rejects OBO authorization helpers from
-  production modules.
-- The local bundle schema supports
-  `resources.apps.<key>.user_api_scopes`.
+- Databricks documentation confirms that, when no user API scopes are
+  selected, Apps receive the default scopes `iam.access-control:read` and
+  `iam.current-user:read`.
+- Those defaults are IAM metadata reads only; they do not grant data or
+  compute access.
+- The live App retains those default effective scopes.
+- `README.md` documents that the deployed App uses its own service-principal
+  identity, without on-behalf-of-user authorization.
+- `tests/test_read_only_surface.py` continues to reject OBO helpers from all
+  production modules (apart from the quarantined legacy helper itself).
 
-## Local change
+## Workaround applied
 
-`databricks.yml` now declares `user_api_scopes: []` under
-`resources.apps.np_impact_analyzer`. This is the only deployment-resource
-change; the app name, resources, ACLs, source path, and identity are
-unchanged. `tests/test_config.py` now asserts the empty list so a future
-configuration edit cannot silently restore user API scopes.
+`resources.apps.np_impact_analyzer.user_api_scopes` is deliberately absent
+from `databricks.yml`. Omitting the unsupported empty-list declaration avoids
+the provider's `[]` versus `null` inconsistency while preserving Databricks'
+safe default IAM scopes.
+
+`tests/test_config.py` now asserts that the field is absent. The existing
+production OBO guard remains in place, so the bundle configuration and code
+continue to express the same App-only, non-OBO boundary.
+
+## TDD evidence
+
+1. **RED** — after changing the test to require omission, the focused test
+   failed against the previous `user_api_scopes: []` declaration with:
+   `AssertionError: assert 'user_api_scopes' not in ...`.
+2. **GREEN** — after removing only that declaration, the focused no-cache
+   command `uv run pytest tests/test_config.py -p no:cacheprovider` passed:
+   `2 passed`.
 
 ## Verification
 
 | Check | Result |
 | --- | --- |
-| Focused no-cache test: `uv run pytest tests/test_config.py -p no:cacheprovider` | Passed: 2 tests |
-| Full no-cache test: `uv run pytest -p no:cacheprovider` | 103 passed; 1 environment error. Pytest could not access its `tmp_path` directory because of local Windows filesystem permissions. The error is unrelated to this change. |
-| `databricks bundle validate --target dev --profile CREA_DEV` | Passed, with two warnings that the now-absent `.pytest_cache` exclusion patterns match no files. |
-| `databricks bundle plan --target dev --profile CREA_DEV` | Succeeded: `create apps.np_impact_analyzer` |
+| Focused configuration test: `uv run pytest tests/test_config.py -p no:cacheprovider` | Passed: 2 tests |
+| Productive non-OBO guard: `uv run pytest tests/test_read_only_surface.py::test_production_modules_do_not_import_or_call_user_authorization_helpers -p no:cacheprovider` | Passed: 1 test |
+| Full no-cache suite: `uv run pytest -p no:cacheprovider` | 103 passed; 1 environment error. Pytest cannot access its Windows `tmp_path` directory. The failure is unrelated to this configuration change. |
+| `databricks bundle validate --target dev --profile CREA_DEV` | Passed, with two warnings because the excluded `.pytest_cache` patterns match no local files. |
+| `databricks bundle plan --target dev --profile CREA_DEV` | Succeeded: 0 to add, 0 to change, 0 to delete, 1 unchanged. |
 
-The plan can show `create` before the existing App has been bound to this
-bundle. It does not indicate that a remote change was made.
+No bind, deploy, run, or smoke test is part of this workaround.
 
 ## Risk
 
-The next bind/deploy should reconcile the declared empty list and remove the
-two effective user API scopes. The app will no longer receive user API tokens,
-which is aligned with its App-only, non-OBO implementation. No remote resource
-was changed during this preparation.
+The effective default IAM scopes will remain visible after deployment; this
+workaround does not and must not claim to remove them. Their presence is safe
+for this App-only implementation and does not enable OBO, data access, or
+compute access. The relevant residual risk is a future code change that adds
+OBO behavior, which the existing production guardrail is designed to catch.
 
 ## Next recommended command
 
-After explicit human approval, bind the existing App before deploying:
-
-```powershell
-databricks bundle deployment bind np_impact_analyzer agent-np-impact-analyzer --auto-approve --target dev --profile CREA_DEV
-```
-
-Then review a fresh plan and obtain approval for deployment. Do not run this
-command as part of this pre-deploy change.
+After a human reviews the fresh plan, use the normal approved deployment
+workflow for `dev`. Do not issue a bind, deploy, run, or smoke-test command as
+part of this configuration-only pre-deploy round.

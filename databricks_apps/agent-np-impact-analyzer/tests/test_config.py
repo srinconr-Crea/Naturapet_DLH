@@ -16,10 +16,10 @@ def test_repository_config_has_fixed_limits():
     assert config.max_results == 30
 
 
-def test_bundle_explicitly_disables_user_api_scopes():
+def test_bundle_omits_user_api_scopes_for_app_only_non_obo_identity():
     bundle_path = Path(__file__).parents[1] / "databricks.yml"
     bundle = YAML(typ="safe").load(bundle_path)
 
     app = bundle["resources"]["apps"]["np_impact_analyzer"]
 
-    assert app["user_api_scopes"] == []
+    assert "user_api_scopes" not in app

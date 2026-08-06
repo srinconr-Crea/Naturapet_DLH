@@ -14,7 +14,6 @@ resources:
       name: agent-np-impact-analyzer
       description: Analista de impacto de solo lectura para Naturapet_DLH
       source_code_path: ./
-      user_api_scopes: []
       config:
         command: ["uv", "run", "start-app"]
         env:

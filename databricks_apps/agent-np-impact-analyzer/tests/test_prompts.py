@@ -1,4 +1,7 @@
-from agent_server.prompts import IMPACT_ANALYZER_INSTRUCTIONS
+from agent_server import prompts
+
+
+IMPACT_ANALYZER_INSTRUCTIONS = prompts.IMPACT_ANALYZER_INSTRUCTIONS
 
 
 def test_instructions_require_verified_context_before_any_other_tool():
@@ -21,3 +24,13 @@ def test_instructions_enforce_read_only_analysis_and_untrusted_content_policy():
         "insufficient_evidence",
     ):
         assert requirement in instructions
+
+
+def test_researcher_returns_only_draft_json_and_formatter_treats_input_as_untrusted():
+    researcher = IMPACT_ANALYZER_INSTRUCTIONS.lower()
+    formatter = getattr(prompts, "IMPACT_ANALYSIS_FORMATTER_INSTRUCTIONS", "").lower()
+
+    assert "only valid json" in researcher
+    assert "impactanalysisdraft" in researcher
+    assert "untrusted data" in formatter
+    assert "do not invent" in formatter

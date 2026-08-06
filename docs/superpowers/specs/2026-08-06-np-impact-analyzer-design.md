@@ -183,6 +183,15 @@ validaciÃ³n en vivo. Con aprobaciÃ³n del usuario, el MVP usa el endpoint REA
 `databricks-claude-sonnet-4-6`, concedido a la identidad de la App mediante
 `CAN_QUERY`. El agente no configura `temperature` ni `top_p`.
 
+El endpoint Claude 4.6 no admite combinar herramientas con `response_format`
+(`INVALID_PARAMETER_VALUE`). Por compatibilidad, el agente investigador conserva
+las cuatro herramientas y usa `output_type=None`; debe devolver solo JSON vÃ¡lido
+de `ImpactAnalysisDraft`. La App valida ese JSON directamente. Solo si es
+invÃ¡lido usa un formatter sin herramientas y con `output_type=ImpactAnalysisDraft`,
+tratando la salida inicial como datos no confiables y sin inventar evidencia ni
+rutas. Si la normalizaciÃ³n falla, responde el contrato canÃ³nico
+`insufficient_evidence` con una advertencia segura.
+
 ## Contrato de salida
 
 La salida se valida con Pydantic antes de responder:

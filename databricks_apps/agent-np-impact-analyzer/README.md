@@ -37,6 +37,17 @@ the App identity. This replaces the unavailable `databricks-gpt-5-2` endpoint,
 which returned `ENDPOINT_NOT_FOUND` during live validation; the replacement was
 chosen with user approval. The agent does not set `temperature` or `top_p`.
 
+### Structured-output compatibility
+
+Claude 4.6 rejects a request that combines tools with `response_format`
+(`INVALID_PARAMETER_VALUE`). The tool-enabled researcher therefore has no
+`output_type` and returns only JSON for `ImpactAnalysisDraft`. The App validates
+that JSON directly. Only an invalid researcher result triggers a second,
+tool-free formatter with `output_type=ImpactAnalysisDraft`; it treats the first
+result as untrusted data and must not invent evidence or paths. If formatting
+still fails, the App returns the canonical `insufficient_evidence` contract with
+a safe warning rather than exposing an exception.
+
 ## Response contract
 
 The canonical JSON is returned in `custom_outputs.analysis` and validates as

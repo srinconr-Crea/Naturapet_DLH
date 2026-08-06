@@ -56,14 +56,19 @@ def analysis_draft() -> ImpactAnalysisDraft:
 
 
 def test_create_agent_is_np_impact_analyzer():
-    from agent_server.agent import create_agent
+    from agent_server.agent import create_agent, create_formatter_agent
 
     agent = create_agent()
+    formatter = create_formatter_agent()
 
     assert agent.name == "Naturapet Impact Analyzer"
     assert agent.model == "databricks-claude-sonnet-4-6"
-    assert agent.output_type is ImpactAnalysisDraft
+    assert agent.output_type is None
     assert {tool.name for tool in agent.tools} == EXPECTED_TOOL_NAMES
+    assert formatter.name == "Naturapet Impact Analysis Formatter"
+    assert formatter.model == "databricks-claude-sonnet-4-6"
+    assert formatter.output_type is ImpactAnalysisDraft
+    assert formatter.tools == []
 
 
 @pytest.mark.asyncio
@@ -218,3 +223,78 @@ async def test_preflight_repository_errors_return_safe_canonical_analysis_withou
     assert error_code.value in markdown
     assert "internal credential details" not in markdown
     assert "internal credential details" not in result.model_dump_json()
+
+
+@pytest.mark.asyncio
+async def test_valid_researcher_json_uses_one_tool_enabled_call_without_formatter(
+    monkeypatch, analysis_request, analysis_draft, fake_workspace_client
+):
+    import agent_server.agent as agent_module
+
+    calls = []
+
+    async def fake_run(agent, *_args, **_kwargs):
+        calls.append(agent)
+        return SimpleNamespace(final_output=analysis_draft.model_dump_json())
+
+    monkeypatch.setattr(agent_module, "WorkspaceClient", lambda: fake_workspace_client)
+    monkeypatch.setattr(agent_module.Runner, "run", fake_run)
+
+    result = await agent_module.run_analysis(analysis_request)
+
+    assert result.request_summary == analysis_draft.request_summary
+    assert len(calls) == 1
+    assert calls[0].name == "Naturapet Impact Analyzer"
+    assert calls[0].output_type is None
+    assert {tool.name for tool in calls[0].tools} == EXPECTED_TOOL_NAMES
+
+
+@pytest.mark.asyncio
+async def test_invalid_researcher_output_uses_a_tool_free_structured_formatter(
+    monkeypatch, analysis_request, analysis_draft, fake_workspace_client
+):
+    import agent_server.agent as agent_module
+
+    calls = []
+
+    async def fake_run(agent, *_args, **_kwargs):
+        calls.append(agent)
+        if agent.name == "Naturapet Impact Analyzer":
+            return SimpleNamespace(final_output="not valid JSON")
+        return SimpleNamespace(final_output=analysis_draft.model_dump(mode="json"))
+
+    monkeypatch.setattr(agent_module, "WorkspaceClient", lambda: fake_workspace_client)
+    monkeypatch.setattr(agent_module.Runner, "run", fake_run)
+
+    result = await agent_module.run_analysis(analysis_request)
+
+    assert result.request_summary == analysis_draft.request_summary
+    assert [agent.name for agent in calls] == [
+        "Naturapet Impact Analyzer",
+        "Naturapet Impact Analysis Formatter",
+    ]
+    assert calls[0].output_type is None
+    assert {tool.name for tool in calls[0].tools} == EXPECTED_TOOL_NAMES
+    assert calls[1].output_type is ImpactAnalysisDraft
+    assert calls[1].tools == []
+
+
+@pytest.mark.asyncio
+async def test_formatter_failure_returns_safe_canonical_insufficient_evidence_result(
+    monkeypatch, analysis_request, fake_workspace_client
+):
+    import agent_server.agent as agent_module
+
+    async def fake_run(agent, *_args, **_kwargs):
+        if agent.name == "Naturapet Impact Analyzer":
+            return SimpleNamespace(final_output="not valid JSON")
+        raise RuntimeError("formatter internal details must not leak")
+
+    monkeypatch.setattr(agent_module, "WorkspaceClient", lambda: fake_workspace_client)
+    monkeypatch.setattr(agent_module.Runner, "run", fake_run)
+
+    result = await agent_module.run_analysis(analysis_request)
+
+    assert result.decision is Decision.INSUFFICIENT_EVIDENCE
+    assert result.warnings == ["STRUCTURED_OUTPUT_NORMALIZATION_FAILED"]
+    assert "formatter internal details" not in result.model_dump_json()

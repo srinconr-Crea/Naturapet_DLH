@@ -16,17 +16,15 @@
 
 1. **Read the quickstart skill** at `.claude/skills/quickstart/SKILL.md` — it contains all available CLI flags, what the script configures, and fallback instructions.
 2. **Check if `.env` exists.** If it does, the environment is already configured — read it to find `DATABRICKS_CONFIG_PROFILE` and skip to verifying auth. If `.env` does not exist, run quickstart:
-   ```bash
-   uv run quickstart --profile <profile-name>
-   ```
-3. Run `databricks auth profiles` to verify the profile is configured and valid.
+    ```bash
+    uv run quickstart --profile CREA_DEV
+    ```
+3. Run `databricks auth profiles --profile CREA_DEV` to verify the profile is configured and valid.
 
-**CRITICAL: All `databricks` CLI commands must include the profile from `.env`.** Either use `--profile` or set the env var:
+**CRITICAL: All `databricks` CLI commands must use the `CREA_DEV` profile.**
 
 ```bash
-databricks <command> --profile <profile>
-# or
-DATABRICKS_CONFIG_PROFILE=<profile> databricks <command>
+databricks <command> --profile CREA_DEV
 ```
 
 > **Why this matters:** Without the profile, the CLI may target the wrong workspace, causing "not found" errors for experiments, apps, or other resources.
@@ -52,7 +50,7 @@ Use `uv run discover-tools` to show them available resources in their workspace,
 Ask the user: "I see there's an existing app with the same name. Would you like me to bind it to this bundle so we can manage it, or delete it and create a new one?"
 
 - **If they want to bind**: See the **deploy** skill for binding steps
-- **If they want to delete**: Run `databricks apps delete <app-name>` then deploy again
+- **If they want to delete**: after explicit human approval, run `databricks apps delete <app-name> --profile CREA_DEV` then deploy again
 
 ## Supervisor API (Offloading the Agent Loop)
 
@@ -130,8 +128,8 @@ After installation, the skills will be available as slash commands (e.g., `/agen
 | Setup | `uv run quickstart` |
 | Discover tools | `uv run discover-tools` |
 | Run locally | `uv run start-app` |
-| Deploy | `databricks bundle deploy && databricks bundle run agent_openai_agents_sdk` |
-| View logs | `databricks apps logs <app-name> --follow` |
+| Deploy | Approval-gated: `databricks bundle deploy --target dev --profile CREA_DEV` then `databricks bundle run np_impact_analyzer --target dev --profile CREA_DEV` |
+| View logs | `databricks apps logs <app-name> --follow --profile CREA_DEV` |
 
 ---
 

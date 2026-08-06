@@ -17,6 +17,8 @@ import time
 import urllib.error
 import urllib.request
 
+from agent_server.schemas import ImpactAnalysisResult
+
 _IS_WINDOWS = sys.platform == "win32"
 
 # How long to wait for the server to start (seconds)
@@ -106,7 +108,17 @@ def check_health(base_url: str) -> bool:
 
 def check_invocations(base_url: str, retries: int = 2) -> bool:
     payload = json.dumps(
-        {"input": [{"role": "user", "content": "Say hello in one word."}]}
+        {
+            "input": [
+                {
+                    "role": "user",
+                    "content": (
+                        "Analiza dónde se calcula margen_pct y qué pruebas deberían "
+                        "revisarse. No modifiques nada."
+                    ),
+                }
+            ]
+        }
     ).encode()
 
     for attempt in range(retries + 1):
@@ -118,11 +130,10 @@ def check_invocations(base_url: str, retries: int = 2) -> bool:
             )
             with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
                 data = json.loads(resp.read())
-                # Check that we got a response with output
-                if "output" in data and len(data["output"]) > 0:
-                    return True
-                print(f"  Unexpected response shape: {json.dumps(data)[:200]}")
-                return False
+                analysis = data.get("custom_outputs", {}).get("analysis")
+                ImpactAnalysisResult.model_validate(analysis)
+                output_text = data["output"][0]["content"][0]["text"]
+                return output_text.startswith("# AnÃ¡lisis de impacto")
         except Exception as e:
             if attempt < retries:
                 print(f"   Attempt {attempt + 1} failed ({e}), retrying...")

@@ -5,8 +5,9 @@ Lakebase schemas and tables used by the agent's memory.
 
 Usage:
     # Get the SP client ID from your deployed app:
-    databricks apps get <app-name> --output json | jq -r '.service_principal_client_id'
+    databricks apps get <app-name> --output json --profile CREA_DEV | jq -r '.service_principal_client_id'
 
+    # Approval-gated: this script grants Lakebase permissions.
     # Autoscaling instance (endpoint):
     uv run python scripts/grant_lakebase_permissions.py <sp-client-id> --memory-type <type> --autoscaling-endpoint <endpoint>
 
@@ -149,7 +150,7 @@ def main():
     parser.add_argument(
         "sp_client_id",
         help="Service principal client ID (UUID). Get it via: "
-        "databricks apps get <app-name> --output json "
+        "databricks apps get <app-name> --output json --profile CREA_DEV "
         "| jq -r '.service_principal_client_id'",
     )
     parser.add_argument(

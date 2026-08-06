@@ -24,8 +24,9 @@ SENSITIVE_SUFFIXES = frozenset({".pem", ".key", ".p12", ".pfx", ".crt", ".cer"})
 
 _URI_SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 _SENSITIVE_ASSIGNMENT = re.compile(
-    r"(?im)^(\s*(?:api_key|access_token|client_secret|password|secret)\s*=\s*)"
-    r"(?:\"[^\"\r\n]*\"|'[^'\r\n]*'|[^\s#\r\n]+)"
+    r"(?im)(?P<prefix>(?:^|(?<=[{,]))\s*(?:export\s+)?[\"']?"
+    r"(?:api_key|access_token|client_secret|password|secret)[\"']?\s*(?:=|:)\s*)"
+    r"(?P<value>\"[^\"\r\n]*\"|'[^'\r\n]*'|[^\s,#}\r\n]+)"
 )
 _PRIVATE_KEY_BLOCK = re.compile(
     r"-----BEGIN (?P<label>[A-Z ]*PRIVATE KEY)-----.*?-----END (?P=label)-----",
@@ -86,6 +87,11 @@ def validate_file_policy(
 
 def redact_sensitive_content(content: str) -> tuple[str, bool]:
     """Redact configured assignment values and PEM private keys from text."""
-    sanitized, assignment_count = _SENSITIVE_ASSIGNMENT.subn(r"\1[REDACTED]", content)
+    def redact_assignment(match: re.Match[str]) -> str:
+        value = match.group("value")
+        replacement = f"{value[0]}[REDACTED]{value[0]}" if value[0] in "\"'" else "[REDACTED]"
+        return f"{match.group('prefix')}{replacement}"
+
+    sanitized, assignment_count = _SENSITIVE_ASSIGNMENT.subn(redact_assignment, content)
     sanitized, key_count = _PRIVATE_KEY_BLOCK.subn("[REDACTED PRIVATE KEY]", sanitized)
     return sanitized, bool(assignment_count or key_count)

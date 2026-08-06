@@ -47,7 +47,7 @@ def main() -> None:
     assert result.repository_context.repo_id == REPOSITORY_ID
     assert result.repository_context.branch == REPOSITORY_BRANCH
     assert result.evidence, "La prueba de humo requiere evidencia no vacía."
-    assert markdown.startswith("# AnÃ¡lisis de impacto")
+    assert markdown.startswith("# Análisis de impacto")
     assert markdown == result.human_report_markdown
     print("Smoke test read-only contract passed.")
 

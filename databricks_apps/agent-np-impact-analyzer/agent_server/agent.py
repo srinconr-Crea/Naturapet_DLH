@@ -20,10 +20,15 @@ from mlflow.types.responses import (
 from agent_server.config import RepositoryConfig
 from agent_server.prompts import IMPACT_ANALYZER_INSTRUCTIONS
 from agent_server.repository.client import DatabricksRepositoryClient
+from agent_server.repository.errors import RepositoryAccessError
 from agent_server.repository.tools import AnalysisRunContext, REPOSITORY_TOOLS
 from agent_server.schemas import (
+    Decision,
     ImpactAnalysisDraft,
     ImpactAnalysisResult,
+    RepositoryContext,
+    RiskAssessment,
+    RiskLevel,
     finalize_analysis,
 )
 from agent_server.utils import get_session_id
@@ -50,11 +55,55 @@ def create_agent() -> Agent[AnalysisRunContext]:
     )
 
 
+def preflight_failure_result(
+    config: RepositoryConfig, error: RepositoryAccessError
+) -> ImpactAnalysisResult:
+    """Create a safe canonical result when repository verification cannot start."""
+    context = RepositoryContext(
+        repo_id=config.repo_id,
+        path=config.root,
+        url=config.url,
+        provider=config.provider,
+        branch=config.branch,
+        head_commit_id="unverified",
+    )
+    draft = ImpactAnalysisDraft(
+        request_summary=(
+            "No fue posible iniciar el análisis porque no se verificó el contexto "
+            "del repositorio autorizado."
+        ),
+        decision=Decision.INSUFFICIENT_EVIDENCE,
+        risk=RiskAssessment(
+            level=RiskLevel.HIGH,
+            reasons=[
+                "El contexto del repositorio no se verificó; no se ejecutó el análisis."
+            ],
+        ),
+        target_files=[],
+        related_files=[],
+        evidence=[],
+        implementation_plan=[],
+        acceptance_criteria=[],
+        prohibited_actions=[
+            "No continuar sin un contexto de repositorio verificado.",
+            "No modificar ni ejecutar recursos.",
+        ],
+        assumptions=[
+            "No hay un head_commit_id verificable mientras falle el preflight."
+        ],
+        warnings=[error.code.value],
+    )
+    return finalize_analysis(draft, context)
+
+
 async def run_analysis(request: ResponsesAgentRequest) -> ImpactAnalysisResult:
     """Verify repository identity before running one evidence-based analysis."""
     config = RepositoryConfig.from_environment()
     repository = DatabricksRepositoryClient(WorkspaceClient(), config)
-    verified_context = repository.get_context()
+    try:
+        verified_context = repository.get_context()
+    except RepositoryAccessError as error:
+        return preflight_failure_result(config, error)
     run_context = AnalysisRunContext(repository=repository, config=config)
     messages = [item.model_dump() for item in request.input]
     result = await Runner.run(create_agent(), messages, context=run_context)

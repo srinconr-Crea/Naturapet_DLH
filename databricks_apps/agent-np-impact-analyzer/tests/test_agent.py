@@ -3,6 +3,7 @@ from types import SimpleNamespace
 import pytest
 from mlflow.types.responses import ResponsesAgentRequest
 
+from agent_server.repository.errors import RepositoryAccessError, RepositoryErrorCode
 from agent_server.schemas import (
     Decision,
     ImpactAnalysisDraft,
@@ -155,3 +156,65 @@ def test_agent_source_has_no_template_or_user_authorization_surface():
 
     for forbidden in ("get_current_time", "McpServer", "get_user_workspace_client"):
         assert forbidden not in source
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "error_code",
+    [
+        RepositoryErrorCode.REPOSITORY_CONTEXT_MISMATCH,
+        RepositoryErrorCode.BRANCH_NOT_ALLOWED,
+        RepositoryErrorCode.DATABRICKS_READ_ERROR,
+    ],
+)
+@pytest.mark.parametrize("handler", ["invoke", "stream"])
+async def test_preflight_repository_errors_return_safe_canonical_analysis_without_running_model(
+    monkeypatch, analysis_request, error_code, handler
+):
+    import agent_server.agent as agent_module
+
+    def failing_repository_factory(*_args, **_kwargs):
+        return SimpleNamespace(
+            get_context=lambda: (_ for _ in ()).throw(
+                RepositoryAccessError(error_code, "internal credential details must not leak")
+            )
+        )
+
+    runner_called = False
+
+    async def forbidden_runner(*_args, **_kwargs):
+        nonlocal runner_called
+        runner_called = True
+        raise AssertionError("Runner.run must not execute after a failed preflight")
+
+    monkeypatch.setattr(agent_module, "DatabricksRepositoryClient", failing_repository_factory)
+    monkeypatch.setattr(agent_module.Runner, "run", forbidden_runner)
+
+    if handler == "invoke":
+        response = await agent_module.invoke_handler(analysis_request)
+    else:
+        events = [event async for event in agent_module.stream_handler(analysis_request)]
+        assert [event.type for event in events] == [
+            "response.output_item.done",
+            "response.completed",
+        ]
+        response = events[1].response
+
+    result = ImpactAnalysisResult.model_validate(
+        response.custom_outputs["analysis"]
+        if handler == "invoke"
+        else response["custom_outputs"]["analysis"]
+    )
+    markdown = (
+        response.output[0].content[0]["text"]
+        if handler == "invoke"
+        else response["output"][0]["content"][0]["text"]
+    )
+
+    assert runner_called is False
+    assert result.status == "completed"
+    assert result.decision is Decision.INSUFFICIENT_EVIDENCE
+    assert result.warnings == [error_code.value]
+    assert error_code.value in markdown
+    assert "internal credential details" not in markdown
+    assert "internal credential details" not in result.model_dump_json()

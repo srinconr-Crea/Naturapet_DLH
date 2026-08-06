@@ -223,4 +223,8 @@ sketch
 
 **/.env
 **/.env.local
+.pytest_cache/
+**/.pytest_cache/
+**/__pycache__/
+*.pyc
 load-test-runs/

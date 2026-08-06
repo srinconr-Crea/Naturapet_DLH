@@ -1,6 +1,13 @@
 bundle:
   name: np_impact_analyzer
 
+sync:
+  exclude:
+    - ".pytest_cache/**"
+    - "**/.pytest_cache/**"
+    - "**/__pycache__/**"
+    - "**/*.pyc"
+
 resources:
   apps:
     np_impact_analyzer:

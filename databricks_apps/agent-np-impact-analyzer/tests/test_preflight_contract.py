@@ -1,6 +1,7 @@
 """Contract tests for the local preflight invocation response."""
 
 import json
+import os
 from contextlib import contextmanager
 
 from agent_server.schemas import ImpactAnalysisResult
@@ -72,3 +73,44 @@ def test_preflight_accepts_valid_canonical_analysis_and_markdown(monkeypatch):
     )
 
     assert preflight.check_invocations("http://localhost:8000", retries=0) is True
+
+
+def test_preflight_pins_crea_dev_only_for_local_server_subprocess(monkeypatch):
+    """The local server inherits CREA_DEV without changing the deployed-App environment."""
+    captured: dict[str, object] = {}
+
+    class FakeStderr:
+        def __init__(self):
+            self._lines = ["Application startup complete\n", ""]
+
+        def readline(self) -> str:
+            return self._lines.pop(0)
+
+    class FakeProcess:
+        stderr = FakeStderr()
+
+        def poll(self):
+            return None
+
+    class ImmediateThread:
+        def __init__(self, target, daemon):
+            self.target = target
+
+        def start(self):
+            self.target()
+
+        def join(self, timeout=None):
+            return None
+
+    def fake_popen(*args, **kwargs):
+        captured["args"] = args
+        captured["kwargs"] = kwargs
+        return FakeProcess()
+
+    monkeypatch.setenv("DATABRICKS_CONFIG_PROFILE", "OTHER_PROFILE")
+    monkeypatch.setattr(preflight.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(preflight.threading, "Thread", ImmediateThread)
+
+    assert preflight.start_server(8011).stderr is not None
+    assert captured["kwargs"]["env"]["DATABRICKS_CONFIG_PROFILE"] == "CREA_DEV"
+    assert os.environ["DATABRICKS_CONFIG_PROFILE"] == "OTHER_PROFILE"

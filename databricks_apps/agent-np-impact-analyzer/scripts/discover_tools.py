@@ -21,12 +21,15 @@ from databricks.sdk import WorkspaceClient
 
 DEFAULT_MAX_RESULTS = 100
 DEFAULT_MAX_SCHEMAS = 25
+DATABRICKS_PROFILE = "CREA_DEV"
 
 def run_databricks_cli(args: List[str]) -> str:
-    """Run databricks CLI command and return output."""
+    """Run a read-only Databricks CLI command with the fixed local profile."""
+    if any(argument == "--profile" or argument.startswith("--profile=") for argument in args):
+        raise ValueError("Discovery commands always use the CREA_DEV profile.")
     try:
         result = subprocess.run(
-            ["databricks"] + args,
+            ["databricks"] + args + ["--profile", DATABRICKS_PROFILE],
             capture_output=True,
             text=True,
             check=True,
@@ -326,8 +329,8 @@ def format_output_markdown(results: Dict[str, List[Dict[str, Any]]]) -> str:
         lines.append("**What:** Your own MCP servers deployed as Databricks Apps (names starting with mcp-)\n")
         lines.append("**How to use:** Access via `{app_url}/mcp`\n")
         lines.append("**⚠️ Important:** Custom MCP server apps require manual permission grants:")
-        lines.append("1. Get your agent app's service principal: `databricks apps get <agent-app> --output json | jq -r '.service_principal_name'`")
-        lines.append("2. Grant permission: `databricks apps update-permissions <mcp-server-app> --service-principal <sp-name> --permission-level CAN_USE`")
+        lines.append("1. Get your agent app's service principal: `databricks apps get <agent-app> --output json --profile CREA_DEV | jq -r '.service_principal_name'`")
+        lines.append("2. Approval-gated grant: `databricks apps update-permissions <mcp-server-app> --service-principal <sp-name> --permission-level CAN_USE --profile CREA_DEV`")
         lines.append("(Apps are not yet supported as resource dependencies in databricks.yml)\n")
         for server in custom_servers:
             lines.append(f"- `{server['name']}`")
@@ -365,7 +368,6 @@ def main():
     parser.add_argument("--schema", help="Limit discovery to specific schema (requires --catalog)")
     parser.add_argument("--format", choices=["json", "markdown"], default="markdown", help="Output format")
     parser.add_argument("--output", help="Output file (default: stdout)")
-    parser.add_argument("--profile", help="Databricks CLI profile to use (default: uses default profile)")
     parser.add_argument("--max-results", type=int, default=DEFAULT_MAX_RESULTS, help=f"Maximum results per resource type (default: {DEFAULT_MAX_RESULTS})")
     parser.add_argument("--max-schemas", type=int, default=DEFAULT_MAX_SCHEMAS, help=f"Total schemas to search across all catalogs (default: {DEFAULT_MAX_SCHEMAS})")
 
@@ -377,12 +379,8 @@ def main():
 
     print("Discovering available tools and data sources...", file=sys.stderr)
 
-    # Initialize Databricks workspace client
-    # Only pass profile if specified, otherwise use default
-    if args.profile:
-        w = WorkspaceClient(profile=args.profile)
-    else:
-        w = WorkspaceClient()
+    # Discovery always uses the explicitly approved local development profile.
+    w = WorkspaceClient(profile=DATABRICKS_PROFILE)
 
     results = {}
 

@@ -41,7 +41,10 @@ databricks <command> --profile CREA_DEV
    - External APIs or services
 3. **Any specific Databricks resources they want to connect?**
 
-Use `uv run discover-tools` to show them available resources in their workspace, then help them select the right ones for their use case. **See the `add-tools` skill for how to connect tools and grant permissions.**
+Use `uv run discover-tools` to show them available resources in the `CREA_DEV`
+workspace, then help them select the right ones for their use case. The script
+does not accept another profile. **See the `add-tools` skill for how to connect
+tools and grant permissions.**
 
 ## Handling Deployment Errors
 

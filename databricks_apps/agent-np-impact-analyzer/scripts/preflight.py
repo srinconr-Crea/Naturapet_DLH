@@ -34,6 +34,8 @@ def find_free_port() -> int:
 
 
 def start_server(port: int) -> subprocess.Popen:
+    server_env = os.environ.copy()
+    server_env["DATABRICKS_CONFIG_PROFILE"] = "CREA_DEV"
     popen_kwargs = {}
     if _IS_WINDOWS:
         popen_kwargs["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
@@ -45,6 +47,7 @@ def start_server(port: int) -> subprocess.Popen:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.PIPE,
         text=True,
+        env=server_env,
         **popen_kwargs,
     )
 

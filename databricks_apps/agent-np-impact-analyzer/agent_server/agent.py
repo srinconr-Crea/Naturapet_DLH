@@ -31,9 +31,6 @@ from agent_server.schemas import (
     RiskLevel,
     finalize_analysis,
 )
-from agent_server.utils import get_session_id
-
-
 logger = logging.getLogger(__name__)
 
 # This client uses the Databricks App service principal credentials in deployment.
@@ -42,6 +39,15 @@ set_default_openai_api("chat_completions")
 set_trace_processors([])
 mlflow.openai.autolog()
 logging.getLogger("mlflow.utils.autologging_utils").setLevel(logging.ERROR)
+
+
+def get_session_id(request: ResponsesAgentRequest) -> str | None:
+    """Read caller-supplied session metadata without inspecting auth headers."""
+    if request.context and request.context.conversation_id:
+        return request.context.conversation_id
+    if request.custom_inputs and isinstance(request.custom_inputs, dict):
+        return request.custom_inputs.get("session_id")
+    return None
 
 
 def create_agent() -> Agent[AnalysisRunContext]:

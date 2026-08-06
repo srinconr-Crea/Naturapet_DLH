@@ -63,6 +63,10 @@ databricks bundle validate --target dev --profile CREA_DEV
 `custom_outputs.analysis`, and checks its Markdown output. It can use the
 developer's local `CREA_DEV` identity to read the authorized Git Folder.
 
+`uv run discover-tools` is optional and fixes every SDK and CLI lookup to
+`CREA_DEV`; it does not accept a caller-selected profile. Do not run it unless
+read-only workspace discovery is in scope.
+
 ## Approved deployment and smoke-test sequence
 
 Deployment is an approval-gated operation. After human approval, bind the

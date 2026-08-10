@@ -27,3 +27,19 @@ def test_operational_checks_match_the_ascii_renderer_heading():
     assert smoke_heading == preflight_heading == renderer_heading
     assert renderer_heading == "# Analisis de impacto"
     assert renderer_heading.isascii()
+
+
+def test_agent_owned_operational_sources_are_ascii():
+    app_root = Path(__file__).parents[1]
+    paths = [
+        app_root / "agent_server" / "agent.py",
+        app_root / "agent_server" / "evaluate_agent.py",
+        app_root / "agent_server" / "output_renderer.py",
+        app_root / "scripts" / "preflight.py",
+        app_root / "scripts" / "smoke_status.py",
+        app_root / "scripts" / "smoke_test.py",
+        app_root / "README.md",
+        app_root / "agent-spec.json",
+    ]
+
+    assert all(path.read_text(encoding="utf-8").isascii() for path in paths)

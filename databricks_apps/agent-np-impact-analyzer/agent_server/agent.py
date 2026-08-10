@@ -129,14 +129,14 @@ def preflight_failure_result(
     )
     draft = ImpactAnalysisDraft(
         request_summary=(
-            "No fue posible iniciar el análisis porque no se verificó el contexto "
+            "No fue posible iniciar el analisis porque no se verifico el contexto "
             "del repositorio autorizado."
         ),
         decision=Decision.INSUFFICIENT_EVIDENCE,
         risk=RiskAssessment(
             level=RiskLevel.HIGH,
             reasons=[
-                "El contexto del repositorio no se verificó; no se ejecutó el análisis."
+                "El contexto del repositorio no se verifico; no se ejecuto el analisis."
             ],
         ),
         target_files=[],
@@ -159,7 +159,7 @@ def preflight_failure_result(
 def structured_output_failure_result(context: RepositoryContext) -> ImpactAnalysisResult:
     """Return a safe result when the tool-free formatter cannot normalize output."""
     draft = ImpactAnalysisDraft(
-        request_summary="No fue posible validar la salida estructurada del análisis.",
+        request_summary="No fue posible validar la salida estructurada del analisis.",
         decision=Decision.INSUFFICIENT_EVIDENCE,
         risk=RiskAssessment(
             level=RiskLevel.MEDIUM,

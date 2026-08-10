@@ -14,7 +14,7 @@ APP_MODEL = "apps/agent-np-impact-analyzer"
 REPOSITORY_ID = 1393361128272538
 REPOSITORY_BRANCH = "practica-margen-silver"
 SMOKE_PROMPT = (
-    "Analiza dónde se calcula margen_pct y qué pruebas deberían revisarse. "
+    "Analiza donde se calcula margen_pct y que pruebas deberian revisarse. "
     "No modifiques nada."
 )
 
@@ -46,8 +46,8 @@ def main() -> None:
 
     assert result.repository_context.repo_id == REPOSITORY_ID
     assert result.repository_context.branch == REPOSITORY_BRANCH
-    assert result.evidence, "La prueba de humo requiere evidencia no vacía."
-    assert markdown.startswith("# Análisis de impacto")
+    assert result.evidence, "La prueba de humo requiere evidencia no vacia."
+    assert markdown.startswith("# Analisis de impacto")
     assert markdown == result.human_report_markdown
     print("Smoke test read-only contract passed.")
 

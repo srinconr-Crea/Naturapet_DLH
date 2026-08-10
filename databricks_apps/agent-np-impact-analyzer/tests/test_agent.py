@@ -56,18 +56,19 @@ def analysis_draft() -> ImpactAnalysisDraft:
     )
 
 
-def test_create_agent_is_np_impact_analyzer():
+def test_create_agent_is_np_impact_analyzer(monkeypatch):
     from agent_server.agent import create_agent, create_formatter_agent
 
+    monkeypatch.setenv("NP_MODEL_ENDPOINT", "databricks-gpt-5-mini")
     agent = create_agent()
     formatter = create_formatter_agent()
 
     assert agent.name == "Naturapet Impact Analyzer"
-    assert agent.model == "databricks-claude-sonnet-4-6"
+    assert agent.model == "databricks-gpt-5-mini"
     assert agent.output_type is None
     assert {tool.name for tool in agent.tools} == EXPECTED_TOOL_NAMES
     assert formatter.name == "Naturapet Impact Analysis Formatter"
-    assert formatter.model == "databricks-claude-sonnet-4-6"
+    assert formatter.model == "databricks-gpt-5-mini"
     assert formatter.output_type is ImpactAnalysisDraft
     assert formatter.tools == []
 
@@ -89,7 +90,7 @@ async def test_invoke_returns_json_for_machine_and_markdown_for_human(
 
     result = ImpactAnalysisResult.model_validate(response.custom_outputs["analysis"])
     assert response.output[0].content[0]["text"] == result.human_report_markdown
-    assert response.output[0].content[0]["text"].startswith("# Análisis de impacto")
+    assert response.output[0].content[0]["text"].startswith("# Analisis de impacto")
 
 
 @pytest.mark.asyncio

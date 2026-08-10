@@ -116,7 +116,7 @@ def check_invocations(base_url: str, retries: int = 2) -> bool:
                 {
                     "role": "user",
                     "content": (
-                        "Analiza dónde se calcula margen_pct y qué pruebas deberían "
+                        "Analiza donde se calcula margen_pct y que pruebas deberian "
                         "revisarse. No modifiques nada."
                     ),
                 }
@@ -136,7 +136,7 @@ def check_invocations(base_url: str, retries: int = 2) -> bool:
                 analysis = data.get("custom_outputs", {}).get("analysis")
                 ImpactAnalysisResult.model_validate(analysis)
                 output_text = data["output"][0]["content"][0]["text"]
-                return output_text.startswith("# AnÃ¡lisis de impacto")
+                return output_text.startswith("# Analisis de impacto")
         except Exception as e:
             if attempt < retries:
                 print(f"   Attempt {attempt + 1} failed ({e}), retrying...")

@@ -18,7 +18,7 @@ from mlflow.types.responses import (
     create_text_output_item,
 )
 
-from agent_server.config import RepositoryConfig
+from agent_server.config import RepositoryConfig, model_endpoint_from_environment
 from agent_server.prompts import (
     IMPACT_ANALYZER_INSTRUCTIONS,
     IMPACT_ANALYSIS_FORMATTER_INSTRUCTIONS,
@@ -59,7 +59,7 @@ def create_agent() -> Agent[AnalysisRunContext]:
     return Agent[AnalysisRunContext](
         name="Naturapet Impact Analyzer",
         instructions=IMPACT_ANALYZER_INSTRUCTIONS,
-        model="databricks-claude-sonnet-4-6",
+        model=model_endpoint_from_environment(),
         tools=REPOSITORY_TOOLS,
         output_type=None,
     )
@@ -70,7 +70,7 @@ def create_formatter_agent() -> Agent[None]:
     return Agent[None](
         name="Naturapet Impact Analysis Formatter",
         instructions=IMPACT_ANALYSIS_FORMATTER_INSTRUCTIONS,
-        model="databricks-claude-sonnet-4-6",
+        model=model_endpoint_from_environment(),
         tools=[],
         output_type=ImpactAnalysisDraft,
     )

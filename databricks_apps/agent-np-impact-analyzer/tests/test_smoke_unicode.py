@@ -1,4 +1,4 @@
-"""Unicode contract between the deployed smoke test and human report renderer."""
+"""ASCII heading contract shared by local and deployed checks."""
 
 import ast
 from pathlib import Path
@@ -15,12 +15,15 @@ def _markdown_heading(source_path: Path) -> str:
     )
 
 
-def test_smoke_heading_matches_the_renderer_unicode_heading():
-    """A valid human report must not fail smoke because of mojibake codepoints."""
+def test_operational_checks_match_the_ascii_renderer_heading():
+    """Operational checks use one ASCII-only heading to avoid encoding drift."""
     app_root = Path(__file__).parents[1]
     smoke_heading = _markdown_heading(app_root / "scripts" / "smoke_test.py")
+    preflight_heading = _markdown_heading(app_root / "scripts" / "preflight.py")
     renderer_heading = _markdown_heading(
         app_root / "agent_server" / "output_renderer.py"
     )
 
-    assert smoke_heading == renderer_heading == "# Análisis de impacto"
+    assert smoke_heading == preflight_heading == renderer_heading
+    assert renderer_heading == "# Analisis de impacto"
+    assert renderer_heading.isascii()

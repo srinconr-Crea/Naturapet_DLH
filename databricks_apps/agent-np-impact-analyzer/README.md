@@ -31,7 +31,8 @@ identity; it does not use on-behalf-of-user authorization.
 
 ## Runtime model
 
-The App uses the live, READY serving endpoint `databricks-claude-sonnet-4-6`.
+The App uses the serving endpoint configured by `NP_MODEL_ENDPOINT`, currently
+`databricks-claude-sonnet-4-6`.
 The bundle declares it as the `llm` resource with `CAN_QUERY` permission for
 the App identity. This replaces the unavailable `databricks-gpt-5-2` endpoint,
 which returned `ENDPOINT_NOT_FOUND` during live validation; the replacement was
@@ -56,7 +57,7 @@ risk, cited evidence, target and related files, implementation plan, acceptance
 criteria, safety restrictions, assumptions, and warnings.
 
 The first text output is human-facing Markdown. It is deterministically derived
-from that JSON, begins with `# AnÃ¡lisis de impacto`, and is not a second source
+from that JSON, begins with `# Analisis de impacto`, and is not a second source
 of truth. A Supervisor should consume the JSON and explicitly ignore the
 `human_report_markdown` field:
 
@@ -78,6 +79,9 @@ uv run preflight
 databricks bundle validate --target dev --profile CREA_DEV
 ```
 
+The reusable role, scope, tool bounds, output contract, identity and approval
+gates are recorded in `agent-spec.json`.
+
 `preflight` starts the local server, sends a safe read-only request, validates
 `custom_outputs.analysis`, and checks its Markdown output. It can use the
 developer's local `CREA_DEV` identity to read the authorized Git Folder.
@@ -90,16 +94,19 @@ read-only workspace discovery is in scope.
 
 Deployment is an approval-gated operation. After human approval, bind the
 existing App (once), deploy to `dev`, restart it, then run the read-only smoke
-test:
+tests. Run the status-only smoke first; it performs no model inference. Run the
+functional smoke only when an inference has been approved:
 
 ```powershell
 databricks bundle deployment bind np_impact_analyzer agent-np-impact-analyzer --auto-approve --target dev --profile CREA_DEV
 databricks bundle deploy --target dev --profile CREA_DEV
 databricks bundle run np_impact_analyzer --target dev --profile CREA_DEV
+uv run smoke-status
 uv run python scripts/smoke_test.py
 ```
 
-`smoke_test.py` constructs `WorkspaceClient(profile="CREA_DEV")` and a
+`smoke-status` only reads the App and compute states. `smoke_test.py` constructs
+`WorkspaceClient(profile="CREA_DEV")` and a
 `DatabricksOpenAI` client, invokes `apps/agent-np-impact-analyzer`, validates
 the canonical JSON, verified repository ID and branch, nonempty evidence, and
 derived Markdown. It never fetches or prints OAuth tokens. Do not run the

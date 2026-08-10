@@ -42,11 +42,11 @@ def _complete_response() -> dict:
             "prohibited_actions": ["No modificar recursos."],
             "assumptions": [],
             "warnings": ["Se requiere una lectura autorizada."],
-            "human_report_markdown": "# AnÃ¡lisis de impacto\n",
+            "human_report_markdown": "# Analisis de impacto\n",
         }
     )
     return {
-        "output": [{"content": [{"text": "# AnÃ¡lisis de impacto\n"}]}],
+        "output": [{"content": [{"text": "# Analisis de impacto\n"}]}],
         "custom_outputs": {"analysis": analysis.model_dump(mode="json")},
     }
 
@@ -57,7 +57,7 @@ def test_preflight_rejects_output_without_canonical_analysis(monkeypatch):
         preflight.urllib.request,
         "urlopen",
         lambda *_args, **_kwargs: _json_response(
-            {"output": [{"content": [{"text": "# AnÃ¡lisis de impacto\n"}]}]}
+            {"output": [{"content": [{"text": "# Analisis de impacto\n"}]}]}
         ),
     )
 

@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.0",
+  "mode": "single-agent",
+  "agent": {
+    "name": "agent-np-impact-analyzer",
+    "role": "impact-analyst",
+    "purpose": "Produce an evidence-backed, read-only impact analysis for the authorized Naturapet_DLH branch.",
+    "existing_app": true,
+    "model_endpoint": "databricks-claude-sonnet-4-6",
+    "identity_mode": "app-service-principal"
+  },
+  "scope": {
+    "environment": "dev",
+    "databricks_profile": "CREA_DEV",
+    "bundle_target": "dev",
+    "repository_path": "/Workspace/Naturapet_BI/practica-margen-silver",
+    "branch": "practica-margen-silver",
+    "allowed_paths": [
+      "/Workspace/Naturapet_BI/practica-margen-silver"
+    ],
+    "forbidden_paths": [
+      "../",
+      "/Workspace/Naturapet_BI"
+    ],
+    "catalogs": [
+      "naturapet_dev"
+    ],
+    "schemas": [],
+    "tables": []
+  },
+  "capabilities": [
+    "repository-read"
+  ],
+  "tools": [
+    {
+      "name": "get_repository_context",
+      "access": "read-only",
+      "bounds": "Fixed repository ID, root and branch"
+    },
+    {
+      "name": "list_repository_tree",
+      "access": "read-only",
+      "bounds": "Maximum 200 files and depth 12"
+    },
+    {
+      "name": "read_repository_file",
+      "access": "read-only",
+      "bounds": "Allowed text extensions and maximum 1 MiB per file"
+    },
+    {
+      "name": "search_repository_text",
+      "access": "read-only",
+      "bounds": "Maximum 30 matches, 5 per file and 500 characters per excerpt"
+    }
+  ],
+  "contract": {
+    "input_schema": "mlflow.types.responses.ResponsesAgentRequest",
+    "output_schema": "agent_server.schemas.ImpactAnalysisResult",
+    "canonical_output": "json",
+    "render_markdown": true,
+    "failure_status": "insufficient_evidence"
+  },
+  "observability": {
+    "mlflow_experiment": "195642121347837",
+    "trace_tables": [
+      "195642121347837_otel_spans",
+      "195642121347837_otel_annotations",
+      "195642121347837_otel_logs",
+      "195642121347837_otel_metrics"
+    ]
+  },
+  "approvals": {
+    "allow_model_probe": false,
+    "allow_local_changes": true,
+    "allow_permission_changes": false,
+    "allow_deploy": false,
+    "allow_run": false
+  }
+}

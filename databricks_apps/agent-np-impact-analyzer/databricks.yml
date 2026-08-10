@@ -39,6 +39,8 @@ resources:
             value: gitHub
           - name: NP_REPOSITORY_BRANCH
             value: practica-margen-silver
+          - name: NP_MODEL_ENDPOINT
+            value: databricks-claude-sonnet-4-6
       resources:
         - name: experiment
           experiment:

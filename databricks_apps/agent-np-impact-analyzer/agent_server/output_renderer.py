@@ -13,12 +13,12 @@ def _bullet_list(items: list[str]) -> list[str]:
 def render_markdown(result: "ImpactAnalysisResult") -> str:
     """Render the human report solely from validated structured analysis fields."""
     lines = [
-        "# Análisis de impacto",
+        "# Analisis de impacto",
         "",
         "## Solicitud",
         result.request_summary,
         "",
-        "## Decisión",
+        "## Decision",
         result.decision.value,
         "",
         "## Riesgo",
@@ -52,7 +52,7 @@ def render_markdown(result: "ImpactAnalysisResult") -> str:
         [f"- `{item.relative_path}`: {item.reason}" for item in result.related_files]
         or ["- Ninguno."]
     )
-    lines.extend(["", "## Plan de implementación"])
+    lines.extend(["", "## Plan de implementacion"])
     lines.extend(
         [
             f"{step.order}. {step.action} (`{', '.join(step.files)}`)"
@@ -61,7 +61,7 @@ def render_markdown(result: "ImpactAnalysisResult") -> str:
         or ["- Ninguno."]
     )
     for heading, items in (
-        ("Criterios de aceptación", result.acceptance_criteria),
+        ("Criterios de aceptacion", result.acceptance_criteria),
         ("Acciones prohibidas", result.prohibited_actions),
         ("Supuestos", result.assumptions),
         ("Advertencias", result.warnings),

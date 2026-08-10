@@ -161,13 +161,13 @@ def test_markdown_renders_every_human_facing_analysis_section(sample_draft, repo
 
     for heading in (
         "Solicitud",
-        "Decisión",
+        "Decision",
         "Riesgo",
         "Evidencia",
         "Archivos objetivo",
         "Archivos relacionados",
-        "Plan de implementación",
-        "Criterios de aceptación",
+        "Plan de implementacion",
+        "Criterios de aceptacion",
         "Acciones prohibidas",
         "Supuestos",
         "Advertencias",

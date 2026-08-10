@@ -5,6 +5,14 @@ import os
 from pydantic import BaseModel, ConfigDict
 
 
+DEFAULT_MODEL_ENDPOINT = "databricks-claude-sonnet-4-6"
+
+
+def model_endpoint_from_environment() -> str:
+    """Return the configured serving endpoint without binding it in agent code."""
+    return os.getenv("NP_MODEL_ENDPOINT", DEFAULT_MODEL_ENDPOINT)
+
+
 class RepositoryConfig(BaseModel):
     """Repository constraints that remain fixed after configuration is loaded."""
 

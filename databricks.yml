@@ -4,6 +4,13 @@ bundle:
 include:
   - resources/**/*.yml
 
+sync:
+  include:
+    - notebooks/**/*
+    - src/**/*
+    - conf/**/*
+    - resources/**/*
+
 variables:
   project_name:
     description: Nombre del bundle y del workspace path del proyecto
@@ -36,13 +43,15 @@ variables:
     description: Ruta base de aterrizaje raw en ADLS
   historic_base_path:
     description: Ruta base del historico en ADLS
+  github_actions_service_principal_name:
+    description: Application ID del service principal usado por GitHub Actions para desplegar y administrar jobs
+    default: 474767ec-ddc8-416e-ad38-e5a63375a89f
 targets:
   dev:
-    mode: development
     default: true
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_dev
       schema_name: ${var.domain_name}_${var.data_layer}
@@ -54,7 +63,7 @@ targets:
     mode: production
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_qa
       schema_name: ${var.domain_name}_${var.data_layer}
@@ -66,7 +75,7 @@ targets:
     mode: production
     workspace:
       host: https://adb-7405606739630987.7.azuredatabricks.net
-      root_path: /Workspace/Shared/${var.project_name}/${bundle.target}
+      root_path: /Workspace/Naturapet_BI/${bundle.target}
     variables:
       catalog_name: naturapet_prod
       schema_name: ${var.domain_name}_${var.data_layer}

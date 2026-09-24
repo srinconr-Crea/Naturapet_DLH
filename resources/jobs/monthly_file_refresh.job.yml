@@ -2,7 +2,7 @@ resources:
   jobs:
     monthly_file_refresh:
       name: ${bundle.target}-${var.project_name}-monthly-file-refresh
-      description: Job inicial de Naturapet para actualizar archivos mensuales en la capa delta externa
+      description: Orquestacion bronze de Naturapet para cargar archivos raw y archivarlos en historic
       max_concurrent_runs: 1
       queue:
         enabled: true
@@ -11,27 +11,114 @@ resources:
         timezone_id: America/Bogota
         pause_status: UNPAUSED
       tasks:
-        - task_key: ingest_monthly_files
-          job_cluster_key: monthly_job_cluster
-          spark_python_task:
-            python_file: src/notebooks/monthly_file_refresh.py
-            parameters:
-              - --catalog
-              - ${var.catalog_name}
-              - --schema
-              - ${var.schema_name}
-              - --external-base-path
-              - ${var.external_base_path}
-              - --table-name
-              - monthly_naturapet_files
-      job_clusters:
-        - job_cluster_key: monthly_job_cluster
-          new_cluster:
-            spark_version: 15.4.x-scala2.12
-            node_type_id: Standard_DS3_v2
-            num_workers: 1
-            data_security_mode: SINGLE_USER
-            runtime_engine: STANDARD
+        - task_key: shared_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/load_to_delta
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: shared_archive_to_historic
+          depends_on:
+            - task_key: shared_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/shared/bronze/archive_to_historic
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: comercial_load_to_delta
+          depends_on:
+            - task_key: shared_archive_to_historic
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/load_to_delta
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: comercial_archive_to_historic
+          depends_on:
+            - task_key: comercial_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/comercial/bronze/archive_to_historic
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: finanzas_load_to_delta
+          depends_on:
+            - task_key: comercial_archive_to_historic
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/load_to_delta
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: finanzas_archive_to_historic
+          depends_on:
+            - task_key: finanzas_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/finanzas/bronze/archive_to_historic
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: operaciones_load_to_delta
+          depends_on:
+            - task_key: finanzas_archive_to_historic
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/load_to_delta
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: operaciones_archive_to_historic
+          depends_on:
+            - task_key: operaciones_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/operaciones/bronze/archive_to_historic
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: gobierno_load_to_delta
+          depends_on:
+            - task_key: operaciones_archive_to_historic
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/load_to_delta
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
+        - task_key: gobierno_archive_to_historic
+          depends_on:
+            - task_key: gobierno_load_to_delta
+          notebook_task:
+            notebook_path: ${workspace.file_path}/notebooks/gobierno/bronze/archive_to_historic
+            base_parameters:
+              environment: ${bundle.target}
+              catalog_name: ${var.catalog_name}
+              storage_account: ${var.storage_account}
+              storage_container: ${var.storage_container}
+              data_year: ${var.data_year}
       tags:
         environment: ${bundle.target}
         domain: ${var.domain_name}

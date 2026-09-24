@@ -192,6 +192,7 @@ def _build_compact_task_value(payload: Dict[str, object]) -> Dict[str, object]:
         "environment": payload.get("environment"),
         "catalog": payload.get("catalog"),
         "bronze_schema": payload.get("bronze_schema"),
+        "no_data_message": payload.get("no_data_message"),
         "task_value_truncated": True,
     }
 
@@ -283,6 +284,7 @@ def dumps_task_value(payload: Dict[str, object]) -> str:
         "failed_file_count": len(payload.get("failed_files", []) or []),
         "archived_file_count": len(payload.get("archived_files", []) or []),
         "archive_failure_count": len(payload.get("archive_failures", []) or []),
+        "no_data_message": payload.get("no_data_message"),
         "task_value_truncated": True,
         "original_payload_bytes": len(serialized_payload.encode("utf-8")),
     }

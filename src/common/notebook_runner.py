@@ -44,13 +44,47 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
     config = get_config(spark=spark, area=area)
     ensure_catalog_schema(spark, config["catalog"], config["bronze_schema"])
 
-    dictionary_map = load_data_dictionary(spark, config["data_dictionary_path"])
-    primary_key_map = build_primary_key_map(dictionary_map)
     audit_table = build_audit_table_fqn(config)
-    source_files = discover_area_files(dbutils, config["raw_year_path"])
+    source_files = (
+        discover_area_files(dbutils, config["raw_year_path"])
+        if path_exists(dbutils, config["raw_year_path"])
+        else []
+    )
 
     processed_files = []
     failed_files = []
+    no_data_message = None
+
+    if not source_files:
+        no_data_message = "No se encontraron archivos nuevos para procesar en raw."
+        no_data_record = build_audit_record(
+            load_id=str(uuid.uuid4()),
+            area=config["area"],
+            table_name="__NO_FILES__",
+            load_mode="no_data",
+            source_year=config["data_year"],
+            source_month=None,
+            source_path=config["raw_year_path"],
+            source_file_name="__NO_FILES__",
+            source_format="none",
+            target_table=audit_table,
+            target_path=config["audit_table_path"],
+            record_count=0,
+            status="NO_DATA",
+            error_message=no_data_message,
+            historic_path=config["historic_year_root"],
+        )
+        append_audit_records(
+            spark=spark,
+            audit_records=[no_data_record],
+            audit_table=audit_table,
+            audit_table_path=config["audit_table_path"],
+        )
+
+    dictionary_map = (
+        load_data_dictionary(spark, config["data_dictionary_path"]) if source_files else {}
+    )
+    primary_key_map = build_primary_key_map(dictionary_map)
 
     for source_file in source_files:
         table_name = normalize_table_name(
@@ -187,6 +221,7 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
         "bronze_schema": config["bronze_schema"],
         "processed_files": processed_files,
         "failed_files": failed_files,
+        "no_data_message": no_data_message,
     }
 
     dbutils.jobs.taskValues.set(

@@ -1,0 +1,79 @@
+schema: spec-driven
+
+context: |
+  Proyecto: NaturaPet Data Lakehouse sobre Azure Databricks, ADLS Gen2,
+  Unity Catalog y Databricks Asset Bundles. Este contexto pertenece al
+  repositorio cliente srinconr-Crea/Naturapet_DLH, separado del harness.
+  Idioma de los artefactos OpenSpec: español.
+
+  Dominios: shared, comercial, finanzas, operaciones y gobierno.
+  Bronze aterriza y valida datos; Silver estandariza, normaliza y aplica
+  controles de calidad; Gold genera marts y métricas de negocio.
+  No asumir reglas nuevas de nulos, cantidades, importes, fechas o ratios:
+  recuperar las reglas existentes y aclarar las decisiones que falten.
+
+  Mapa del repositorio: src/common/ contiene utilidades compartidas;
+  src/utilities/ contiene otras utilidades; notebooks/<dominio>/<capa>/
+  contiene notebooks. conf/ contiene configuración; resources/jobs/
+  define jobs; databricks.yml define el bundle; tests/ contiene pruebas.
+  README.md describe arquitectura y operación. Consultar las instrucciones
+  de agentes del cliente si existen y las fuentes pertinentes a cada HU.
+
+  openspec/specs/ expresa requisitos vigentes; openspec/changes/ contiene
+  propuestas activas; openspec/changes/archive/ conserva el histórico.
+  Código y pruebas aportan evidencia de implementación. Una propuesta,
+  una tarea marcada o el chat no demuestran por sí solos comportamiento
+  verificado. Resolver contradicciones relevantes antes de implementar.
+
+  Flujo de HU: explore aclara alcance y criterios; propose prepara los
+  artefactos; update revisa el plan si hay feedback; la aprobación humana
+  vigente del plan y manifiesto precede a apply. Después se verifica,
+  sincroniza, archiva y publica el PR del candidato verificado.
+  Cambiar el alcance o plan aprobado exige nueva aprobación.
+  Rama base del piloto: develop. Publicar código y OpenSpec juntos en
+  feature/* mediante PR. Merge y despliegue siguen siendo humanos.
+
+  El perfil externo aprobado del harness fija rutas, operaciones, modelos,
+  límites y pruebas; la HU y este YAML no pueden ampliarlos. Las skills
+  versionadas en .agents/skills/ describen los siete workflows; su contenido
+  no concede shell ni permisos adicionales. El desarrollador no modifica
+  las rutas protegidas; OpenSpec se escribe mediante su workflow controlado.
+
+  Las pruebas del harness usan recursos demo_harness_* aislados. El código
+  ejecutable requiere el Job sandbox con identidad distinta de la App.
+  No ejecutar jobs o pipelines ni modificar tablas o catálogos de NaturaPet.
+  Usar datos sintéticos y pruebas pertinentes de tests/, sin secretos ni
+  dependencias de recursos reales del cliente. No desplegar desde una HU.
+
+rules:
+  proposal:
+    - Explicar problema, alcance, exclusiones y criterios de aceptación de la HU.
+    - Separar comportamiento actual, evidencia disponible y cambio propuesto.
+    - Identificar capacidades y dominios/capas afectados sin inventar reglas de negocio.
+  specs:
+    - Redactar requisitos observables y escenarios verificables de éxito y rechazo.
+    - Definir casos de nulos, cero, duplicados, fechas y valores límite cuando apliquen.
+    - Preservar requisitos y escenarios vigentes al redactar una modificación.
+  design:
+    - Identificar archivos, contratos, esquemas y configuración afectados.
+    - Explicar impacto entre capas y dominios, compatibilidad y recuperación cuando apliquen.
+    - Definir pruebas sintéticas, adaptadores y dependencias disponibles en el sandbox.
+    - Incluir archivos/operaciones previstos y pruebas para el manifiesto del plan aprobado.
+  tasks:
+    - Usar tareas verificables con formato de casilla e incluir pruebas junto al cambio pertinente.
+    - Incluir verificación, sincronización de specs, archivado y preparación del PR.
+    - Si cambia databricks.yml o resources/, incluir validación estricta del bundle para dev.
+    - Si falta una herramienta o permiso de prueba, declarar el bloqueo sin sustituirlo por credenciales de la App.
+
+operations:
+  apply:
+    guidance:
+      - Aplicar únicamente el alcance y operaciones del plan/manifiesto con aprobación vigente.
+      - Respetar las instrucciones aplicables y los controles deterministas del perfil cliente.
+      - Ejecutar las pruebas requeridas en el sandbox y conservar resultados antes de publicar.
+      - Ante cambios de alcance o bloqueos, volver al flujo de revisión del harness.
+  archive:
+    guidance:
+      - Archivar después de verificar implementación y sincronizar las specs afectadas.
+      - Conservar evidencia de pruebas y trazabilidad del cambio; no marcar pendientes como completados.
+      - Incluir OpenSpec y código en el mismo PR feature/* hacia develop, sin merge ni despliegue automático del agente.

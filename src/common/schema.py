@@ -1,4 +1,9 @@
+import re
 from typing import Dict, List, Tuple
+
+# Extensiones de archivo reconocidas al normalizar el nombre de tabla.
+# Deben corresponder a los formatos admitidos por la ingesta (ver io.py).
+_RECOGNIZED_EXTENSION = re.compile(r"\.(?:csv|json|parquet)$", re.IGNORECASE | re.ASCII)
 
 
 def _require_pyspark():
@@ -14,7 +19,7 @@ def _require_pyspark():
 
 
 def normalize_table_name(file_name: str, month: str = "") -> str:
-    table_name = file_name.removesuffix(".csv")
+    table_name = _RECOGNIZED_EXTENSION.sub("", file_name, count=1)
     if month and table_name.endswith(f"_{month}"):
         return table_name[: -(len(month) + 1)]
     return table_name

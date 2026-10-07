@@ -4,16 +4,16 @@
 
 Establecer el contrato actual de descubrimiento, validación, carga Delta, auditoría y traslado a histórico de archivos por dominio.
 
-Base documental sugerida, derivada por lectura de código en `develop@9c48831022a329902f765058de37e6d0a1528eb7`. Requiere revisión humana antes de adoptarse; no acredita ejecución de Spark ni despliegue Databricks.
+Contrato del comportamiento implementado, documentado mediante lectura estática de `develop@eb35b87b79eb541c4832fccc8f8825412755f498`. Los escenarios describen resultados esperados del código actual; no constituyen evidencia de ejecución de Spark ni de despliegue en Databricks.
 
 ## Sources
 
-- [src/common/io.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/src/common/io.py)
-- [src/common/schema.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/src/common/schema.py)
-- [src/common/validation.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/src/common/validation.py)
-- [src/common/delta_load.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/src/common/delta_load.py)
-- [src/common/notebook_runner.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/src/common/notebook_runner.py)
-- [tests/test_project_structure.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/tests/test_project_structure.py)
+- [src/common/io.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/src/common/io.py)
+- [src/common/schema.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/src/common/schema.py)
+- [src/common/validation.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/src/common/validation.py)
+- [src/common/delta_load.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/src/common/delta_load.py)
+- [src/common/notebook_runner.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/src/common/notebook_runner.py)
+- [tests/test_project_structure.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/tests/test_project_structure.py)
 
 ## Requirements
 
@@ -88,3 +88,67 @@ El archivo SHALL seleccionar auditorías con status SUCCESS y archived_at nulo. 
 #### Scenario: Carga fallida
 - **WHEN** la auditoría de carga tiene status FAILED
 - **THEN** no entra en list_pending_archives
+
+### Requirement: Nombre de tabla y lectura por formato
+
+detect_file_format SHALL comparar la extensión final en minúsculas y admitir csv, json y parquet. normalize_table_name SHALL eliminar únicamente el sufijo literal .csv, sensible a mayúsculas, y después el sufijo _<mes> si queda al final. El soporte del lector no SHALL interpretarse como eliminación de extensiones JSON, Parquet o CSV en mayúsculas al resolver tablas. CSV y JSON SHALL leerse con inferencia cuando no hay schema; CSV SHALL usar header=true y Parquet su esquema almacenado.
+
+#### Scenario: Nombre JSON mensual
+- **WHEN** se resuelve fact_ventas_01.json con mes 01
+- **THEN** el nombre permanece fact_ventas_01.json; no se convierte automáticamente en fact_ventas
+
+#### Scenario: CSV en mayúsculas
+- **WHEN** se detecta y normaliza fact_ventas_01.CSV
+- **THEN** el lector detecta csv y el normalizador conserva fact_ventas_01.CSV
+
+### Requirement: Diccionario y evolución de columnas Bronze
+
+load_data_dictionary SHALL leer CSV con header=true y agrupar sus filas por tabla usando tabla, campo, rol y tipo_dato_csv. conform_to_dictionary SHALL seleccionar únicamente las columnas declaradas y mapear object a string, int64 a long y float64 a double; otros tipos SHALL usar string. Las columnas declaradas faltantes SHALL causar ValueError; las columnas adicionales SHALL descartarse en tablas del diccionario. La tabla nueva SHALL usar mergeSchema=true y el MERGE existente no SHALL añadir explícitamente columnas ni activar autoMerge de sesión.
+
+#### Scenario: Columna extra
+- **WHEN** un CSV conocido tiene todas las columnas declaradas y una columna adicional
+- **THEN** conform_to_dictionary excluye la adicional antes de la carga
+
+#### Scenario: Tipo no reconocido
+- **WHEN** tipo_dato_csv contiene un valor fuera de los tres tipos mapeados
+- **THEN** la columna se convierte a string
+
+#### Scenario: Evolución de tabla existente
+- **WHEN** la entrada declarada incorpora una nueva columna y la tabla Delta ya existe
+- **THEN** el código invoca MERGE sin ALTER TABLE ni configuración global de autoMerge; el resultado depende del esquema y runtime Delta
+
+### Requirement: Relectura e identidad de archivos
+
+run_bronze_load SHALL procesar todos los archivos descubiertos aún presentes en raw, sin excluirlos por auditorías SUCCESS anteriores y sin comprobar checksum de archivo. Una nueva lectura SHALL añadir un instante de ingesta nuevo y crear otro load_id. Las PK de diccionario SHALL prevalecer sobre el hash; cuando se usa hash SHALL incluir columnas de negocio y metadatos disponibles excepto _np_ingestion_ts, en el orden de columnas de entrada.
+
+#### Scenario: Archivo exitoso que sigue en raw
+- **WHEN** un archivo con auditoría SUCCESS anterior se descubre de nuevo
+- **THEN** el runner vuelve a leerlo y realiza la carga por claves; no lo omite basándose en la auditoría
+
+#### Scenario: Misma fila en otra fuente sin PK
+- **WHEN** la fila de negocio se presenta con otra ruta y nombre de fuente
+- **THEN** los metadatos participan en el hash y no se garantiza la misma identidad que en la fuente anterior
+
+### Requirement: Límites de auditoría y fallos iniciales
+
+El manejo por archivo SHALL abarcar validación de tabla, lectura, validaciones de datos, escritura y auditoría de ese archivo. El descubrimiento y la carga del diccionario SHALL ejecutarse antes del try por archivo; los fallos en esas fases no SHALL describirse como registros FAILED por archivo ni como resumen taskValues garantizado. path_exists SHALL devolver false ante cualquier excepción de ls; run_bronze_load SHALL tratar ese resultado como ausencia de fuentes si no falla una operación posterior.
+
+#### Scenario: Formato no soportado descubierto
+- **WHEN** discover_area_files encuentra un .xlsx en raw
+- **THEN** detect_file_format lanza ValueError antes del bucle por archivo; no se genera el resumen final por ese camino
+
+#### Scenario: Error al listar raw
+- **WHEN** dbutils.fs.ls falla dentro de path_exists
+- **THEN** path_exists devuelve false y el runner toma el camino sin fuentes; no distingue aquí permisos insuficientes de ruta ausente
+
+### Requirement: Persistencia parcial y movimiento a histórico
+
+La escritura de tabla, el append de auditoría y el movimiento a histórico SHALL ejecutarse por separado, sin rollback global. El archivador SHALL construir la carpeta destino y llamar dbutils.fs.mv, sin comparación de checksum ni política explícita de resolución de colisiones. El estado de archivo SHALL actualizarse por load_id; archived_at SHALL fijarse solo para éxitos de archivo.
+
+#### Scenario: Fallo después de una escritura
+- **WHEN** la escritura Delta termina y una operación posterior falla
+- **THEN** el código no restaura la versión previa de la tabla; los datos escritos pueden permanecer
+
+#### Scenario: Fuente y destino presentes
+- **WHEN** el archivador encuentra la fuente y ya existe el destino histórico
+- **THEN** invoca mv; no resuelve la colisión ni verifica equivalencia de contenido por su cuenta

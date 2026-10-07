@@ -2,18 +2,18 @@
 
 ## Purpose
 
-Definir las dependencias entre capas, schedules y comportamiento CI existente que afectan una HU y su PR de preparación.
+Definir las dependencias entre capas, schedules y comportamiento de entrega existentes del lakehouse.
 
-Base documental sugerida, derivada por lectura de código en `develop@9c48831022a329902f765058de37e6d0a1528eb7`. Requiere revisión humana antes de adoptarse; no acredita ejecución de Spark ni despliegue Databricks.
+Contrato del comportamiento implementado, documentado mediante lectura estática de `develop@eb35b87b79eb541c4832fccc8f8825412755f498`. Los escenarios describen resultados esperados del código actual; no constituyen evidencia de ejecución de Spark ni de despliegue en Databricks.
 
 ## Sources
 
-- [resources/jobs/monthly_data_mesh_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/resources/jobs/monthly_data_mesh_refresh.job.yml)
-- [resources/jobs/monthly_file_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/resources/jobs/monthly_file_refresh.job.yml)
-- [resources/jobs/monthly_silver_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/resources/jobs/monthly_silver_refresh.job.yml)
-- [resources/jobs/monthly_gold_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/resources/jobs/monthly_gold_refresh.job.yml)
-- [.github/workflows/databricks-cicd.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/.github/workflows/databricks-cicd.yml)
-- [tests/test_project_structure.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/9c48831022a329902f765058de37e6d0a1528eb7/tests/test_project_structure.py)
+- [resources/jobs/monthly_data_mesh_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/resources/jobs/monthly_data_mesh_refresh.job.yml)
+- [resources/jobs/monthly_file_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/resources/jobs/monthly_file_refresh.job.yml)
+- [resources/jobs/monthly_silver_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/resources/jobs/monthly_silver_refresh.job.yml)
+- [resources/jobs/monthly_gold_refresh.job.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/resources/jobs/monthly_gold_refresh.job.yml)
+- [.github/workflows/databricks-cicd.yml](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/.github/workflows/databricks-cicd.yml)
+- [tests/test_project_structure.py](https://github.com/srinconr-Crea/Naturapet_DLH/blob/eb35b87b79eb541c4832fccc8f8825412755f498/tests/test_project_structure.py)
 
 ## Requirements
 
@@ -61,3 +61,43 @@ La evidencia local SHALL distinguir las pruebas unitarias de utilidades y mocks 
 - **WHEN** tests/test_project_structure.py pasa sin Spark ni conexiones Databricks
 - **THEN** se acredita únicamente el alcance unitario de esa suite y no el resultado real de notebooks, jobs o tablas
 
+
+### Requirement: Grafo Bronze por dominios
+
+monthly_file_refresh SHALL encadenar shared_load_to_delta→shared_archive_to_historic→comercial_load_to_delta→comercial_archive_to_historic→finanzas_load_to_delta→finanzas_archive_to_historic→operaciones_load_to_delta→operaciones_archive_to_historic→gobierno_load_to_delta→gobierno_archive_to_historic. Cada tarea SHALL recibir environment, catalog_name, storage_account, storage_container y data_year. No SHALL iniciar carga de otro dominio dentro de este Job antes de su dependencia declarada.
+
+#### Scenario: Archivo comercial fallido
+- **WHEN** comercial_load_to_delta termina con excepción
+- **THEN** su tarea de archivo y las cargas posteriores dependen del camino fallido; el YAML no declara run_if para continuar ante ese fallo
+
+### Requirement: Paralelismo Silver y referencias shared
+
+Silver SHALL iniciar la estandarización de cada dominio sin dependencia Bronze ni dependencia de otro dominio dentro del Job Silver. Cada dominio SHALL encadenar sus cinco pasos; quality_checks de dominios distintos de shared SHALL depender además de shared_04_business_derivations, sin esperar explícitamente shared_05_quality_checks. Los pasos 01,02,03,05 SHALL usar notebooks shared y el paso 04 el notebook del dominio.
+
+#### Scenario: Inicio Silver comercial
+- **WHEN** se inspecciona comercial_01_schema_standardization
+- **THEN** no tiene depends_on en el Job Silver y puede iniciar junto a otros dominios
+
+#### Scenario: Calidad de operaciones
+- **WHEN** se inspecciona operaciones_05_quality_checks
+- **THEN** depende de operaciones_04_business_derivations y shared_04_business_derivations
+
+### Requirement: Concurrencia acotada por Job
+
+max_concurrent_runs=1 y queue.enabled=true SHALL declararse en los cuatro Jobs. Estos límites SHALL aplicarse a cada definición de Job, sin un lock global del lakehouse declarado en el código. Los schedules de capa SHALL estar UNPAUSED en los recursos comunes sin overrides específicos por target; el orquestador SHALL permanecer sin schedule propio.
+
+#### Scenario: Bronze y Silver programados
+- **WHEN** se consulta la definición de los dos Jobs
+- **THEN** cada uno tiene su propio límite de concurrencia y el YAML no enlaza sus schedules mediante depends_on
+
+#### Scenario: Target qa
+- **WHEN** se despliegan los recursos sin overrides adicionales
+- **THEN** el schedule de cada capa conserva pause_status=UNPAUSED en su definición
+
+### Requirement: Recursos Jobs e identidad declarada
+
+monthly_data_mesh_refresh SHALL declarar run_as y CAN_MANAGE para github_actions_service_principal_name. Los Jobs Bronze, Silver y Gold no SHALL atribuirse un run_as explícito, permisos propios ni configuración de cluster en los YAML actuales. Ninguno de los cuatro Jobs SHALL atribuirse retry, timeout, notificaciones o health rules configurados en el repositorio; los defaults efectivos de plataforma no se definen aquí. El contrato detallado de entrega SHALL consultarse en deployment y el de recuperación en lakehouse-operations.
+
+#### Scenario: Identidad de una capa
+- **WHEN** se consulta monthly_gold_refresh.job.yml
+- **THEN** no contiene run_as; el repositorio no garantiza mediante esa definición que sea idéntica a la identidad del orquestador

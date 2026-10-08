@@ -1,5 +1,7 @@
 from typing import Dict, List, Tuple
 
+_RECOGNIZED_EXTENSIONS = (".csv", ".json", ".parquet")
+
 
 def _require_pyspark():
     from pyspark.sql import functions as F
@@ -14,7 +16,23 @@ def _require_pyspark():
 
 
 def normalize_table_name(file_name: str, month: str = "") -> str:
-    table_name = file_name.removesuffix(".csv")
+    """Resuelve el nombre de tabla a partir del nombre de archivo.
+
+    Orden de normalización:
+    1. Elimina una sola extensión final reconocida (.csv, .json o .parquet),
+       sin distinguir mayúsculas de minúsculas.
+    2. Elimina el sufijo ``_<month>`` solo si ``month`` está informado y
+       coincide exactamente al final del nombre ya sin extensión.
+
+    Preserva las mayúsculas del nombre de tabla, las extensiones no
+    reconocidas (por ejemplo .xlsx) y los puntos internos del nombre.
+    """
+    table_name = file_name
+    lowered_name = file_name.lower()
+    for extension in _RECOGNIZED_EXTENSIONS:
+        if lowered_name.endswith(extension):
+            table_name = file_name[: -len(extension)]
+            break
     if month and table_name.endswith(f"_{month}"):
         return table_name[: -(len(month) + 1)]
     return table_name

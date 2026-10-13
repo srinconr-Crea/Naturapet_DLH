@@ -83,6 +83,8 @@
     "mode": "human_authorized_pilot_draft_via_git_codex",
     "local_harness_certified": false,
     "next_increment_enabled": false,
-    "remaining_actual_model_evaluations": 144
+    "remaining_actual_model_evaluations": 144,
+    "pr_url": "https://github.com/srinconr-Crea/Naturapet_DLH/pull/12",
+    "draft": true
   }
 }

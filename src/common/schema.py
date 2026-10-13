@@ -14,7 +14,8 @@ def _require_pyspark():
 
 
 def normalize_table_name(file_name: str, month: str = "") -> str:
-    table_name = file_name.removesuffix(".csv")
+    stem, separator, extension = file_name.rpartition(".")
+    table_name = stem if separator and extension.lower() in {"csv", "json", "parquet"} else file_name
     if month and table_name.endswith(f"_{month}"):
         return table_name[: -(len(month) + 1)]
     return table_name

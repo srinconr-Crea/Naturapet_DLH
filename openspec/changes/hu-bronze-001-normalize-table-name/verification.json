@@ -1,0 +1,88 @@
+{
+  "hu": "HU-BRONZE-001-Codex-Local",
+  "base_commit": "c5efcf154c7e56101e6dd6c3ea830f6512e6b184",
+  "profile": "CREA_DEV",
+  "job_id": 611081415041874,
+  "job_run_as": "dac4cb01-380f-4af5-b594-132d6d693beb",
+  "app_identity": "8910cd3e-32f6-4c75-b16f-b5ff3ea258d2",
+  "runner_sha256": "cb54ddacc52b3efb5dfd4c0b935d313f1412101cbbbdbfa32829dc79d226ffcd",
+  "new_dependencies": [],
+  "bundle_target_executed": false,
+  "client_resources_executed": false,
+  "runs": [
+    {
+      "case": "red",
+      "job_run_id": 196791846417982,
+      "url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/611081415041874/run/196791846417982",
+      "source_sha256": {
+        "src/common/schema.py": "99e17dc620dcc4a2dab3a4b772ea7ad226c4665d07b5e3391233fae0fcdf1dea",
+        "tests/test_normalize_table_name.py": "72c1954778b4c6d037e95c352875792ecfce825bb00533b38e9121c9f4b3f7fd"
+      },
+      "result": {
+        "run_id": "77bc178a0633463b80e83aae1b199c15",
+        "attempt_id": "d2891887decd46ce8b2119daf041f845",
+        "archive_sha256": "ac8cb63604a56f3ffebb8fedcbdec2c0269b4b80ed0d275131c7fd357c5cad84",
+        "passed": false,
+        "evidence": [
+          "ected):\n>       assert normalize_table_name(file_name, month) == expected\nE       AssertionError: assert 'fact_ventas_01.parquet' == 'fact_ventas'\nE         \nE         - fact_ventas\nE         + fact_ventas_01.parquet\n\ntests/test_normalize_table_name.py:23: AssertionError\n___ test_normalize_table_name_acceptance[Fact_Ventas_01.CSV-01-Fact_Ventas] ____\n\nfile_name = 'Fact_Ventas_01.CSV', month = '01', expected = 'Fact_Ventas'\n\n    @pytest.mark.parametrize(\n        \"file_name,month,expected\",\n        [\n            (\"fact_ventas_01.csv\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.json\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.parquet\", \"01\", \"fact_ventas\"),\n            (\"Fact_Ventas_01.CSV\", \"01\", \"Fact_Ventas\"),\n            (\"fact_ventas_01.JsOn\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas.PARQUET\", \"\", \"fact_ventas\"),\n            (\"fact_ventas_02.csv\", \"01\", \"fact_ventas_02\"),\n            (\"fact_ventas_01.csv\", \"\", \"fact_ventas_01\"),\n            (\"fact.ventas_01.json\", \"01\", \"fact.ventas\"),\n            (\"fact_ventas_01.xlsx\", \"01\", \"fact_ventas_01.xlsx\"),\n            (\"fact_ventas_01\", \"01\", \"fact_ventas\"),\n        ],\n    )\n    def test_normalize_table_name_acceptance(file_name, month, expected):\n>       assert normalize_table_name(file_name, month) == expected\nE       AssertionError: assert 'Fact_Ventas_01.CSV' == 'Fact_Ventas'\nE         \nE         - Fact_Ventas\nE         + Fact_Ventas_01.CSV\nE         ?            +++++++\n\ntests/test_normalize_table_name.py:23: AssertionError\n___ test_normalize_table_name_acceptance[fact_ventas_01.JsOn-01-fact_ventas] ___\n\nfile_name = 'fact_ventas_01.JsOn', month = '01', expected = 'fact_ventas'\n\n    @pytest.mark.parametrize(\n        \"file_name,month,expected\",\n        [\n            (\"fact_ventas_01.csv\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.json\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.parquet\", \"01\", \"fact_ventas\"),\n            (\"Fact_Ventas_01.CSV\", \"01\", \"Fact_Ventas\"),\n            (\"fact_ventas_01.JsOn\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas.PARQUET\", \"\", \"fact_ventas\"),\n            (\"fact_ventas_02.csv\", \"01\", \"fact_ventas_02\"),\n            (\"fact_ventas_01.csv\", \"\", \"fact_ventas_01\"),\n            (\"fact.ventas_01.json\", \"01\", \"fact.ventas\"),\n            (\"fact_ventas_01.xlsx\", \"01\", \"fact_ventas_01.xlsx\"),\n            (\"fact_ventas_01\", \"01\", \"fact_ventas\"),\n        ],\n    )\n    def test_normalize_table_name_acceptance(file_name, month, expected):\n>       assert normalize_table_name(file_name, month) == expected\nE       AssertionError: assert 'fact_ventas_01.JsOn' == 'fact_ventas'\nE         \nE         - fact_ventas\nE         + fact_ventas_01.JsOn\n\ntests/test_normalize_table_name.py:23: AssertionError\n____ test_normalize_table_name_acceptance[fact_ventas.PARQUET--fact_ventas] ____\n\nfile_name = 'fact_ventas.PARQUET', month = '', expected = 'fact_ventas'\n\n    @pytest.mark.parametrize(\n        \"file_name,month,expected\",\n        [\n            (\"fact_ventas_01.csv\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.json\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.parquet\", \"01\", \"fact_ventas\"),\n            (\"Fact_Ventas_01.CSV\", \"01\", \"Fact_Ventas\"),\n            (\"fact_ventas_01.JsOn\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas.PARQUET\", \"\", \"fact_ventas\"),\n            (\"fact_ventas_02.csv\", \"01\", \"fact_ventas_02\"),\n            (\"fact_ventas_01.csv\", \"\", \"fact_ventas_01\"),\n            (\"fact.ventas_01.json\", \"01\", \"fact.ventas\"),\n            (\"fact_ventas_01.xlsx\", \"01\", \"fact_ventas_01.xlsx\"),\n            (\"fact_ventas_01\", \"01\", \"fact_ventas\"),\n        ],\n    )\n    def test_normalize_table_name_acceptance(file_name, month, expected):\n>       assert normalize_table_name(file_name, month) == expected\nE       AssertionError: assert 'fact_ventas.PARQUET' == 'fact_ventas'\nE         \nE         - fact_ventas\nE         + fact_ventas.PARQUET\n\ntests/test_normalize_table_name.py:23: AssertionError\n___ test_normalize_table_name_acceptance[fact.ventas_01.json-01-fact.ventas] ___\n\nfile_name = 'fact.ventas_01.json', month = '01', expected = 'fact.ventas'\n\n    @pytest.mark.parametrize(\n        \"file_name,month,expected\",\n        [\n            (\"fact_ventas_01.csv\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.json\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas_01.parquet\", \"01\", \"fact_ventas\"),\n            (\"Fact_Ventas_01.CSV\", \"01\", \"Fact_Ventas\"),\n            (\"fact_ventas_01.JsOn\", \"01\", \"fact_ventas\"),\n            (\"fact_ventas.PARQUET\", \"\", \"fact_ventas\"),\n            (\"fact_ventas_02.csv\", \"01\", \"fact_ventas_02\"),\n            (\"fact_ventas_01.csv\", \"\", \"fact_ventas_01\"),\n            (\"fact.ventas_01.json\", \"01\", \"fact.ventas\"),\n            (\"fact_ventas_01.xlsx\", \"01\", \"fact_ventas_01.xlsx\"),\n            (\"fact_ventas_01\", \"01\", \"fact_ventas\"),\n        ],\n    )\n    def test_normalize_table_name_acceptance(file_name, month, expected):\n>       assert normalize_table_name(file_name, month) == expected\nE       AssertionError: assert 'fact.ventas_01.json' == 'fact.ventas'\nE         \nE         - fact.ventas\nE         + fact.ventas_01.json\n\ntests/test_normalize_table_name.py:23: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[fact_ventas_01.json-01-fact_ventas]\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[fact_ventas_01.parquet-01-fact_ventas]\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[Fact_Ventas_01.CSV-01-Fact_Ventas]\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[fact_ventas_01.JsOn-01-fact_ventas]\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[fact_ventas.PARQUET--fact_ventas]\nFAILED tests/test_normalize_table_name.py::test_normalize_table_name_acceptance[fact.ventas_01.json-01-fact.ventas]\n6 failed, 5 passed in 0.03s\n\n"
+        ],
+        "failure_category": "implementation",
+        "failure_code": "pytest_failed"
+      }
+    },
+    {
+      "case": "green-focused",
+      "job_run_id": 618095537049869,
+      "url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/611081415041874/run/618095537049869",
+      "source_sha256": {
+        "src/common/schema.py": "6be8bd94a68412f72fd09b8ac00177889832f7b6dcb35af63d691110edec6172",
+        "tests/test_normalize_table_name.py": "72c1954778b4c6d037e95c352875792ecfce825bb00533b38e9121c9f4b3f7fd"
+      },
+      "result": {
+        "run_id": "8d7ca5fd58b94769b36d41231b35f752",
+        "attempt_id": "b8502e72b58e4e19a2f354c40b5185c2",
+        "archive_sha256": "670b3cd6e9fcb34b556a0148891f80a985fb7e97052c47689e16ad602e7fef1b",
+        "passed": true,
+        "evidence": [
+          "...........                                                              [100%]\n11 passed in 0.01s\n\n"
+        ],
+        "failure_category": null,
+        "failure_code": null
+      }
+    },
+    {
+      "case": "green-suite",
+      "job_run_id": 233846238020350,
+      "url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/611081415041874/run/233846238020350",
+      "source_sha256": {
+        "src/common/schema.py": "6be8bd94a68412f72fd09b8ac00177889832f7b6dcb35af63d691110edec6172",
+        "tests/test_normalize_table_name.py": "72c1954778b4c6d037e95c352875792ecfce825bb00533b38e9121c9f4b3f7fd"
+      },
+      "result": {
+        "run_id": "d8725cf1893348eab0d0cb72afcf4c2e",
+        "attempt_id": "778e579a043b4817852aa333163d4fdb",
+        "archive_sha256": "d6de964617c4b4ccf826816e1e0a24cab175017085a1277128af4e894aef4a79",
+        "passed": true,
+        "evidence": [
+          ".........................                                                [100%]\n25 passed in 0.06s\n\n"
+        ],
+        "failure_category": null,
+        "failure_code": null
+      }
+    }
+  ],
+  "review": {
+    "status": "no_findings",
+    "scope": "independent read-only review of code, eleven acceptance cases, OpenSpec delta and five additional boundary probes"
+  },
+  "spec_sync": {
+    "unchanged_requirements_preserved": true,
+    "delta_matches_main_requirement": true
+  },
+  "publication": {
+    "mode": "human_authorized_pilot_draft_via_git_codex",
+    "local_harness_certified": false,
+    "next_increment_enabled": false,
+    "remaining_actual_model_evaluations": 144
+  }
+}

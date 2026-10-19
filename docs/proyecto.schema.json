@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Configuracion manual Crea v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "project",
+    "inventory",
+    "databricks",
+    "workflow",
+    "validation",
+    "practices",
+    "extensions",
+    "delivery"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "name",
+        "setup_complete",
+        "context_path"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "setup_complete": {
+          "type": "boolean"
+        },
+        "context_path": {
+          "type": "string"
+        },
+        "base_branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "object",
+          "required": [
+            "provider",
+            "url"
+          ],
+          "properties": {
+            "provider": {
+              "enum": [
+                "unconfigured",
+                "github",
+                "azure_devops",
+                "other"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "organization": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "project": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name_or_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "inventory": {
+      "type": "object",
+      "required": [
+        "paths",
+        "file_types",
+        "exclude_from_context"
+      ],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "purpose",
+              "exists",
+              "owner"
+            ]
+          }
+        },
+        "file_types": {
+          "type": "array"
+        },
+        "exclude_from_context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "databricks": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "profile": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "workspace_host": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": [
+        "roles",
+        "orchestrator",
+        "require_manual_archive_approval"
+      ],
+      "properties": {
+        "require_manual_archive_approval": {
+          "const": true
+        },
+        "max_active_agents": {
+          "const": 1
+        },
+        "max_fix_rounds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "roles": {
+          "type": "object",
+          "required": [
+            "planner",
+            "developer",
+            "reviewer"
+          ]
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "required": [
+        "required_checks",
+        "no_checks_policy"
+      ],
+      "properties": {
+        "required_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "command",
+              "environment"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "command": {
+                "type": "string"
+              },
+              "environment": {
+                "enum": [
+                  "local",
+                  "databricks"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "practices": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "required": [
+        "skills",
+        "agents",
+        "mcp",
+        "hooks"
+      ],
+      "properties": {
+        "skills": {
+          "type": "array"
+        },
+        "agents": {
+          "type": "array"
+        },
+        "mcp": {
+          "type": "array"
+        },
+        "hooks": {
+          "type": "array"
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "owner",
+        "mode",
+        "remote",
+        "branch_prefix",
+        "auto_create_pr",
+        "allow_force_push",
+        "allow_merge",
+        "allow_deploy",
+        "pr_creation"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "owner": {
+          "const": "principal"
+        },
+        "mode": {
+          "const": "commit_push_provider_pr"
+        },
+        "remote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch_prefix": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "protected_branches": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publish_approval": {
+          "const": "include_in_manual_archive_confirmation"
+        },
+        "allow_force_push": {
+          "const": false
+        },
+        "allow_merge": {
+          "const": false
+        },
+        "allow_deploy": {
+          "const": false
+        },
+        "auto_create_pr": {
+          "const": false
+        },
+        "delete_branch_automatically": {
+          "const": false
+        },
+        "web_repository_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pr_creation": {
+          "const": {
+            "azure_devops": "cli_after_explicit_approval",
+            "github": "manual_link",
+            "other": "manual_link"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

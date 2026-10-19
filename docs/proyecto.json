@@ -1,0 +1,438 @@
+{
+  "$schema": "./proyecto.schema.json",
+  "schema_version": 1,
+  "project": {
+    "name": "Naturapet_DLH",
+    "description": "Data Lakehouse NaturaPet en Azure Databricks, ADLS Gen2 y Unity Catalog; flujo mensual Bronze, Silver y Gold por dominio.",
+    "setup_complete": true,
+    "context_path": "docs/contexto-proyecto.md",
+    "base_branch": "develop",
+    "repository": {
+      "provider": "github",
+      "url": "https://github.com/srinconr-Crea/Naturapet_DLH.git",
+      "organization": "https://github.com/srinconr-Crea",
+      "project": null,
+      "note": "Repositorio clonado en develop. Identidad Git configurada solo para este checkout. PR mediante formulario web.",
+      "name_or_id": "Naturapet_DLH"
+    }
+  },
+  "inventory": {
+    "mode": "manual-reviewed",
+    "paths": [
+      {
+        "path": "src/",
+        "purpose": "Utilidades Python compartidas en common/ y utilities/",
+        "exists": true,
+        "owner": "developer"
+      },
+      {
+        "path": "notebooks/",
+        "purpose": "Notebooks Bronze/Silver/Gold por dominio",
+        "exists": true,
+        "owner": "developer"
+      },
+      {
+        "path": "sql/",
+        "purpose": "Consultas y transformaciones SQL",
+        "exists": false,
+        "owner": "developer"
+      },
+      {
+        "path": "tests/",
+        "purpose": "Pruebas y fixtures sinteticos",
+        "exists": true,
+        "owner": "developer"
+      },
+      {
+        "path": "resources/",
+        "purpose": "Jobs definidos en resources/jobs/ para Databricks Asset Bundles",
+        "exists": true,
+        "owner": "developer"
+      },
+      {
+        "path": "docs/",
+        "purpose": "Contexto, practicas y evidencia",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "openspec/",
+        "purpose": "Store y specs existentes preservados; integracion Codex inicializada",
+        "exists": true,
+        "owner": "phase-dependent"
+      },
+      {
+        "path": ".agents/skills/Crea/",
+        "purpose": "Procedimientos comunes Crea; orquestador y agentes Databricks",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": ".agents/skills/Project/",
+        "purpose": "Skills especificas del proyecto; inicialmente README",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": ".codex/agents/",
+        "purpose": "Perfiles nativos planner, developer, reviewer",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "docs/buenas-practicas/",
+        "purpose": "Sintesis por herramienta y referencias",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "docs/plantillas/",
+        "purpose": "Contratos de handoff y evidencia",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "scripts/crea/",
+        "purpose": "Verificador de estructura e integridad; ejecucion opcional",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "conf/",
+        "purpose": "Configuracion por ambiente y jobs",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": ".github/workflows/",
+        "purpose": "CI/CD existente; fuera del alcance de modificacion",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": ".agents/skills/",
+        "purpose": "Skills OpenSpec existentes y skills agregadas del kit",
+        "exists": true,
+        "owner": "shared"
+      },
+      {
+        "path": "databricks.yml",
+        "purpose": "Bundle Naturapet_DLH y targets dev/qa/prod",
+        "exists": true,
+        "owner": "developer"
+      },
+      {
+        "path": "requirements-dev.txt",
+        "purpose": "Dependencia pytest para pruebas locales; instalar en .venv",
+        "exists": true,
+        "owner": "developer"
+      }
+    ],
+    "file_types": [
+      {
+        "extensions": [
+          ".py"
+        ],
+        "purpose": "Utilidades en src/ y pruebas en tests/; Spark solo donde se importe o use",
+        "practices": [
+          "python",
+          "spark"
+        ]
+      },
+      {
+        "extensions": [
+          ".ipynb"
+        ],
+        "purpose": "Notebooks por dominio/capa; Python y SQL embebidos, sin salidas sensibles",
+        "practices": [
+          "databricks",
+          "python",
+          "spark",
+          "sql"
+        ]
+      },
+      {
+        "extensions": [
+          ".yml",
+          ".yaml"
+        ],
+        "purpose": "Bundle Databricks, jobs, entornos y CI/CD existentes; sin Terraform",
+        "practices": [
+          "infraestructura"
+        ]
+      },
+      {
+        "extensions": [
+          ".toml",
+          ".json",
+          ".md",
+          ".ps1"
+        ],
+        "purpose": "Perfiles, contexto, contratos, evidencia y verificador del kit",
+        "practices": [
+          "agentes",
+          "general"
+        ]
+      },
+      {
+        "extensions": [
+          ".txt"
+        ],
+        "purpose": "Dependencias locales de desarrollo en requirements-dev.txt",
+        "practices": [
+          "python"
+        ]
+      }
+    ],
+    "exclude_from_context": [
+      ".git/",
+      ".venv/",
+      "node_modules/",
+      ".env",
+      ".databrickscfg",
+      "dist/",
+      ".databricks/",
+      ".pytest_cache/",
+      "build/",
+      "coverage/"
+    ],
+    "update_on_path_change": true,
+    "observed_kit_file_types": [
+      {
+        "extension": "(sin-extension)",
+        "count": 5,
+        "examples": [
+          ".gitignore",
+          "docs/licencias/databricks-snapshot/LICENSE",
+          "docs/licencias/databricks-snapshot/NOTICE"
+        ]
+      },
+      {
+        "extension": ".json",
+        "count": 5,
+        "examples": [
+          ".agents/skills/Crea/creating-databricks-agents/assets/agent-spec.json",
+          "docs/fuentes.json",
+          "docs/proyecto.json"
+        ]
+      },
+      {
+        "extension": ".md",
+        "count": 149,
+        "examples": [
+          ".agents/skills/Crea/creating-databricks-agents/references/architecture.md",
+          ".agents/skills/Crea/creating-databricks-agents/references/configuration-intake.md",
+          ".agents/skills/Crea/creating-databricks-agents/references/preflight-and-permissions.md"
+        ]
+      },
+      {
+        "extension": ".png",
+        "count": 15,
+        "examples": [
+          ".agents/skills/databricks-app-design/assets/databricks.png",
+          ".agents/skills/databricks-apps/assets/databricks.png",
+          ".agents/skills/databricks-apps-python/assets/databricks.png"
+        ]
+      },
+      {
+        "extension": ".ps1",
+        "count": 2,
+        "examples": [
+          ".agents/skills/Crea/creating-databricks-agents/scripts/preflight.ps1",
+          "scripts/crea/verificar-kit.ps1"
+        ]
+      },
+      {
+        "extension": ".py",
+        "count": 11,
+        "examples": [
+          ".agents/skills/Crea/creating-databricks-agents/scripts/validate_agent_spec.py",
+          ".agents/skills/databricks-apps-python/examples/fm-minimal-chat.py",
+          ".agents/skills/databricks-apps-python/examples/fm-parallel-calls.py"
+        ]
+      },
+      {
+        "extension": ".svg",
+        "count": 15,
+        "examples": [
+          ".agents/skills/databricks-app-design/assets/databricks.svg",
+          ".agents/skills/databricks-apps/assets/databricks.svg",
+          ".agents/skills/databricks-apps-python/assets/databricks.svg"
+        ]
+      },
+      {
+        "extension": ".toml",
+        "count": 4,
+        "examples": [
+          ".codex/agents/developer.toml",
+          ".codex/agents/planner.toml",
+          ".codex/agents/reviewer.toml"
+        ]
+      },
+      {
+        "extension": ".yaml",
+        "count": 17,
+        "examples": [
+          ".agents/skills/Crea/creating-databricks-agents/agents/openai.yaml",
+          ".agents/skills/Crea/orquestador/agents/openai.yaml",
+          ".agents/skills/databricks-app-design/agents/openai.yaml"
+        ]
+      }
+    ],
+    "observed_on": "2026-10-19",
+    "observed_note": "Rutas revisadas el 2026-10-19; observed_project_file_types cuenta archivos del repositorio base sin .agents; observed_kit_file_types conserva la procedencia del kit, no el inventario cliente.",
+    "observed_kit_version": "0.1.3",
+    "observed_project_file_types": [
+      {
+        "extension": "(sin-extension)",
+        "count": 3
+      },
+      {
+        "extension": ".ipynb",
+        "count": 24
+      },
+      {
+        "extension": ".md",
+        "count": 12
+      },
+      {
+        "extension": ".py",
+        "count": 21
+      },
+      {
+        "extension": ".yaml",
+        "count": 1
+      },
+      {
+        "extension": ".yml",
+        "count": 10
+      }
+    ]
+  },
+  "databricks": {
+    "enabled": true,
+    "cloud": "azure",
+    "workspace_host": "https://adb-7405606739630987.7.azuredatabricks.net",
+    "profile": "CREA_DEV",
+    "target": "dev",
+    "catalog": "naturapet_dev",
+    "schema": null,
+    "warehouse_id": null,
+    "runtime": null,
+    "spark_version": null,
+    "python_version": null,
+    "schema_pattern": "${var.domain_name}_${var.data_layer}",
+    "default_bundle_domain": "comercial",
+    "default_bundle_layer": "bronze",
+    "runtime_note": "No hay spark_version fijado en los YAML de jobs; registrar DBR/Spark/Python reales antes de pruebas de runtime. Python local y CI no son la version del runtime remoto."
+  },
+  "workflow": {
+    "orchestrator": ".agents/skills/Crea/orquestador/SKILL.md",
+    "change_name": null,
+    "roles": {
+      "planner": ".codex/agents/planner.toml",
+      "developer": ".codex/agents/developer.toml",
+      "reviewer": ".codex/agents/reviewer.toml"
+    },
+    "max_active_agents": 1,
+    "max_fix_rounds": 2,
+    "require_manual_archive_approval": true,
+    "require_plan_approval": true,
+    "handoff_template": "docs/plantillas/handoff.md",
+    "evidence_template": "docs/plantillas/evidencia-hu.md",
+    "skills_by_role": {
+      "planner": [
+        "openspec-explore",
+        "openspec-propose",
+        "openspec-update-change"
+      ],
+      "developer": [
+        "openspec-apply-change"
+      ],
+      "reviewer": [
+        "openspec-verify-change",
+        "openspec-sync-specs",
+        "openspec-archive-change"
+      ]
+    },
+    "planning_confirmation_policy": "preserve_openspec_skill_gates"
+  },
+  "validation": {
+    "required_checks": [
+      {
+        "id": "kit-structure",
+        "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/crea/verificar-kit.ps1",
+        "environment": "local",
+        "when": "Cambios en kit, contexto, perfiles o contrato proyecto.json"
+      },
+      {
+        "id": "openspec-list",
+        "command": "openspec.cmd list --json",
+        "environment": "local",
+        "when": "Inicio/reanudacion de HU y cambios en artefactos OpenSpec"
+      },
+      {
+        "id": "python-unit",
+        "command": ".\\.venv\\Scripts\\python.exe -m pytest tests -q",
+        "environment": "local",
+        "when": "Cambios en src/, tests/ o logica Python compartida"
+      },
+      {
+        "id": "bundle-dev",
+        "command": "databricks bundle validate --strict --target dev --profile CREA_DEV",
+        "environment": "databricks",
+        "when": "Cambios en databricks.yml, resources/, rutas de notebooks o configuracion del bundle"
+      }
+    ],
+    "example_checks": [],
+    "no_checks_policy": "planner_define_before_apply",
+    "require_runtime_tests_when_spark_changes": true
+  },
+  "practices": {
+    "general": "docs/buenas-practicas/general.md",
+    "databricks": "docs/buenas-practicas/databricks.md",
+    "sql": "docs/buenas-practicas/sql.md",
+    "python": "docs/buenas-practicas/python.md",
+    "spark": "docs/buenas-practicas/spark.md",
+    "infraestructura": "docs/buenas-practicas/infraestructura.md",
+    "agentes": "docs/buenas-practicas/agentes.md",
+    "gobierno-datos": "docs/buenas-practicas/gobierno-datos.md"
+  },
+  "extensions": {
+    "skills": [],
+    "agents": [],
+    "mcp": [],
+    "hooks": [],
+    "notes": "Sin skills personalizadas de Project, agentes adicionales, MCP ni hooks propios. Los tres roles base se definen en workflow.roles. No se infieren conexiones de las herramientas disponibles en esta sesion."
+  },
+  "delivery": {
+    "enabled": true,
+    "owner": "principal",
+    "mode": "commit_push_provider_pr",
+    "remote": "origin",
+    "branch_prefix": "feature/",
+    "branch_name": null,
+    "base_branch_ref": "project.base_branch",
+    "publish_approval": "include_in_manual_archive_confirmation",
+    "protected_branches": [
+      "main",
+      "master",
+      "develop",
+      "qa"
+    ],
+    "allow_force_push": false,
+    "allow_merge": false,
+    "allow_deploy": false,
+    "auto_create_pr": false,
+    "delete_branch_automatically": false,
+    "web_repository_url": "https://github.com/srinconr-Crea/Naturapet_DLH",
+    "pr_template": "docs/plantillas/pr.md",
+    "procedure": "docs/entrega-git.md",
+    "note": "GitHub: entrega autorizada mediante commit/push en feature/<hu> hacia develop y enlace/borrador manual de PR. No publicar en develop: su CI existente puede desplegar a dev. Sin merge, deploy ni borrado automatico.",
+    "pr_creation": {
+      "azure_devops": "cli_after_explicit_approval",
+      "github": "manual_link",
+      "other": "manual_link"
+    }
+  }
+}

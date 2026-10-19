@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "mode": "single-agent",
+  "agent": {
+    "name": "replace-with-app-name",
+    "role": "custom",
+    "purpose": "Describe the single responsibility and expected business outcome.",
+    "existing_app": true,
+    "model_endpoint": "replace-with-endpoint",
+    "identity_mode": "app-service-principal"
+  },
+  "scope": {
+    "environment": "replace-with-environment",
+    "databricks_profile": "replace-with-profile",
+    "bundle_target": "replace-with-target",
+    "repository_path": "/Workspace/replace/path",
+    "branch": "replace-with-branch",
+    "allowed_paths": [
+      "/Workspace/replace/path"
+    ],
+    "forbidden_paths": [],
+    "catalogs": [],
+    "schemas": [],
+    "tables": []
+  },
+  "capabilities": [
+    "repository-read"
+  ],
+  "tools": [],
+  "contract": {
+    "input_schema": "schemas/input.json",
+    "output_schema": "schemas/output.json",
+    "canonical_output": "json",
+    "render_markdown": true,
+    "failure_status": "insufficient_evidence"
+  },
+  "observability": {
+    "mlflow_experiment": "replace-with-experiment",
+    "trace_tables": []
+  },
+  "approvals": {
+    "allow_model_probe": false,
+    "allow_local_changes": false,
+    "allow_permission_changes": false,
+    "allow_deploy": false,
+    "allow_run": false
+  }
+}

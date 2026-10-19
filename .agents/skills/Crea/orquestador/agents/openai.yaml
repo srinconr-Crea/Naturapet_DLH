@@ -1,0 +1,6 @@
+interface:
+  display_name: "Crea — Orquestador de HU"
+  short_description: "Coordina planner, developer y reviewer con OpenSpec"
+  default_prompt: "Usa $crea-orquestador para iniciar o reanudar esta HU siguiendo el contexto del proyecto."
+policy:
+  allow_implicit_invocation: true

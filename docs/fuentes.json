@@ -1,0 +1,239 @@
+{
+  "reviewed_on": "2026-10-16",
+  "original_harness_sources": [
+    {
+      "id": "ms-notebooks",
+      "url": "https://learn.microsoft.com/es-es/azure/databricks/notebooks/best-practices",
+      "kind": "official-documentation",
+      "scope": "Notebooks: control de versiones, lógica compartida y pruebas.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-best-practices",
+      "url": "https://docs.databricks.com/aws/en/getting-started/best-practices",
+      "kind": "official-index",
+      "scope": "Índice de prácticas; no constituye por sí solo una prueba o receta universal.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-testing",
+      "url": "https://docs.databricks.com/aws/en/notebooks/testing",
+      "kind": "official-documentation",
+      "scope": "Separar funciones comprobables y pruebas de notebook.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "spark-testing",
+      "url": "https://spark.apache.org/docs/latest/api/python/getting_started/testing_pyspark.html",
+      "kind": "official-documentation",
+      "scope": "Comparación de DataFrames/esquemas; API debe verificarse en versión Spark seleccionada.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-cicd",
+      "url": "https://docs.databricks.com/aws/en/dev-tools/ci-cd/flows",
+      "kind": "official-documentation",
+      "scope": "Código/configuración versionados, pruebas, ambientes separados, IaC e identidad de CI.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-bundles",
+      "url": "https://docs.databricks.com/aws/en/dev-tools/bundles/faqs",
+      "kind": "official-documentation",
+      "scope": "Targets, variables, validación y separación de despliegue.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-query-profile",
+      "url": "https://docs.databricks.com/aws/en/sql/user/queries/query-profile",
+      "kind": "official-documentation",
+      "scope": "Diagnóstico de operadores, filas y costos para optimización medida.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "db-skills",
+      "url": "https://github.com/databricks/databricks-agent-skills/tree/ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "kind": "official-repository",
+      "scope": "Snapshot íntegro de nueve Skills, referencias y licencia Databricks.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "web-failed-local-snapshot-read"
+    },
+    {
+      "id": "medium-sql",
+      "url": "https://medium.com/@avinash.narala6814/best-practices-for-writing-efficient-sql-queries-in-databricks-ea5c8d30d29b",
+      "kind": "secondary-user-reference",
+      "scope": "Revisada como referencia aportada. No se usa como autoridad normativa; consejos contrastados con fuentes oficiales.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content",
+      "use": "Hypotheses only; technical guidance checked against primary docs; no rule requiring its caching/clustering recommendations."
+    },
+    {
+      "id": "openai-roles",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents",
+      "kind": "official-documentation",
+      "scope": "Configuración por rol/modelo/esfuerzo; disponibilidad y permisos efectivos deben probarse en Desktop.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "openai-customization",
+      "url": "https://learn.chatgpt.com/docs/customization/overview",
+      "kind": "official-documentation",
+      "scope": "Responsabilidades de AGENTS, Skills, MCP y subagentes.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "opened-content"
+    },
+    {
+      "id": "harness-design",
+      "url": "docs/propuesta-harness-local-codex.md",
+      "kind": "project-design",
+      "scope": "Reglas propias del harness, gates, evidencia, oráculos y alcance sintético.",
+      "retrieved_on": "2026-10-09",
+      "reviewed_on": "2026-10-16",
+      "access": "local-checkout-read"
+    }
+  ],
+  "complementary_sources": [
+    {
+      "id": "python-venv",
+      "url": "https://docs.python.org/3/tutorial/venv.html",
+      "access": "opened-content",
+      "used_in": "python.md"
+    },
+    {
+      "id": "spark-tuning",
+      "url": "https://spark.apache.org/docs/latest/sql-performance-tuning.html",
+      "access": "opened-content",
+      "used_in": "spark.md, sql.md"
+    },
+    {
+      "id": "delta-best-practices",
+      "url": "https://docs.databricks.com/aws/en/delta/best-practices",
+      "access": "opened-content",
+      "used_in": "databricks.md"
+    },
+    {
+      "id": "uc-best-practices",
+      "url": "https://docs.databricks.com/aws/en/data-governance/unity-catalog/best-practices",
+      "access": "opened-content",
+      "used_in": "gobierno-datos.md"
+    },
+    {
+      "id": "codex-skills",
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "access": "opened-content",
+      "used_in": "agentes.md, extensiones.md"
+    },
+    {
+      "id": "codex-agents-md",
+      "url": "https://learn.chatgpt.com/docs/agent-configuration/agents-md",
+      "access": "opened-content",
+      "used_in": "AGENTS.md"
+    },
+    {
+      "id": "openspec-cli",
+      "url": "https://github.com/Fission-AI/OpenSpec/blob/main/docs/cli.md",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md"
+    },
+    {
+      "id": "openspec-install",
+      "url": "https://github.com/Fission-AI/OpenSpec/blob/main/docs/installation.md",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md"
+    },
+    {
+      "id": "db-cli-install",
+      "url": "https://docs.databricks.com/aws/en/dev-tools/cli/install",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md"
+    },
+    {
+      "id": "db-oauth",
+      "url": "https://docs.databricks.com/aws/en/dev-tools/auth/oauth-u2m",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md"
+    },
+    {
+      "id": "gh-login",
+      "url": "https://cli.github.com/manual/gh_auth_login",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md"
+    },
+    {
+      "id": "azure-repos-gcm",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/repos/git/set-up-credential-managers?view=azure-devops",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md",
+      "reviewed_on": "2026-10-16"
+    },
+    {
+      "id": "azure-repos-clone",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/repos/git/clone?tabs=git-command-line&view=azure-devops",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md",
+      "reviewed_on": "2026-10-16"
+    },
+    {
+      "id": "azure-pr-link",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/release-notes/2026/repos/sprint-276-update",
+      "access": "opened-content",
+      "used_in": "entrega-git.md",
+      "reviewed_on": "2026-10-16"
+    },
+    {
+      "id": "github-pr-link",
+      "url": "https://docs.github.com/en/pull-requests/reference/using-query-parameters-to-create-a-pull-request",
+      "access": "opened-content",
+      "used_in": "entrega-git.md",
+      "reviewed_on": "2026-10-16"
+    },
+    {
+      "id": "azure-cli-windows",
+      "url": "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md; entrega-git.md",
+      "reviewed_on": "2026-10-19"
+    },
+    {
+      "id": "azure-devops-cli",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/cli/?view=azure-devops",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md; entrega-git.md",
+      "reviewed_on": "2026-10-19"
+    },
+    {
+      "id": "azure-devops-cli-login",
+      "url": "https://learn.microsoft.com/en-us/azure/devops/cli/log-in-via-pat?view=azure-devops",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md; entrega-git.md",
+      "reviewed_on": "2026-10-19"
+    },
+    {
+      "id": "azure-repos-cli-pr",
+      "url": "https://learn.microsoft.com/en-us/cli/azure/repos/pr?view=azure-cli-latest",
+      "access": "opened-content",
+      "used_in": "configuracion-manual.md; entrega-git.md",
+      "reviewed_on": "2026-10-19"
+    }
+  ],
+  "method": "Sintesis propia de contenido leido, con convenciones locales identificadas. No se distribuyen copias completas de articulos web. SDK/CLI y cuenta objetivo requieren comprobacion durante setup."
+}

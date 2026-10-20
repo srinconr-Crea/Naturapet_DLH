@@ -1,0 +1,4 @@
+interface:
+  display_name: "Creating Databricks Agents"
+  short_description: "Build efficient, safe Databricks agents"
+  default_prompt: "Use $creating-databricks-agents to design and create a Databricks agent from this role specification."

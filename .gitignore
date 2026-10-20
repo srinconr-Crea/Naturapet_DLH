@@ -9,3 +9,18 @@ __pycache__/
 .idea/
 .vscode/
 
+# Crea: dependencias, credenciales y estado local
+venv/
+node_modules/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+.databrickscfg
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+*.egg-info/

@@ -33,17 +33,21 @@ context: |
   Rama base del piloto: develop. Publicar código y OpenSpec juntos en
   feature/* mediante PR. Merge y despliegue siguen siendo humanos.
 
-  El perfil externo aprobado del harness fija rutas, operaciones, modelos,
-  límites y pruebas; la HU y este YAML no pueden ampliarlos. Las skills
-  versionadas en .agents/skills/ describen los siete workflows; su contenido
-  no concede shell ni permisos adicionales. El desarrollador no modifica
-  las rutas protegidas; OpenSpec se escribe mediante su workflow controlado.
+  Este checkout usa el kit manual Crea 0.1.3: leer AGENTS.md,
+  docs/proyecto.json y docs/contexto-proyecto.md. No requiere el harness
+  externo, su App ni un Job sandbox. Los permisos efectivos de Codex y
+  la autorizacion humana delimitan operaciones, modelos y pruebas.
+  Conservar las skills upstream existentes sin modificaciones.
 
-  Las pruebas del harness usan recursos demo_harness_* aislados. El código
-  ejecutable requiere el Job sandbox con identidad distinta de la App.
-  No ejecutar jobs o pipelines ni modificar tablas o catálogos de NaturaPet.
-  Usar datos sintéticos y pruebas pertinentes de tests/, sin secretos ni
-  dependencias de recursos reales del cliente. No desplegar desde una HU.
+  Fuente de rutas y checks: docs/proyecto.json. Principal gpt-6.1-sol con
+  esfuerzo medium; planner, developer y reviewer con esfuerzo low.
+  Sin skills personalizadas de Project ni MCP/hooks adicionales.
+  El setup se versiona por separado antes de iniciar una HU con checkout limpio.
+
+  Perfil Databricks seleccionado: CREA_DEV; target dev. No ejecutar jobs,
+  pipelines ni modificar tablas o catalogos durante la configuracion.
+  Usar pruebas sinteticas y tests/; no guardar secretos ni datos reales.
+  Las pruebas locales no acreditan runtime Spark. Sin deploy desde una HU.
 
 rules:
   proposal:
@@ -57,21 +61,23 @@ rules:
   design:
     - Identificar archivos, contratos, esquemas y configuración afectados.
     - Explicar impacto entre capas y dominios, compatibilidad y recuperación cuando apliquen.
-    - Definir pruebas sintéticas, adaptadores y dependencias disponibles en el sandbox.
+    - Definir pruebas sintéticas y dependencias locales; separar pruebas de runtime Databricks.
     - Incluir archivos/operaciones previstos y pruebas para el manifiesto del plan aprobado.
   tasks:
     - Usar tareas verificables con formato de casilla e incluir pruebas junto al cambio pertinente.
     - Incluir verificación, sincronización de specs, archivado y preparación del PR.
     - Si cambia databricks.yml o resources/, incluir validación estricta del bundle para dev.
-    - Si falta una herramienta o permiso de prueba, declarar el bloqueo sin sustituirlo por credenciales de la App.
+    - Usar los checks aplicables de docs/proyecto.json y justificar los no aplicables.
+    - No declarar ejecucion Spark verificada con mocks locales ni con bundle validate.
+    - Si falta una herramienta o permiso de prueba, declarar el bloqueo sin sustituirlo por credenciales adicionales.
 
 operations:
   apply:
     guidance:
       - Aplicar únicamente el alcance y operaciones del plan/manifiesto con aprobación vigente.
-      - Respetar las instrucciones aplicables y los controles deterministas del perfil cliente.
-      - Ejecutar las pruebas requeridas en el sandbox y conservar resultados antes de publicar.
-      - Ante cambios de alcance o bloqueos, volver al flujo de revisión del harness.
+      - Respetar AGENTS.md, docs/proyecto.json, permisos efectivos y el alcance aprobado.
+      - Ejecutar las pruebas requeridas en su entorno declarado y conservar resultados antes de publicar.
+      - Ante cambios de alcance o bloqueos, volver a la persona para revisar el plan.
   archive:
     guidance:
       - Archivar después de verificar implementación y sincronizar las specs afectadas.

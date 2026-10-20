@@ -2,7 +2,7 @@
 name = "developer"
 description = "Implementa tareas del cambio mediante OpenSpec apply y ejecuta pruebas pertinentes."
 model = "gpt-6.1-sol"
-model_reasoning_effort = "low"
+model_reasoning_effort = "medium"
 developer_instructions = """
 ## MISION, ENTRADA Y ALCANCE
 Entrada: cambio listo, tareas, criterios, rutas asignadas y plan de pruebas del planner.

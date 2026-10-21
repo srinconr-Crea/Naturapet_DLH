@@ -1,0 +1,55 @@
+{
+  "run_id": 582119187788237,
+  "state": {
+    "life_cycle_state": "INTERNAL_ERROR",
+    "result_state": "FAILED",
+    "state_message": "Task validate_cotizaciones failed with message: Workload failed, see run output for details.",
+    "user_cancelled_or_timedout": false
+  },
+  "tasks": [
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "cluster_instance": {
+        "cluster_id": "1020-210854-9y22c5h7",
+        "spark_context_id": "4146207448184763659"
+      },
+      "end_time": 1792533013637,
+      "execution_duration": 16000,
+      "existing_cluster_id": "1020-210854-9y22c5h7",
+      "notebook_task": {
+        "base_parameters": {
+          "allow_synthetic_writes": "true",
+          "approved_catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+          "approved_compute_reference": "1020-210854-9y22c5h7",
+          "approved_schema_prefix": "hu_cotizaciones_test_run",
+          "approved_storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data",
+          "candidate_checkout_path": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+          "test_run_id": "runtime_attempt02"
+        },
+        "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/notebooks/comercial/bronze/tests/validate_cotizaciones",
+        "source": "WORKSPACE"
+      },
+      "run_id": 149461545064842,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/1026745209976083/run/149461545064842",
+      "setup_duration": 1000,
+      "start_time": 1792532996394,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "FAILED",
+        "state_message": "Workload failed, see run output for details",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "RUN_EXECUTION_ERROR",
+          "message": "Workload failed, see run output for details",
+          "type": "CLIENT_ERROR"
+        }
+      },
+      "task_key": "validate_cotizaciones"
+    }
+  ]
+}

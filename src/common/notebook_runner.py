@@ -9,6 +9,11 @@ from src.common.config import (
     build_historic_file_path,
     get_config,
 )
+from src.common.cotizaciones_ingestion import (
+    archive_cotizaciones,
+    load_cotizaciones,
+    split_sources,
+)
 from src.common.delta_load import (
     add_ingestion_metadata,
     append_audit_records,
@@ -40,7 +45,7 @@ from src.common.validation import (
 )
 
 
-def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
+def run_bronze_load(spark, dbutils, area: str, cotizaciones_month: str = "") -> Dict[str, object]:
     config = get_config(spark=spark, area=area)
     ensure_catalog_schema(spark, config["catalog"], config["bronze_schema"])
 
@@ -81,12 +86,18 @@ def run_bronze_load(spark, dbutils, area: str) -> Dict[str, object]:
             audit_table_path=config["audit_table_path"],
         )
 
+    cotizaciones_files, generic_files = split_sources(config["area"], source_files, cotizaciones_month)
+    if cotizaciones_files:
+        specialized_success, specialized_failures = load_cotizaciones(spark, dbutils, config, cotizaciones_files)
+        processed_files.extend(specialized_success)
+        failed_files.extend(specialized_failures)
+
     dictionary_map = (
-        load_data_dictionary(spark, config["data_dictionary_path"]) if source_files else {}
+        load_data_dictionary(spark, config["data_dictionary_path"]) if generic_files else {}
     )
     primary_key_map = build_primary_key_map(dictionary_map)
 
-    for source_file in source_files:
+    for source_file in generic_files:
         table_name = normalize_table_name(
             source_file["source_file_name"],
             source_file["source_month"] or "",
@@ -242,6 +253,11 @@ def run_bronze_archive(spark, dbutils, area: str) -> Dict[str, object]:
     archived_files = []
     archive_failures = []
     updates = []
+
+    if config["area"] == "comercial":
+        specialized_success, specialized_failures = archive_cotizaciones(spark, dbutils, config)
+        archived_files.extend(specialized_success)
+        archive_failures.extend(specialized_failures)
 
     for row in list_pending_archives(spark, audit_table):
         now = datetime.utcnow()

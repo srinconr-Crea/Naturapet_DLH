@@ -1,0 +1,25 @@
+{
+  "run_name": "crea-cotizaciones-synthetic-20261020-01a15a7c-attempt03",
+  "idempotency_token": "cotizaciones-20261020-01a15a7c-attempt03",
+  "timeout_seconds": 5400,
+  "tasks": [
+    {
+      "task_key": "validate_cotizaciones",
+      "existing_cluster_id": "1020-210854-9y22c5h7",
+      "timeout_seconds": 5400,
+      "notebook_task": {
+        "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/notebooks/comercial/bronze/tests/validate_cotizaciones",
+        "source": "WORKSPACE",
+        "base_parameters": {
+          "allow_synthetic_writes": "true",
+          "approved_catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+          "approved_schema_prefix": "hu_cotizaciones_test_run",
+          "approved_storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data",
+          "approved_compute_reference": "1020-210854-9y22c5h7",
+          "candidate_checkout_path": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+          "test_run_id": "runtime_attempt03"
+        }
+      }
+    }
+  ]
+}

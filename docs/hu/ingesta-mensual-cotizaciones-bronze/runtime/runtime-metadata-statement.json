@@ -1,0 +1,6 @@
+{
+  "wait_timeout": "10s",
+  "statement": "SELECT get_json_object(CAST(content AS STRING), '$[1].metadata') AS runtime_metadata FROM read_files('abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data/runtime_attempt01/_inventory.json', format => 'binaryFile')",
+  "warehouse_id": "dd74907a9f5cb481",
+  "on_wait_timeout": "CONTINUE"
+}

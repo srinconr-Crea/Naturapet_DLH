@@ -1,0 +1,24 @@
+{
+  "statement_id": "01f1cccd-93d4-1a7d-88b9-72fd686ec9a3",
+  "status": {
+    "state": "SUCCEEDED"
+  },
+  "manifest": {
+    "format": "JSON_ARRAY",
+    "schema": {
+      "column_count": 1,
+      "columns": [
+        {
+          "name": "runtime_metadata",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 0
+        }
+      ]
+    },
+    "total_chunk_count": 0,
+    "total_row_count": 0,
+    "truncated": false
+  },
+  "result": {}
+}

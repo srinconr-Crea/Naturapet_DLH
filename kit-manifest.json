@@ -1,0 +1,1122 @@
+{
+  "kit": "crea-manual-kit",
+  "version": "0.1.3",
+  "created_on": "2026-10-19",
+  "files": [
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/agents/openai.yaml",
+      "bytes": 245,
+      "sha256": "392298e6f1b7da61f789ee968c72bc007d42827519c38a85c802ccc5271bc11a"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/assets/agent-spec.json",
+      "bytes": 1280,
+      "sha256": "da12ab1dfb23b5037dd476e1c482986b38e22f54e0b688ff13116e602015174e"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/references/architecture.md",
+      "bytes": 2952,
+      "sha256": "35f2b99542580a2a8d2fed8267c50d467a553e8ffa1c31bb7d07d894ba255fa3"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/references/configuration-intake.md",
+      "bytes": 3808,
+      "sha256": "5544c45330c1127d231e285bf27bda495fead4ccfbfd7478b503f7efa331f122"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/references/preflight-and-permissions.md",
+      "bytes": 2943,
+      "sha256": "0edf274cf31e413136099283117fa0601fe4eea69715eb95eea9bdf2c8ebb117"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/references/verification-policy.md",
+      "bytes": 2565,
+      "sha256": "2e0ffc08d21ad7a0be255b27feebec3a87624b255e698d813598fd83e7d429fc"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/scripts/preflight.ps1",
+      "bytes": 1968,
+      "sha256": "9201efdd2059f4c72458f1f2dc06032eef2533a069daa5927a96ec470692ffe4"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/scripts/validate_agent_spec.py",
+      "bytes": 3851,
+      "sha256": "c8d95935797f520cfc3851b758239bc4340d98f22358291455bb4816f776ed96"
+    },
+    {
+      "path": ".agents/skills/Crea/creating-databricks-agents/SKILL.md",
+      "bytes": 3876,
+      "sha256": "9a4d8f81ecd732bd41cb9a3b0e31cd47817f456dfca36056e014ead15229688e"
+    },
+    {
+      "path": ".agents/skills/Crea/orquestador/agents/openai.yaml",
+      "bytes": 283,
+      "sha256": "fd4b42fb1248717a70eb55ea099f50d2bddafc78cf89c61edf88e3df027d7167"
+    },
+    {
+      "path": ".agents/skills/Crea/orquestador/SKILL.md",
+      "bytes": 7932,
+      "sha256": "ee274340dee5c016554d7e9507fddda4f96990b34c65c0b248a04660b5cf5b38"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/agents/openai.yaml",
+      "bytes": 445,
+      "sha256": "44bad3bd763070293d471b2329ac3159f42bf26a569274eeebb4fbd9dd187565"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/references/appkit-cheatsheet.md",
+      "bytes": 3821,
+      "sha256": "5a3973ea2b10411e35c3f91ddff0d33e9af4d1862721468e9e30a4fa0173f891"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/references/dashboard-patterns.md",
+      "bytes": 4033,
+      "sha256": "5d4966d5da80d122cbd274e167bd4dd67028fcc162eae051734259c6ddd28336"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/references/genie-ai-trust.md",
+      "bytes": 4183,
+      "sha256": "a29438b526b6c04c9dde552af57ef00220c937da6f4aeb1c1ae074befeed7eeb"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/references/ibcs-notation.md",
+      "bytes": 4840,
+      "sha256": "949a2cfb692744f4e4f19195d0c73459c35707ec47a44947a0e2549672b58594"
+    },
+    {
+      "path": ".agents/skills/databricks-app-design/SKILL.md",
+      "bytes": 7232,
+      "sha256": "a7caad42f73c3a1584a7ff63dca8573a1e8577a2e1b950d3f5a16613ee6be22e"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/agents/openai.yaml",
+      "bytes": 294,
+      "sha256": "010472ad6bbdadb45e22283d4a0f39048e8d88a2a2011361f2e9ef3da444f278"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/agents.md",
+      "bytes": 15758,
+      "sha256": "f5c6e8b0b115add1f9296b09398ade5dcb06b58ea3801fc1504a644b1fbfb2dd"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/appkit-sdk.md",
+      "bytes": 6192,
+      "sha256": "0ae4495ce2592f0129a85f188de6a0826dc946596ec4278dd57afce2dc60626a"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/custom-endpoints.md",
+      "bytes": 6339,
+      "sha256": "3a6543e55d1032752a41c0c361b2b2d8a5b2460f8906f27dfa8310cdae7c7b61"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/files.md",
+      "bytes": 13604,
+      "sha256": "836cba6880455400ebdb53a4d65cb4a6797cd43001eb0487c26c65195ca110c3"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/frontend.md",
+      "bytes": 7406,
+      "sha256": "ad3bed478cc719db71f2899607aee8e138e4667a03ab35a9f7c9cd4a0d105c10"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/genie.md",
+      "bytes": 10593,
+      "sha256": "e8ebff94a29edd7b5ad60df7c4283640fbc5b2d10674f97a9af2189496828e04"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/image-generation.md",
+      "bytes": 22407,
+      "sha256": "b0c94c1adf7010f27d73b7918898940c88b6113913f08d98b542569065fdc65e"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/jobs.md",
+      "bytes": 6639,
+      "sha256": "db504cf2ae7504657f80ed9387095ac53b32df7df576dcbabc042511b6fa223c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/lakebase.md",
+      "bytes": 19508,
+      "sha256": "73321f7cfd895cbcf4f778959878584022c0bd0bf15d24e31a91187ca2620bc8"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/metric-views.md",
+      "bytes": 5151,
+      "sha256": "f8771a972c2a3b43c70df2d07b066ddaa40438946d545f6a115920e5874c8b7c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/model-serving.md",
+      "bytes": 13313,
+      "sha256": "e23930376c04d828f459bf40a751ebc61c79576ba879080cc0e5890935ef38c7"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/overview.md",
+      "bytes": 8208,
+      "sha256": "d0cf423577338e24e2ba3a8b2106d7d41a619298752dcc862570d6e940b5020c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/proto-contracts.md",
+      "bytes": 7852,
+      "sha256": "5a1f296829f4d63c77672932a05a00195f5916e65d7debc37007a1fbbf048e8c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/proto-first.md",
+      "bytes": 9399,
+      "sha256": "3ee8f2576a86160b9f0bec8d2183a648dccbf1388c3722fd63b240581e21d5c8"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/appkit/sql-queries.md",
+      "bytes": 10149,
+      "sha256": "0bc653e0689acdabfb0f8478ff01316556efad1a117e69af112062aa0cd7723f"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/other-frameworks.md",
+      "bytes": 9285,
+      "sha256": "bdf4c0782da2df4d3d67744b41715a9627eeea9c5669b803accc9b04f4054da3"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/platform-guide.md",
+      "bytes": 14161,
+      "sha256": "9f9df3791f9e3c7c052aa146846f3d04a553b9461d4e7709255679ee23b15f8e"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/references/testing.md",
+      "bytes": 3876,
+      "sha256": "8027f8a6151fe41cdc33c2cd9f0a1129cbf97f2244bd7d66914f7d6629c1a795"
+    },
+    {
+      "path": ".agents/skills/databricks-apps/SKILL.md",
+      "bytes": 24920,
+      "sha256": "34b309783ffae0589ad6564d02146ecd8de08794d284b92fd0adc5d7a7462c79"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/agents/openai.yaml",
+      "bytes": 632,
+      "sha256": "39a94b3263d742887070c9eca9d7cabc8d5b25f249f162f75d21e65532cabafa"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/examples/fm-minimal-chat.py",
+      "bytes": 5985,
+      "sha256": "e160b274912cc89ba0911eb8ef48eaf4c635115b23fecf273e6711438c971d29"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/examples/fm-parallel-calls.py",
+      "bytes": 8708,
+      "sha256": "d464612f9499ef0ef1bf272410b0be8e906c66549d3c18486cdd6f4a85018d19"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/examples/fm-structured-outputs.py",
+      "bytes": 11695,
+      "sha256": "aaeaa39871fa923671ff6663f9749c4cb3c13f062f4c7b8505af219f93cb881d"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/examples/llm_config.py",
+      "bytes": 12402,
+      "sha256": "0b2061f3e7dd72b14241428cdb4be13dd8dbe2d0845d50db9a358cf1a7aaf29a"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/1-authorization.md",
+      "bytes": 4202,
+      "sha256": "f761c29e390525d1bda3ec347fbdec8004626b67a477819fcaa7c94e161612e3"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/2-app-resources.md",
+      "bytes": 4131,
+      "sha256": "0838ed663742b392deef231633aaa46a441e8a4d8e55e1b97bd3a520d32c7ec3"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/3-frameworks.md",
+      "bytes": 9350,
+      "sha256": "10d196f8c1fa2791fb3d2b184339fd2b59d23848719ebd9e6fba34c65b3e2a3e"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/4-deployment.md",
+      "bytes": 4823,
+      "sha256": "c1bb4da0b66878f2872a9463d7cf0d59fb0d384fd7fb5d6c9e49347b8d542ced"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/5-lakebase.md",
+      "bytes": 3306,
+      "sha256": "fcc12d649a412098591f15192fce324912e608edee59b62644bdfa877c4e017c"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/references/6-cli-approach.md",
+      "bytes": 2874,
+      "sha256": "ac923c7cb66cbfa4244b4e8c83c33926769940ee02e49fa97c068ee85dcf9554"
+    },
+    {
+      "path": ".agents/skills/databricks-apps-python/SKILL.md",
+      "bytes": 12173,
+      "sha256": "89c4fb79173e615412ed3db3665d72a39c66e71af984031dfbfb2218d155fadd"
+    },
+    {
+      "path": ".agents/skills/databricks-core/agents/openai.yaml",
+      "bytes": 289,
+      "sha256": "8c6cc7d4ea613427f5c460357f6dda4c6de340fdf1fa0077ebfefb7afe8b82be"
+    },
+    {
+      "path": ".agents/skills/databricks-core/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-core/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-core/databricks-cli-auth.md",
+      "bytes": 17243,
+      "sha256": "d30d52889e183b35f957b0ae62e0c2d22b33ad4c2f6dfa87f5aefc66edeacfac"
+    },
+    {
+      "path": ".agents/skills/databricks-core/databricks-cli-install.md",
+      "bytes": 6828,
+      "sha256": "ad90458547aba95a77434a5712e00a95462f021befd576a19b129ab18850e518"
+    },
+    {
+      "path": ".agents/skills/databricks-core/manual-data-exploration.md",
+      "bytes": 13240,
+      "sha256": "511fbd3bd703eef9898835d7136d1bbadf6764ef19b5d430c4261a49adfae57f"
+    },
+    {
+      "path": ".agents/skills/databricks-core/SKILL.md",
+      "bytes": 7210,
+      "sha256": "dd526c86abe8c1139dedb40d0fc1c243630b3ceee305d9f0c35b5d8dac42432f"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/agents/openai.yaml",
+      "bytes": 392,
+      "sha256": "52f6b4aa18c3b2b0e51ee0f2bc5c5013926d88b72774059969cc4d2db749aef9"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/references/alerts.md",
+      "bytes": 2885,
+      "sha256": "3f56a627099be135e15606fe9bb5d84b8fa935195b9a4f99b53dd8a132ab616e"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/references/bundle-structure.md",
+      "bytes": 7508,
+      "sha256": "2de9cb031d25db7cd63d18dc4d5fbb4c08fbc55afd844e74a01a38212b6b39b8"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/references/deploy-and-run.md",
+      "bytes": 4115,
+      "sha256": "b82229e9ab4eff73ab2c8a8073170aa6305c9ca6d986e4838761e0c66c6bf491"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/references/resource-permissions.md",
+      "bytes": 1767,
+      "sha256": "8bd92af4b51a21822b417782817bd5e196b9916473d1c206c99fa7f18008c601"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/references/sdp-pipelines.md",
+      "bytes": 1160,
+      "sha256": "3f10ba4c10a318f80c2365e0538355e1800e509bc9cecc00eab8073a13f0dfa6"
+    },
+    {
+      "path": ".agents/skills/databricks-dabs/SKILL.md",
+      "bytes": 2799,
+      "sha256": "3ae2cf35e8c8840f888c9e95553e20bd270ab234129fc531fc164e58c1608722"
+    },
+    {
+      "path": ".agents/skills/databricks-data-discovery/agents/openai.yaml",
+      "bytes": 640,
+      "sha256": "683f7c832d0616eae91d6edb90e6c65ae1a10dd089c276905d9d892d3bef7846"
+    },
+    {
+      "path": ".agents/skills/databricks-data-discovery/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-data-discovery/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-data-discovery/SKILL.md",
+      "bytes": 8470,
+      "sha256": "786663c9883a6a0ecc6675fe0c2d7dca09a46f7c53110e4b68fe95f9bcb35387"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/agents/openai.yaml",
+      "bytes": 638,
+      "sha256": "5a3ea80e8f020d1223ffc3eae2a9d46678650405344ca82e18cd6a708d3a5c37"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/references/ai-functions.md",
+      "bytes": 43379,
+      "sha256": "cb6d3f1b4075a99519be7acbe500efbc07390c1433a4fe73632c54daf61a4532"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/references/best-practices.md",
+      "bytes": 23174,
+      "sha256": "fabd6fa7457fe06373fd9c26925dcd3f104cf4eead870c80cda50d9f51deebfe"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/references/geospatial-collations.md",
+      "bytes": 28721,
+      "sha256": "23579de0add0babf26cc98a326a4825e392d1ee9b2785d3b2fcb8d60c8f3453d"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/references/materialized-views-pipes.md",
+      "bytes": 23144,
+      "sha256": "c19da7c7c10f5f9544e07ae55b47360f9d609c586f99a5c406c6ebfb851983c7"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/references/sql-scripting.md",
+      "bytes": 28320,
+      "sha256": "7275ea7a6cf953fb8ea846240792e5353d4b0128bc789ea984789135d9caf737"
+    },
+    {
+      "path": ".agents/skills/databricks-dbsql/SKILL.md",
+      "bytes": 11002,
+      "sha256": "7d58a08aac3ec601478332de9eb2d3146ab64ac0e1007b97cacaf29229ac4c6a"
+    },
+    {
+      "path": ".agents/skills/databricks-docs/agents/openai.yaml",
+      "bytes": 328,
+      "sha256": "b68655e9829abc722577110fa492f88f5845b8b6cefe03489270e351e1de0623"
+    },
+    {
+      "path": ".agents/skills/databricks-docs/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-docs/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-docs/SKILL.md",
+      "bytes": 2884,
+      "sha256": "0040fae239c29888e71cacf6751cee6a8bc834337d24af3814feeca84a0cac08"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/agents/openai.yaml",
+      "bytes": 298,
+      "sha256": "61e879cea71a422e32a5a27b06ea43705db0264cb99e92b62bb8db77f0a5d865"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/references/examples.md",
+      "bytes": 19343,
+      "sha256": "9312338bc1d2c0c576c7ca95fb4b6b3faf5ff668b48c789d1027846ecf8847a2"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/references/notifications-monitoring.md",
+      "bytes": 12985,
+      "sha256": "742b3be99d863d601e3d4a70ccd94abef7fc3aa0f2a6b6c92940c0d8d563065c"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/references/task-types.md",
+      "bytes": 14257,
+      "sha256": "681f49dc36436d3d3a7e4fa781b393375e1da3c0eaa4013abf906a534d5df9a0"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/references/triggers-schedules.md",
+      "bytes": 11082,
+      "sha256": "95c46b401f9b2bfbb1ab92a129b4250d70fae0568e19d144ce63bb2ed298f7a5"
+    },
+    {
+      "path": ".agents/skills/databricks-jobs/SKILL.md",
+      "bytes": 12372,
+      "sha256": "5293473c510665bf7393ea1d0a8d1d9297ed06bf94bb56ce6f4488bfd1e2cd32"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/agents/openai.yaml",
+      "bytes": 310,
+      "sha256": "0661fdd860772285921771d77421e6483808ee49a4ed71c02108bbc899817509"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/CRITICAL-interfaces.md",
+      "bytes": 13137,
+      "sha256": "b94c59313e6d57d0c20a330a973cd880063d0bfd2985e72123cfac431d7b942e"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/GOTCHAS.md",
+      "bytes": 26424,
+      "sha256": "7a6f39735cbf8f11c5b34a206298b566d4640f38fbb11414ab63e288d0d895c3"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-context-optimization.md",
+      "bytes": 10421,
+      "sha256": "0e3e39f76af60ebba3f7749bf7872ab97f51cabe3dfeeaf82b4b57b870b90391"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-datasets.md",
+      "bytes": 22240,
+      "sha256": "b826abdb5679329af0fe5e1feae7ed0e1d2a8a27c2d0139425b7b5401b6f9ec6"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-evaluation.md",
+      "bytes": 16414,
+      "sha256": "3d12ebacdaedca00c88ad67483354d7e098e92e4a80434f3a594f89413b9f1bc"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-judge-alignment.md",
+      "bytes": 13503,
+      "sha256": "5acac05e44235d5a44a174738647b174e404e7bb289d5e571178ee4a4912d6de"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-prompt-optimization.md",
+      "bytes": 7073,
+      "sha256": "53cb491a8684bad1494d9d03eb67781307f7e3ac3c82969a7e88d38accb3ca57"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-scorers.md",
+      "bytes": 23361,
+      "sha256": "1fa6f9edf556c6be6108b01a0576f86ca99c3b3d326c8a27fab940950292bd71"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-trace-analysis.md",
+      "bytes": 26869,
+      "sha256": "5abef7e0be5fdc2c1bac089874a01915935c27442cce62bbcffca7fcc85a08bc"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/patterns-trace-ingestion.md",
+      "bytes": 22458,
+      "sha256": "cd92c3de3c12f30e4660aa77eca0a61685beef2fde386379f5d82f5c633e8862"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/references/user-journeys.md",
+      "bytes": 24580,
+      "sha256": "b863fc18f6aeb477a6aab8d56d82a1f4e94a6209a3220f13d0a74e68be1ab750"
+    },
+    {
+      "path": ".agents/skills/databricks-mlflow-evaluation/SKILL.md",
+      "bytes": 10751,
+      "sha256": "c7ef1bc3b826bd37cc6c72ba76f3c327d78aa95615f7c10945cf1d7574a36375"
+    },
+    {
+      "path": ".agents/skills/databricks-model-serving/agents/openai.yaml",
+      "bytes": 316,
+      "sha256": "92c474e4459ea3f73de028f63597507479f3356953303bf3a3c605d804c0c627"
+    },
+    {
+      "path": ".agents/skills/databricks-model-serving/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-model-serving/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-model-serving/references/off-platform-streaming.md",
+      "bytes": 6280,
+      "sha256": "3d952f4a084140ee6830f6733d513be67d3551a22b9e757dbebde03bc2cc2757"
+    },
+    {
+      "path": ".agents/skills/databricks-model-serving/SKILL.md",
+      "bytes": 13072,
+      "sha256": "289590686e8eb93a3b2182dec932ed85d6336ea03792b9b6309f42b29976f507"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/agents/openai.yaml",
+      "bytes": 300,
+      "sha256": "92845e3f025be5b77b93904fa2b84e1a47636ab92c07e67c29760088b97cdb2a"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/1-project-initialization-with-dab.md",
+      "bytes": 9701,
+      "sha256": "d080281f838bfed735cbca3dc65ebdde9aef7deec1b5f078889acc863541201c"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/2-rapid-iteration-with-cli.md",
+      "bytes": 7558,
+      "sha256": "35fb333be5ff59074d06721e715c8f8735c831fa9ceae7261a4ca62f18282eca"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/auto-cdc-python.md",
+      "bytes": 5418,
+      "sha256": "706ea8429907e20c884b3592fc15b6ea292bf3780ebd6fb0f30d4907570181ad"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/auto-cdc-sql.md",
+      "bytes": 8756,
+      "sha256": "92791778c9232a1cbb6bebd6bd2d0d8e1d4ea3cff8388c573a771a6d4e165463"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/auto-loader-python.md",
+      "bytes": 3894,
+      "sha256": "bcbec4e207b1853eb390187e4f1dfb90a4ca7ea2d60ef9e635edf6454dfa47b9"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/auto-loader-sql.md",
+      "bytes": 2156,
+      "sha256": "994d58003a265665188add4482511a74f6c1477e4b537bf7cefbbf2976efc98d"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/dlt-migration.md",
+      "bytes": 6160,
+      "sha256": "d1d391027604a69845369d0249ffd15ea69b49af5626c2b3202a8b782ece0bd2"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/expectations-python.md",
+      "bytes": 2915,
+      "sha256": "e6a08671d4935f294ce1ef37314135b5b582f8d925bedbabf8c130bc3e330775"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/expectations-sql.md",
+      "bytes": 3516,
+      "sha256": "dbb60f0105dc4ee5d1241b20d0a63bc23acc18e400bbc84bf2394a8c5ae485b8"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/foreach-batch-sink-python.md",
+      "bytes": 3228,
+      "sha256": "4d8997147638d4f9d98ffcab541683f01b74fdf5046a32c2165724a30178c9f0"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/kafka.md",
+      "bytes": 5939,
+      "sha256": "8d0ef922204e7696d92a09ffc3e2b7549805804783353ff9bd935cf52dd5dddf"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/materialized-view-python.md",
+      "bytes": 3567,
+      "sha256": "e48950d7ef177a9bd73e42460bcf1b9ac8e9bbac54bd77bb405122e1f2fb7a2f"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/materialized-view-sql.md",
+      "bytes": 3906,
+      "sha256": "7ed43c0ec8b4b3e52f54573cce1b1e41986f5f39ac3f259e1792719b8ea4c9a7"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-avro.md",
+      "bytes": 261,
+      "sha256": "6cf08ede4bf63f3b4ed8c40b78349c50a94555cbcc7c142bc2ab57d79e674af0"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-csv.md",
+      "bytes": 1462,
+      "sha256": "a83023ad7a3dcfdf05a834dfd6a5264f2e4f1b1621e14376d51c8c7415173a17"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-json.md",
+      "bytes": 1297,
+      "sha256": "5ed3f7f87f2575cc8de545121349359edc805e42d2b6c1adf5f13fb3c96d75b2"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-orc.md",
+      "bytes": 100,
+      "sha256": "24494531ba6bed21ac14e14ec858b416238d9c9dfba7b8f82db6c0683d03c098"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-parquet.md",
+      "bytes": 264,
+      "sha256": "9d99fd3d517e7d1f211711c3655330f9385c0aa722e7cd9580e436d450ec75ea"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-text.md",
+      "bytes": 143,
+      "sha256": "1a2f1a9b501eb18bf5e53d8c38561e0388a9605fce8044fb1e6b496efa288424"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/options-xml.md",
+      "bytes": 1102,
+      "sha256": "dea7b75eb14924f0f9470883a3e1c6afb57364a07662d8721323b0221edd5f71"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/performance.md",
+      "bytes": 8663,
+      "sha256": "f325bb5016cc0ff53022518ac0d4f540e9f368968e7c90506974f6eb9ef9de40"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/pipeline-configuration.md",
+      "bytes": 12134,
+      "sha256": "3935d6ec6c710082a384088d894d85aa3e05e7290c9534fcbda6dfe79eff58c6"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/python-basics.md",
+      "bytes": 2869,
+      "sha256": "b63977d8a211b6a52943f95ba2cb3fa21da4f0f9902443d14d08b5b9df995eef"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/real-time-mode.md",
+      "bytes": 12160,
+      "sha256": "e813eef62df6a96bcde6bd82563e93b28901ff30eed362427f9f0b2da3fcacbf"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/scd-2-querying.md",
+      "bytes": 6048,
+      "sha256": "4b03412d3cd433007888d78be4cea6c6716b373ee850368c0e75fa3237db643a"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/sink-python.md",
+      "bytes": 3029,
+      "sha256": "c9fa865c949a02f5a15eb899420939ba74a9435d01ed3d6e48d430be625b1826"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/sql-basics.md",
+      "bytes": 3271,
+      "sha256": "954962cc88d584bea0b18820bcf0e95e728297b11885329d2bd6d8dbd87cbcf5"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/streaming-patterns.md",
+      "bytes": 10352,
+      "sha256": "e37b637aa120fd06df0b37e0f87d54d68b3734301e174841ff571d81587d01ff"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/streaming-table-python.md",
+      "bytes": 5533,
+      "sha256": "1a4c80e1a30119f4035b229e0855fffcfcfecd4383c6bccec828cbb3be39417a"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/streaming-table-sql.md",
+      "bytes": 5636,
+      "sha256": "3d5f4edb340f555a54fc61cf4deed56b758a1644c067fae53e9fb312f78e9100"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/temporary-view-python.md",
+      "bytes": 1525,
+      "sha256": "ff718fa8c331f488076e3b3becd9d33fec5122e6c750bc610f3d4b2bfc709b4c"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/temporary-view-sql.md",
+      "bytes": 1809,
+      "sha256": "a4f1f32e3af5e50533df47b0d7bb3f1fccc36e4c8fd80fc6f760b23127641762"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/references/view-sql.md",
+      "bytes": 1358,
+      "sha256": "ee9e52dbc25a8180f34fc60aa959c9a98a38e1a88d6b5f810b6df9af93364fca"
+    },
+    {
+      "path": ".agents/skills/databricks-pipelines/SKILL.md",
+      "bytes": 34860,
+      "sha256": "bfc8dcff6ba5af2b117fca10b489e176ac3a04abf7dc26e409d5d894ce0a3b52"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/agents/openai.yaml",
+      "bytes": 416,
+      "sha256": "666ddb456954f7d3fd5ab50b848c75e76604baf1cecc89fa3218d42b71e58e29"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/examples/1-authentication.py",
+      "bytes": 2923,
+      "sha256": "ad778285c49886cf505abbf091ee434d18cbbe45632091e401f8b35f14a0f066"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/examples/2-clusters-and-jobs.py",
+      "bytes": 5789,
+      "sha256": "931662715e02fdaba72e651893126e98ed6cf87f318c76134aba9a517261fccd"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/examples/3-sql-and-warehouses.py",
+      "bytes": 5777,
+      "sha256": "24133cded7984b791332c36f4aaa305c33a599f92ed7b7cc6ddddb28fb043768"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/examples/4-unity-catalog.py",
+      "bytes": 6229,
+      "sha256": "1855dffce8f7d4f903a4d645ad061a13cbc40e3c7641aa6f8f96cc887077c851"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/examples/5-serving-and-vector-search.py",
+      "bytes": 7171,
+      "sha256": "22c579acb5ddd314068c7f3ba3e4a4f1deeaf260a33bf51acaceea6d99147631"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/references/doc-index.md",
+      "bytes": 14701,
+      "sha256": "02d4141e18b407e62b64d254241abb78389221654ab9bd51c43a532da77b290e"
+    },
+    {
+      "path": ".agents/skills/databricks-python-sdk/SKILL.md",
+      "bytes": 18204,
+      "sha256": "1cf3702fd174d316e6fc8f836a3dfe2bad74595ce64352b6ae04128694aa240a"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/agents/openai.yaml",
+      "bytes": 644,
+      "sha256": "d3826f2fb3cc6b6bc1cc4a445b1614cce0dfd21343980f4768c1437cad58d53c"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/references/1-data-patterns.md",
+      "bytes": 5891,
+      "sha256": "35ee7c4b76a6ec9cc3bf5704b51084b135fbd6c53d9d21f3b5f8bff4e20415b3"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/references/2-troubleshooting.md",
+      "bytes": 9615,
+      "sha256": "a684675504f65722f59c96454a6f4181ed92eb9dacf7c7ba2b26db5352fa318e"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/scripts/generate_synthetic_data.py",
+      "bytes": 11339,
+      "sha256": "ab6a29e050ca626d28f08d4872901031cc0ae0ad2774fe78878c34dc20d9033c"
+    },
+    {
+      "path": ".agents/skills/databricks-synthetic-data-gen/SKILL.md",
+      "bytes": 12918,
+      "sha256": "d15491624bdc0be2069c31352bcf571d9b9f15355ba3fc4e315cfde2b54abd3e"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/agents/openai.yaml",
+      "bytes": 512,
+      "sha256": "9a745ac030120b59a47a5092cbdb105b07034396fa47966e7a5b71656aacd873"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/assets/databricks.png",
+      "bytes": 15366,
+      "sha256": "06873c31ebda49d6ec5a730749c3dd1d0a140495f235cb1c0256cb2a3d1de850"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/assets/databricks.svg",
+      "bytes": 582,
+      "sha256": "00e528e4d5e665dbb5784e3d028b74ecf74405e5ff5a9c75a4d8661f05bda91c"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/1-access-control.md",
+      "bytes": 10463,
+      "sha256": "b89b9e97b6c41a7fad10bff16fbdb7f328c9eca22568c2622a3bde276c485516"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/2-external-locations.md",
+      "bytes": 8009,
+      "sha256": "dca8f7443d3ef563f495e4ed859e9eed69aac0cc81ea87650dda5ffda6c76cf7"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/3-securables-ddl.md",
+      "bytes": 7135,
+      "sha256": "8199b93d15198135b83f43a62d37986a9daa7c791ec854f724b0805b59ae5575"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/4-fine-grained-access.md",
+      "bytes": 7914,
+      "sha256": "2cbbf51bbe305ee5bde9fc0a0ffb23fbadd568e0a8989d4adcff925629d8a1c4"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/5-system-tables.md",
+      "bytes": 28972,
+      "sha256": "19e652a94a8b3250ff845e324f309975bc6df7b39adf16926322960409e2efab"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/6-volumes.md",
+      "bytes": 12040,
+      "sha256": "f2b488f21f7cbe19da494ff14d4a9764732423379cb412c40361a32562b96880"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/references/7-data-profiling.md",
+      "bytes": 10556,
+      "sha256": "35baa78c6caf94342ee5bb4991daba16536d21f3ccc644a0d2fb5095c50603a6"
+    },
+    {
+      "path": ".agents/skills/databricks-unity-catalog/SKILL.md",
+      "bytes": 12203,
+      "sha256": "f7c19ee1ed74fcd0ed800b4f5d5dedd39b6c48de67559a38994d77b205f2341b"
+    },
+    {
+      "path": ".agents/skills/openspec-apply-change/SKILL.md",
+      "bytes": 10930,
+      "sha256": "961dd6b729eb94d47b4c268d03562f08e810bccbb293b9c8b89fad661b2db8a8"
+    },
+    {
+      "path": ".agents/skills/openspec-archive-change/SKILL.md",
+      "bytes": 15343,
+      "sha256": "9789f1a007a9ab389b9e2be4abef0d81ceee132af977216b5a06183883b65b20"
+    },
+    {
+      "path": ".agents/skills/openspec-explore/SKILL.md",
+      "bytes": 23134,
+      "sha256": "c193717b9e0cfbed076d551e3e28a287589e44e931448826c11416360f6a6970"
+    },
+    {
+      "path": ".agents/skills/openspec-propose/SKILL.md",
+      "bytes": 16312,
+      "sha256": "3443a9d952d50fbbcdc553f7fc8923b46f6dc63abdd40d39ae1d86fc90fc97e9"
+    },
+    {
+      "path": ".agents/skills/openspec-sync-specs/SKILL.md",
+      "bytes": 15826,
+      "sha256": "dbbb248d82a0c00756d625e83ad2216bdb231cf5bb5e4eb8f63aa4a8a37dbec9"
+    },
+    {
+      "path": ".agents/skills/openspec-update-change/SKILL.md",
+      "bytes": 11597,
+      "sha256": "3a12bd7291f599098831a616d936a6565086acc4cf7e8fd308c617a29dc77218"
+    },
+    {
+      "path": ".agents/skills/openspec-verify-change/SKILL.md",
+      "bytes": 18032,
+      "sha256": "3b5894bb976f5c259444d0ae1e5f162c91f9a5bf06282baebc45741a6061e841"
+    },
+    {
+      "path": ".agents/skills/Project/README.md",
+      "bytes": 624,
+      "sha256": "e63293e28b032e974a7c80c163b89e2a4d844dad98bb289a9f338860a5caeefd"
+    },
+    {
+      "path": ".codex/agents/developer.toml",
+      "bytes": 3401,
+      "sha256": "c9ed81e2de3dd94662cb4a37abe3583e39a78019e4b13ba6df64d7a874c37056"
+    },
+    {
+      "path": ".codex/agents/planner.toml",
+      "bytes": 4143,
+      "sha256": "6d4b84f03dab2e8c168524496c68d9829c6929c7d29ce0b29e9d16c5043dfffc"
+    },
+    {
+      "path": ".codex/agents/reviewer.toml",
+      "bytes": 4758,
+      "sha256": "ce504f1db04994724ad70b99c0ffd7f82b11c84c0a31392d252afcb1d430f9a7"
+    },
+    {
+      "path": ".codex/config.toml",
+      "bytes": 1021,
+      "sha256": "b512c9012b56a4b2991fa6181d257ceb2b22cd1f26d4d133f52b866452355f90"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 539,
+      "sha256": "698ed475e50e9685a189ad42e96c946ab34554d33c5f2c8b0dc59adebf0162d5"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 5856,
+      "sha256": "418252f9e1bbc63002ca4be06ddf4d85a32e028bf83331b02c1cfb9fc4888117"
+    },
+    {
+      "path": "docs/buenas-practicas/agentes.md",
+      "bytes": 2125,
+      "sha256": "ef5dd6ae6c7e4f66c83acb3739819290776739ad8db696b2d1690bd6888b3035"
+    },
+    {
+      "path": "docs/buenas-practicas/databricks.md",
+      "bytes": 2362,
+      "sha256": "f4e2f0e84642de417ed7d8b796bbfd53751e31d56ce6ac1b11ad75b51c747197"
+    },
+    {
+      "path": "docs/buenas-practicas/general.md",
+      "bytes": 2286,
+      "sha256": "6d3f2a01f55024c556243cfd4b2171491552e971db2655cd37b2749b28afcc86"
+    },
+    {
+      "path": "docs/buenas-practicas/gobierno-datos.md",
+      "bytes": 1822,
+      "sha256": "162e56c0d980303f7b7aff727fd947f67216c336d13c6c3db5ef7e3151cb27fc"
+    },
+    {
+      "path": "docs/buenas-practicas/infraestructura.md",
+      "bytes": 2093,
+      "sha256": "38c9813161fea730592e0e69ea58f281355c1b2b63427cf775a43603bd85ba72"
+    },
+    {
+      "path": "docs/buenas-practicas/python.md",
+      "bytes": 2210,
+      "sha256": "291fd16101f99602df022f205b768faf4c5a772ce9b216e28c7e5aed1804beca"
+    },
+    {
+      "path": "docs/buenas-practicas/README.md",
+      "bytes": 1305,
+      "sha256": "25e8077f77f802601cb2b4b0b024acbc6a484c956d39d4fe83e5bb2d516d618c"
+    },
+    {
+      "path": "docs/buenas-practicas/spark.md",
+      "bytes": 2127,
+      "sha256": "550d7b26caf802778a8d0515e1527f6d11fae3a8e84a56bd8a1dd09b3ae8bd9b"
+    },
+    {
+      "path": "docs/buenas-practicas/sql.md",
+      "bytes": 2540,
+      "sha256": "1d8a41c666dbed7dae08bb38049757a4b8f51f9c78dcba288fc080983a993a10"
+    },
+    {
+      "path": "docs/catalogo-skills.md",
+      "bytes": 3108,
+      "sha256": "79d1a130e0e75a53cb5a6f81b46e19ce927e5e7183de2638961476550d72d08c"
+    },
+    {
+      "path": "docs/configuracion-manual.md",
+      "bytes": 16084,
+      "sha256": "ceace3e04d0067a764426a9373c45a739aa667bc2ddfbb4e57cf0781f199f6bf"
+    },
+    {
+      "path": "docs/contexto-proyecto.md",
+      "bytes": 4275,
+      "sha256": "f369eb8c6027bc7ff7cc1207af231bdac3a477ee00a38337681d023e6fd97480"
+    },
+    {
+      "path": "docs/entrega-git.md",
+      "bytes": 10829,
+      "sha256": "83e589cdd869ffeb6e17d277678bf452d9dda6a2d2acf7654591d7a0d6bf33b6"
+    },
+    {
+      "path": "docs/extensiones.md",
+      "bytes": 4744,
+      "sha256": "fdc3af14622965f8c50dd09dfc8665cbf32a5c28d335cf02d9e79723d4b39da8"
+    },
+    {
+      "path": "docs/fuentes.json",
+      "bytes": 9296,
+      "sha256": "f2e808bd9d09756418e86cc7d541d296638289b903c8309465ea1fcea40e73d5"
+    },
+    {
+      "path": "docs/licencias/databricks-snapshot/LICENSE",
+      "bytes": 3789,
+      "sha256": "df8afbfd34830a45f85dff044550a913a3355be1c61ab756417e7670cb48fa1c"
+    },
+    {
+      "path": "docs/licencias/databricks-snapshot/NOTICE",
+      "bytes": 174,
+      "sha256": "0c4c03b0de159e6308cfbb17a96c708b742e3c85887e9debb84dcd270315371e"
+    },
+    {
+      "path": "docs/licencias/databricks-upstream/LICENSE",
+      "bytes": 3789,
+      "sha256": "df8afbfd34830a45f85dff044550a913a3355be1c61ab756417e7670cb48fa1c"
+    },
+    {
+      "path": "docs/licencias/databricks-upstream/NOTICE",
+      "bytes": 174,
+      "sha256": "0c4c03b0de159e6308cfbb17a96c708b742e3c85887e9debb84dcd270315371e"
+    },
+    {
+      "path": "docs/plantillas/evidencia-hu.md",
+      "bytes": 2266,
+      "sha256": "fd9e8b794443d32e66930d17cb127a6b26e720f1c2c5cf19e6cfb0c95019ffe4"
+    },
+    {
+      "path": "docs/plantillas/handoff.md",
+      "bytes": 887,
+      "sha256": "d1025e39f2335aa336822c91733b85746386aedc769ce2b3cc60efc4ae882176"
+    },
+    {
+      "path": "docs/plantillas/pr.md",
+      "bytes": 1063,
+      "sha256": "b25856b24fcdc0d21ccba1ec18357b6477d8a54c511d79e2b922df998ed88981"
+    },
+    {
+      "path": "docs/proyecto.json",
+      "bytes": 10988,
+      "sha256": "d4d8954352a695d13904f17249044a43900b15f02544650949ee4e38e364e1b1"
+    },
+    {
+      "path": "docs/proyecto.schema.json",
+      "bytes": 6646,
+      "sha256": "333adf14c7a3062f7b1b4181dd252337444ef4ec0459b7cb69624209232112db"
+    },
+    {
+      "path": "docs/skills-procedencia.json",
+      "bytes": 5051,
+      "sha256": "1176924f1c7465176274f9f14a2fe4a30c36adeae42d1a9f8b1d959677d8ff5b"
+    },
+    {
+      "path": "docs/VALIDACION-KIT.md",
+      "bytes": 4750,
+      "sha256": "dfbe70775e468df2cb3fecd16496d0cd5cbcd5d1a21979ac098379f529a8246c"
+    },
+    {
+      "path": "LEEME-CREA.md",
+      "bytes": 3037,
+      "sha256": "49cf7c7bd2a984c40d8d89be43b314d9d565125bf3641957adc7fb50905d2f40"
+    },
+    {
+      "path": "scripts/crea/verificar-kit.ps1",
+      "bytes": 5153,
+      "sha256": "b8a40e8e3b47d83c1259f7a922e70e25b7f50d7bbaf1eaec1579433e8d6ab0cc"
+    }
+  ]
+}

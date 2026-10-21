@@ -1,0 +1,79 @@
+{
+  "error": "ValueError: PATH_OUTSIDE_APPROVED_TEST_DATA_ROOT",
+  "error_trace": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mValueError\u001b[0m                                Traceback (most recent call last)\nFile \u001b[0;32m\u003ccommand-7067789677343661\u003e, line 65\u001b[0m\n\u001b[1;32m     61\u001b[0m     \u001b[38;5;28mprint\u001b[39m(json\u001b[38;5;241m.\u001b[39mdumps({\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mmetadata\u001b[39m\u001b[38;5;124m\"\u001b[39m: metadata, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124massertions_by_CA\u001b[39m\u001b[38;5;124m\"\u001b[39m: report,\n\u001b[1;32m     62\u001b[0m         \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mcleanup\u001b[39m\u001b[38;5;124m\"\u001b[39m: \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mNo automática; conservar namespace aislado para revisión\u001b[39m\u001b[38;5;124m\"\u001b[39m}, ensure_ascii\u001b[38;5;241m=\u001b[39m\u001b[38;5;28;01mFalse\u001b[39;00m))\n\u001b[1;32m     64\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m---\u003e 65\u001b[0m     run_all_checks()\n\u001b[1;32m     66\u001b[0m \u001b[38;5;28;01mfinally\u001b[39;00m:\n\u001b[1;32m     67\u001b[0m     finalize_inventory()\n\nFile \u001b[0;32m\u003ccommand-7067789677343661\u003e, line 58\u001b[0m, in \u001b[0;36mrun_all_checks\u001b[0;34m()\u001b[0m\n\u001b[1;32m     56\u001b[0m check_file_errors()\n\u001b[1;32m     57\u001b[0m check_main_integrity_on_replay_and_archive()\n\u001b[0;32m---\u003e 58\u001b[0m check_generic_regression()\n\u001b[1;32m     59\u001b[0m \u001b[38;5;28;01massert\u001b[39;00m \u001b[38;5;28mset\u001b[39m(report) \u001b[38;5;241m==\u001b[39m {\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mCA\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;241m+\u001b[39m \u001b[38;5;28mstr\u001b[39m(i)\u001b[38;5;241m.\u001b[39mzfill(\u001b[38;5;241m2\u001b[39m) \u001b[38;5;28;01mfor\u001b[39;00m i \u001b[38;5;129;01min\u001b[39;00m \u001b[38;5;28mrange\u001b[39m(\u001b[38;5;241m1\u001b[39m, \u001b[38;5;241m15\u001b[39m)}\n\u001b[1;32m     60\u001b[0m \u001b[38;5;28;01massert\u001b[39;00m \u001b[38;5;28mall\u001b[39m(value \u001b[38;5;241m==\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mpassed\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;28;01mfor\u001b[39;00m value \u001b[38;5;129;01min\u001b[39;00m report\u001b[38;5;241m.\u001b[39mvalues())\n\nFile \u001b[0;32m\u003ccommand-7067789677343661\u003e, line 41\u001b[0m, in \u001b[0;36mcheck_generic_regression\u001b[0;34m()\u001b[0m\n\u001b[1;32m     39\u001b[0m dbutils\u001b[38;5;241m.\u001b[39mfs\u001b[38;5;241m.\u001b[39mput(path, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mid,mes_carga\u001b[39m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;124mA,2026-02\u001b[39m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;124mB,2026-02\u001b[39m\u001b[38;5;130;01m\\n\u001b[39;00m\u001b[38;5;124m\"\u001b[39m, \u001b[38;5;28;01mFalse\u001b[39;00m)\n\u001b[1;32m     40\u001b[0m \u001b[38;5;28;01mwith\u001b[39;00m patch(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124msrc.common.notebook_runner.get_config\u001b[39m\u001b[38;5;124m\"\u001b[39m, return_value\u001b[38;5;241m=\u001b[39mconfig):\n\u001b[0;32m---\u003e 41\u001b[0m     summary \u001b[38;5;241m=\u001b[39m run_bronze_load(spark, proxy, area)\n\u001b[1;32m     42\u001b[0m     \u001b[38;5;28;01massert\u001b[39;00m summary[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mstatus\u001b[39m\u001b[38;5;124m\"\u001b[39m] \u001b[38;5;241m==\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mOK\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;129;01mand\u001b[39;00m \u001b[38;5;28mlen\u001b[39m(summary[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mprocessed_files\u001b[39m\u001b[38;5;124m\"\u001b[39m]) \u001b[38;5;241m==\u001b[39m \u001b[38;5;241m1\u001b[39m\n\u001b[1;32m     43\u001b[0m     \u001b[38;5;28;01massert\u001b[39;00m summary[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mprocessed_files\u001b[39m\u001b[38;5;124m\"\u001b[39m][\u001b[38;5;241m0\u001b[39m][\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mrecord_count\u001b[39m\u001b[38;5;124m\"\u001b[39m] \u001b[38;5;241m==\u001b[39m \u001b[38;5;241m2\u001b[39m\n\nFile \u001b[0;32m/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/notebook_runner.py:54\u001b[0m, in \u001b[0;36mrun_bronze_load\u001b[0;34m(spark, dbutils, area, cotizaciones_month)\u001b[0m\n\u001b[1;32m     50\u001b[0m ensure_catalog_schema(spark, config[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mcatalog\u001b[39m\u001b[38;5;124m\"\u001b[39m], config[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mbronze_schema\u001b[39m\u001b[38;5;124m\"\u001b[39m])\n\u001b[1;32m     52\u001b[0m audit_table \u001b[38;5;241m=\u001b[39m build_audit_table_fqn(config)\n\u001b[1;32m     53\u001b[0m source_files \u001b[38;5;241m=\u001b[39m (\n\u001b[0;32m---\u003e 54\u001b[0m     discover_area_files(dbutils, config[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mraw_year_path\u001b[39m\u001b[38;5;124m\"\u001b[39m])\n\u001b[1;32m     55\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m path_exists(dbutils, config[\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mraw_year_path\u001b[39m\u001b[38;5;124m\"\u001b[39m])\n\u001b[1;32m     56\u001b[0m     \u001b[38;5;28;01melse\u001b[39;00m []\n\u001b[1;32m     57\u001b[0m )\n\u001b[1;32m     59\u001b[0m processed_files \u001b[38;5;241m=\u001b[39m []\n\u001b[1;32m     60\u001b[0m failed_files \u001b[38;5;241m=\u001b[39m []\n\nFile \u001b[0;32m/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/io.py:27\u001b[0m, in \u001b[0;36mdiscover_area_files\u001b[0;34m(dbutils, raw_year_path)\u001b[0m\n\u001b[1;32m     25\u001b[0m entry_name \u001b[38;5;241m=\u001b[39m entry\u001b[38;5;241m.\u001b[39mname\u001b[38;5;241m.\u001b[39mrstrip(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m/\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m     26\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m entry\u001b[38;5;241m.\u001b[39misDir() \u001b[38;5;129;01mand\u001b[39;00m MONTH_PATTERN\u001b[38;5;241m.\u001b[39mmatch(entry_name):\n\u001b[0;32m---\u003e 27\u001b[0m     \u001b[38;5;28;01mfor\u001b[39;00m monthly_file \u001b[38;5;129;01min\u001b[39;00m dbutils\u001b[38;5;241m.\u001b[39mfs\u001b[38;5;241m.\u001b[39mls(entry\u001b[38;5;241m.\u001b[39mpath):\n\u001b[1;32m     28\u001b[0m         \u001b[38;5;28;01mif\u001b[39;00m monthly_file\u001b[38;5;241m.\u001b[39misDir():\n\u001b[1;32m     29\u001b[0m             \u001b[38;5;28;01mcontinue\u001b[39;00m\n\nFile \u001b[0;32m\u003ccommand-7067789677343657\u003e, line 91\u001b[0m, in \u001b[0;36mGuardedFS.ls\u001b[0;34m(self, path)\u001b[0m\n\u001b[1;32m     90\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mls\u001b[39m(\u001b[38;5;28mself\u001b[39m, path):\n\u001b[0;32m---\u003e 91\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m raw_fs\u001b[38;5;241m.\u001b[39mls(assert_test_path(path, storage_root))\n\nFile \u001b[0;32m\u003ccommand-7067789677343657\u003e, line 36\u001b[0m, in \u001b[0;36massert_test_path\u001b[0;34m(path, data_root)\u001b[0m\n\u001b[1;32m     30\u001b[0m actual \u001b[38;5;241m=\u001b[39m urlsplit(path)\n\u001b[1;32m     31\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m (actual\u001b[38;5;241m.\u001b[39mscheme \u001b[38;5;241m!=\u001b[39m expected\u001b[38;5;241m.\u001b[39mscheme \u001b[38;5;129;01mor\u001b[39;00m actual\u001b[38;5;241m.\u001b[39mnetloc \u001b[38;5;241m!=\u001b[39m expected\u001b[38;5;241m.\u001b[39mnetloc \u001b[38;5;129;01mor\u001b[39;00m\n\u001b[1;32m     32\u001b[0m     actual\u001b[38;5;241m.\u001b[39mquery \u001b[38;5;129;01mor\u001b[39;00m actual\u001b[38;5;241m.\u001b[39mfragment \u001b[38;5;129;01mor\u001b[39;00m unquote(actual\u001b[38;5;241m.\u001b[39mpath) \u001b[38;5;241m!=\u001b[39m actual\u001b[38;5;241m.\u001b[39mpath \u001b[38;5;129;01mor\u001b[39;00m\n\u001b[1;32m     33\u001b[0m     posixpath\u001b[38;5;241m.\u001b[39mnormpath(actual\u001b[38;5;241m.\u001b[39mpath) \u001b[38;5;241m!=\u001b[39m actual\u001b[38;5;241m.\u001b[39mpath \u001b[38;5;129;01mor\u001b[39;00m\n\u001b[1;32m     34\u001b[0m     \u001b[38;5;129;01mnot\u001b[39;00m (actual\u001b[38;5;241m.\u001b[39mpath \u001b[38;5;241m==\u001b[39m expected\u001b[38;5;241m.\u001b[39mpath \u001b[38;5;129;01mor\u001b[39;00m actual\u001b[38;5;241m.\u001b[39mpath\u001b[38;5;241m.\u001b[39mstartswith(expected\u001b[38;5;241m.\u001b[39mpath \u001b[38;5;241m+\u001b[39m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m/\u001b[39m\u001b[38;5;124m\"\u001b[39m)) \u001b[38;5;129;01mor\u001b[39;00m\n\u001b[1;32m     35\u001b[0m     \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m'\u001b[39m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;129;01min\u001b[39;00m path \u001b[38;5;129;01mor\u001b[39;00m \u001b[38;5;124m\"\u001b[39m\u001b[38;5;130;01m\\\\\u001b[39;00m\u001b[38;5;124m\"\u001b[39m \u001b[38;5;129;01min\u001b[39;00m path):\n\u001b[0;32m---\u003e 36\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mValueError\u001b[39;00m(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mPATH_OUTSIDE_APPROVED_TEST_DATA_ROOT\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m     37\u001b[0m \u001b[38;5;28;01mreturn\u001b[39;00m path\n\n\u001b[0;31mValueError\u001b[0m: PATH_OUTSIDE_APPROVED_TEST_DATA_ROOT",
+  "metadata": {
+    "cleanup_duration": 0,
+    "creator_user_name": "srinconr@creasistemas.com",
+    "end_time": 1792532739601,
+    "execution_duration": 1545000,
+    "job_id": 38875730589260,
+    "job_run_id": 213340312329490,
+    "number_in_job": 360442301870637,
+    "run_id": 360442301870637,
+    "run_name": "validate_cotizaciones",
+    "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/38875730589260/run/360442301870637",
+    "run_type": "SUBMIT_RUN",
+    "setup_duration": 382000,
+    "start_time": 1792530812312,
+    "state": {
+      "life_cycle_state": "TERMINATED",
+      "result_state": "FAILED",
+      "state_message": "Workload failed, see run output for details",
+      "user_cancelled_or_timedout": false
+    },
+    "status": {
+      "state": "TERMINATED",
+      "termination_details": {
+        "code": "RUN_EXECUTION_ERROR",
+        "message": "Workload failed, see run output for details",
+        "type": "CLIENT_ERROR"
+      }
+    },
+    "tasks": [
+      {
+        "attempt_number": 0,
+        "cleanup_duration": 0,
+        "cluster_instance": {
+          "cluster_id": "1020-210854-9y22c5h7",
+          "spark_context_id": "4146207448184763659"
+        },
+        "end_time": 1792532739601,
+        "execution_duration": 1545000,
+        "existing_cluster_id": "1020-210854-9y22c5h7",
+        "notebook_task": {
+          "base_parameters": {
+            "allow_synthetic_writes": "true",
+            "approved_catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+            "approved_compute_reference": "1020-210854-9y22c5h7",
+            "approved_schema_prefix": "hu_cotizaciones_test_run",
+            "approved_storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data",
+            "candidate_checkout_path": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+            "test_run_id": "runtime_attempt01"
+          },
+          "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/notebooks/comercial/bronze/tests/validate_cotizaciones",
+          "source": "WORKSPACE"
+        },
+        "run_id": 360442301870637,
+        "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/38875730589260/run/360442301870637",
+        "setup_duration": 382000,
+        "start_time": 1792530812312,
+        "state": {
+          "life_cycle_state": "TERMINATED",
+          "result_state": "FAILED",
+          "state_message": "Workload failed, see run output for details",
+          "user_cancelled_or_timedout": false
+        },
+        "status": {
+          "state": "TERMINATED",
+          "termination_details": {
+            "code": "RUN_EXECUTION_ERROR",
+            "message": "Workload failed, see run output for details",
+            "type": "CLIENT_ERROR"
+          }
+        },
+        "task_key": "validate_cotizaciones"
+      }
+    ]
+  },
+  "notebook_output": {}
+}

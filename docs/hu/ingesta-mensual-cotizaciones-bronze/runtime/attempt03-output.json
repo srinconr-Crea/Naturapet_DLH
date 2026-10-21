@@ -1,0 +1,80 @@
+{
+  "metadata": {
+    "cleanup_duration": 0,
+    "creator_user_name": "srinconr@creasistemas.com",
+    "end_time": 1792534271774,
+    "execution_duration": 1017000,
+    "job_id": 932964046047690,
+    "job_run_id": 853804030647399,
+    "number_in_job": 169503786443292,
+    "run_id": 169503786443292,
+    "run_name": "validate_cotizaciones",
+    "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/932964046047690/run/169503786443292",
+    "run_type": "SUBMIT_RUN",
+    "setup_duration": 1000,
+    "start_time": 1792533253028,
+    "state": {
+      "life_cycle_state": "TERMINATED",
+      "result_state": "SUCCESS",
+      "state_message": "",
+      "user_cancelled_or_timedout": false
+    },
+    "status": {
+      "state": "TERMINATED",
+      "termination_details": {
+        "code": "SUCCESS",
+        "message": "",
+        "type": "SUCCESS"
+      }
+    },
+    "tasks": [
+      {
+        "attempt_number": 0,
+        "cleanup_duration": 0,
+        "cluster_instance": {
+          "cluster_id": "1020-210854-9y22c5h7",
+          "spark_context_id": "4146207448184763659"
+        },
+        "end_time": 1792534271774,
+        "execution_duration": 1017000,
+        "existing_cluster_id": "1020-210854-9y22c5h7",
+        "notebook_task": {
+          "base_parameters": {
+            "allow_synthetic_writes": "true",
+            "approved_catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+            "approved_compute_reference": "1020-210854-9y22c5h7",
+            "approved_schema_prefix": "hu_cotizaciones_test_run",
+            "approved_storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data",
+            "candidate_checkout_path": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+            "test_run_id": "runtime_attempt03"
+          },
+          "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/notebooks/comercial/bronze/tests/validate_cotizaciones",
+          "source": "WORKSPACE"
+        },
+        "run_id": 169503786443292,
+        "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/932964046047690/run/169503786443292",
+        "setup_duration": 1000,
+        "start_time": 1792533253028,
+        "state": {
+          "life_cycle_state": "TERMINATED",
+          "result_state": "SUCCESS",
+          "state_message": "",
+          "user_cancelled_or_timedout": false
+        },
+        "status": {
+          "state": "TERMINATED",
+          "termination_details": {
+            "code": "SUCCESS",
+            "message": "",
+            "type": "SUCCESS"
+          }
+        },
+        "task_key": "validate_cotizaciones"
+      }
+    ]
+  },
+  "notebook_output": {
+    "result": "{\"metadata\": {\"run_id\": \"runtime_attempt03\", \"profile\": \"CREA_DEV\", \"catalog\": \"crea_cotizaciones_test_20261020_01a15a7c\", \"compute\": \"1020-210854-9y22c5h7\", \"host\": \"adb-7405606739630987.7.azuredatabricks.net\", \"DBR\": \"16.4\", \"Spark\": \"3.5.2\", \"Python\": \"3.12.3\", \"Delta\": \"integrada en DBR 16.4\", \"storage_root\": \"abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data/runtime_attempt03\", \"identity\": \"srinconr@creasistemas.com\", \"inventory_path\": \"abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data/runtime_attempt03/_inventory.json\", \"checkout\": \"/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout\", \"shuffle_partitions\": 4}, \"assertions_by_CA\": {\"CA01\": \"passed\", \"CA02\": \"passed\", \"CA03\": \"passed\", \"CA04\": \"passed\", \"CA05\": \"passed\", \"CA11\": \"passed\", \"CA06\": \"passed\", \"CA07\": \"passed\", \"CA08\": \"passed\", \"CA09\": \"passed\", \"CA10\": \"passed\", \"CA12\": \"passed\", \"CA13\": \"passed\", \"CA14\": \"passed\"}, \"cleanup\": \"No automática; conservar namespace aislado para revisión\"}",
+    "truncated": false
+  }
+}

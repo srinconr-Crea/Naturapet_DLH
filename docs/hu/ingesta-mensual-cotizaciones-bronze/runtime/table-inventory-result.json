@@ -1,0 +1,67 @@
+{
+  "statement_id": "01f1cccc-7887-1ae5-abb3-c1b0ad1f4bee",
+  "status": {
+    "state": "SUCCEEDED"
+  },
+  "manifest": {
+    "format": "JSON_ARRAY",
+    "schema": {
+      "column_count": 4,
+      "columns": [
+        {
+          "name": "table_catalog",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 0
+        },
+        {
+          "name": "table_schema",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 1
+        },
+        {
+          "name": "table_name",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 2
+        },
+        {
+          "name": "table_type",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 3
+        }
+      ]
+    },
+    "total_chunk_count": 1,
+    "chunks": [
+      {
+        "chunk_index": 0,
+        "row_offset": 0,
+        "row_count": 2
+      }
+    ],
+    "total_row_count": 2,
+    "truncated": false
+  },
+  "result": {
+    "chunk_index": 0,
+    "row_offset": 0,
+    "row_count": 2,
+    "data_array": [
+      [
+        "crea_cotizaciones_test_20261020_01a15a7c",
+        "hu_cotizaciones_test_run_runtime_attempt01_contract",
+        "fact_cotizaciones",
+        "EXTERNAL"
+      ],
+      [
+        "crea_cotizaciones_test_20261020_01a15a7c",
+        "hu_cotizaciones_test_run_runtime_attempt01_quality",
+        "fact_cotizaciones",
+        "EXTERNAL"
+      ]
+    ]
+  }
+}

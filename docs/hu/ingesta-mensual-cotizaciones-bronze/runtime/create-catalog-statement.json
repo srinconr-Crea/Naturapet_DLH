@@ -1,0 +1,6 @@
+{
+  "warehouse_id": "dd74907a9f5cb481",
+  "statement": "CREATE CATALOG crea_cotizaciones_test_20261020_01a15a7c MANAGED LOCATION 'abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/managed' COMMENT 'Pruebas sinteticas aisladas HU cotizaciones; no datos NaturaPet; ejecucion 20261020_01a15a7c'",
+  "wait_timeout": "10s",
+  "on_wait_timeout": "CONTINUE"
+}

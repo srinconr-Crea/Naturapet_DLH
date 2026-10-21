@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "run_id": "runtime_attempt03",
+    "profile": "CREA_DEV",
+    "catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+    "compute": "1020-210854-9y22c5h7",
+    "host": "adb-7405606739630987.7.azuredatabricks.net",
+    "DBR": "16.4",
+    "Spark": "3.5.2",
+    "Python": "3.12.3",
+    "Delta": "integrada en DBR 16.4",
+    "storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data/runtime_attempt03",
+    "identity": "srinconr@creasistemas.com",
+    "inventory_path": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data/runtime_attempt03/_inventory.json",
+    "checkout": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+    "shuffle_partitions": 4
+  },
+  "assertions_by_CA": {
+    "CA01": "passed",
+    "CA02": "passed",
+    "CA03": "passed",
+    "CA04": "passed",
+    "CA05": "passed",
+    "CA11": "passed",
+    "CA06": "passed",
+    "CA07": "passed",
+    "CA08": "passed",
+    "CA09": "passed",
+    "CA10": "passed",
+    "CA12": "passed",
+    "CA13": "passed",
+    "CA14": "passed"
+  },
+  "cleanup": "No automática; conservar namespace aislado para revisión"
+}

@@ -1,0 +1,16 @@
+{
+  "cluster_id": "1020-210854-9y22c5h7",
+  "cluster_name": "crea-cotizaciones-test-20261020-01a15a7c",
+  "state": "TERMINATED",
+  "node_type_id": "Standard_D4ads_v6",
+  "spark_version": "16.4.x-scala2.12",
+  "autotermination_minutes": 10,
+  "state_message": "Termination requested by srinconr@creasistemas.com",
+  "termination_reason": {
+    "code": "USER_REQUEST",
+    "parameters": {
+      "username": "srinconr@creasistemas.com"
+    },
+    "type": "SUCCESS"
+  }
+}

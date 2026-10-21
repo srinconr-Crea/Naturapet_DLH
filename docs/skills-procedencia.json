@@ -1,0 +1,151 @@
+{
+  "reviewed_on": "2026-10-16",
+  "skills": [
+    {
+      "name": "databricks-apps-python",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-core",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-dabs",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-dbsql",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-model-serving",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-unity-catalog",
+      "origin": "installed-local-snapshot",
+      "revision": "2026-10-16",
+      "modified": false
+    },
+    {
+      "name": "databricks-docs",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-jobs",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-mlflow-evaluation",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-pipelines",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-python-sdk",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-synthetic-data-gen",
+      "origin": "https://github.com/databricks/databricks-agent-skills",
+      "revision": "ba45d10df7413de14c32937bbd584aeee17d22a2",
+      "modified": false
+    },
+    {
+      "name": "databricks-apps",
+      "origin": "https://raw.githubusercontent.com/databricks/databricks-agent-skills/aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80/plugins/databricks/codex/skills/databricks-apps",
+      "revision": "aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80",
+      "modified": true,
+      "patches": [
+        {
+          "path": "references/appkit/proto-first.md",
+          "change": "Repair only Markdown href references/plugin-contracts.md -> proto-contracts.md; canonical resource already included.",
+          "reason": "Original link does not resolve relative to its file."
+        }
+      ]
+    },
+    {
+      "name": "databricks-app-design",
+      "origin": "https://raw.githubusercontent.com/databricks/databricks-agent-skills/aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80/plugins/databricks/codex/skills/databricks-app-design",
+      "revision": "aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80",
+      "modified": false
+    },
+    {
+      "name": "databricks-data-discovery",
+      "origin": "https://raw.githubusercontent.com/databricks/databricks-agent-skills/aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80/plugins/databricks/codex/skills/databricks-data-discovery",
+      "revision": "aea6a1b9bd88eefc7e858941fb98b2d3b01fbd80",
+      "modified": false
+    },
+    {
+      "name": "openspec-apply-change",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-archive-change",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-explore",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-propose",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-sync-specs",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-update-change",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "openspec-verify-change",
+      "origin": "OpenSpec generated integration",
+      "revision": "1.13.2",
+      "modified": false
+    },
+    {
+      "name": "Crea/creating-databricks-agents",
+      "origin": "installed-local-custom-skill",
+      "revision": "2026-10-16",
+      "modified": false
+    }
+  ],
+  "note": "Copias locales preservadas; no se afirma que todas correspondan al commit remoto actual. Cada archivo se inventaría por SHA256 en kit-manifest.json. Skills upstream conservan sus instrucciones; un enlace relativo de apps se corrige y se registra en patches; las extensiones propias viven fuera de ellas."
+}

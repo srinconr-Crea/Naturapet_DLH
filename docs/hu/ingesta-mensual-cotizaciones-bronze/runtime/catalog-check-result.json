@@ -1,0 +1,51 @@
+{
+  "statement_id": "01f1cccb-9d58-1dcf-971b-bcef1a7fda5e",
+  "status": {
+    "state": "SUCCEEDED"
+  },
+  "manifest": {
+    "format": "JSON_ARRAY",
+    "schema": {
+      "column_count": 2,
+      "columns": [
+        {
+          "name": "catalog_name",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 0
+        },
+        {
+          "name": "schema_name",
+          "type_text": "STRING",
+          "type_name": "STRING",
+          "position": 1
+        }
+      ]
+    },
+    "total_chunk_count": 1,
+    "chunks": [
+      {
+        "chunk_index": 0,
+        "row_offset": 0,
+        "row_count": 2
+      }
+    ],
+    "total_row_count": 2,
+    "truncated": false
+  },
+  "result": {
+    "chunk_index": 0,
+    "row_offset": 0,
+    "row_count": 2,
+    "data_array": [
+      [
+        "crea_cotizaciones_test_20261020_01a15a7c",
+        "default"
+      ],
+      [
+        "crea_cotizaciones_test_20261020_01a15a7c",
+        "information_schema"
+      ]
+    ]
+  }
+}

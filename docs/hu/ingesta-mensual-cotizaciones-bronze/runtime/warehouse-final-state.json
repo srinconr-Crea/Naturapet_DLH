@@ -1,0 +1,7 @@
+{
+  "id": "dd74907a9f5cb481",
+  "name": "naturapet_serverless_wh",
+  "state": "STOPPED",
+  "auto_stop_mins": 10,
+  "cluster_size": "2X-Small"
+}

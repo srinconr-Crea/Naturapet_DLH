@@ -1,0 +1,16 @@
+{
+  "run_name": "crea-cotizaciones-resource-inventory-20261020-01a15a7c",
+  "idempotency_token": "cotizaciones-20261020-01a15a7c-inspection01",
+  "timeout_seconds": 600,
+  "tasks": [
+    {
+      "task_key": "inspect_runtime",
+      "existing_cluster_id": "1020-210854-9y22c5h7",
+      "timeout_seconds": 600,
+      "notebook_task": {
+        "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/inspect-runtime",
+        "source": "WORKSPACE"
+      }
+    }
+  ]
+}

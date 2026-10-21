@@ -1,0 +1,23 @@
+[
+  ["cotizacion_id", "  ", "MISSING_PK"],
+  ["fecha_cotizacion", "", "MISSING_DATE"],
+  ["fecha_cotizacion", "31/02/2026", "INVALID_DATE"],
+  ["fecha_cotizacion", "2026-01-03", "DATE_OUTSIDE_PERIOD"],
+  ["fecha_cotizacion", "2026-2-03", "INVALID_DATE"],
+  ["fecha_id", "20260204", "DATE_ID_MISMATCH"],
+  ["fecha_id", "", "INVALID_DATE_ID"],
+  ["mes_carga", "2026-02-01", "INVALID_PERIOD"],
+  ["mes_carga", "", "INVALID_PERIOD"],
+  ["mes_carga", "2026-01", "PERIOD_MISMATCH"],
+  ["cantidad", "cinco", "INVALID_INTEGER"],
+  ["cantidad", "1.0", "INVALID_INTEGER"],
+  ["cantidad", "2147483648", "INTEGER_OVERFLOW"],
+  ["cantidad", "-2147483649", "INTEGER_OVERFLOW"],
+  ["precio_unitario", "125.000,50", "INVALID_DECIMAL"],
+  ["iva_tasa", "19%", "INVALID_DECIMAL"],
+  ["precio_unitario", "NaN", "INVALID_DECIMAL"],
+  ["precio_unitario", "1e3", "INVALID_DECIMAL"],
+  ["precio_unitario", "10000000000000000", "DECIMAL_OVERFLOW"],
+  ["precio_unitario", "0.001", "DECIMAL_SCALE"],
+  ["descuento_pct", "0.00001", "DECIMAL_SCALE"]
+]

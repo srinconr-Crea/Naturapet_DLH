@@ -1,0 +1,79 @@
+{
+  "error": "AnalysisException: [RequestId=a32aa633-753b-4886-90d2-8ca5cdf62e03 ErrorClass=INVALID_PARAMETER_VALUE.LOCATION_OVERLAP] Input path url 'abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data' overlaps with other external tables or volumes within 'CheckPathAccess' call. Conflicting tables/volumes: crea_cotizaciones_test_20261020_01a15a7c.hu_cotizaciones_test_run_runtime_attempt01_failure_success.fact_cotizaciones, crea_cotizaciones_test_20261020_01a15a7c.hu_cotizaciones_test_run_runtime_attempt01_replay.fact_cotizaciones....",
+  "error_trace": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mAnalysisException\u001b[0m                         Traceback (most recent call last)\nFile \u001b[0;32m\u003ccommand-5130612269398679\u003e, line 77\u001b[0m\n\u001b[1;32m     75\u001b[0m raw_fs \u001b[38;5;241m=\u001b[39m dbutils\u001b[38;5;241m.\u001b[39mfs\n\u001b[1;32m     76\u001b[0m \u001b[38;5;28mprint\u001b[39m(json\u001b[38;5;241m.\u001b[39mdumps({\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124minventory\u001b[39m\u001b[38;5;124m\"\u001b[39m: \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mPLANNED\u001b[39m\u001b[38;5;124m\"\u001b[39m, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mkind\u001b[39m\u001b[38;5;124m\"\u001b[39m: \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mdirectory\u001b[39m\u001b[38;5;124m\"\u001b[39m, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mpath\u001b[39m\u001b[38;5;124m\"\u001b[39m: storage_root}))\n\u001b[0;32m---\u003e 77\u001b[0m raw_fs\u001b[38;5;241m.\u001b[39mmkdirs(storage_root)  \u001b[38;5;66;03m# Exact approved /data root; may not exist initially.\u001b[39;00m\n\u001b[1;32m     78\u001b[0m \u001b[38;5;28;01massert\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28many\u001b[39m(e\u001b[38;5;241m.\u001b[39mname\u001b[38;5;241m.\u001b[39mrstrip(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m/\u001b[39m\u001b[38;5;124m\"\u001b[39m) \u001b[38;5;241m==\u001b[39m run_id \u001b[38;5;28;01mfor\u001b[39;00m e \u001b[38;5;129;01min\u001b[39;00m raw_fs\u001b[38;5;241m.\u001b[39mls(storage_root)), \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mrun_id ya existe\u001b[39m\u001b[38;5;124m\"\u001b[39m\n\u001b[1;32m     79\u001b[0m raw_fs\u001b[38;5;241m.\u001b[39mmkdirs(root)\n\nFile \u001b[0;32m/databricks/spark/python/pyspark/databricks/instrumentation/instrumentation_utils.py:217\u001b[0m, in \u001b[0;36m_wrap_function.\u003clocals\u003e.wrapper\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m    215\u001b[0m start \u001b[38;5;241m=\u001b[39m time\u001b[38;5;241m.\u001b[39mperf_counter()\n\u001b[1;32m    216\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m--\u003e 217\u001b[0m     res \u001b[38;5;241m=\u001b[39m func(\u001b[38;5;241m*\u001b[39margs, \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs)\n\u001b[1;32m    218\u001b[0m     logging_helper\u001b[38;5;241m.\u001b[39mlog_event(\n\u001b[1;32m    219\u001b[0m         accessor\u001b[38;5;241m=\u001b[39mwrapper,\n\u001b[1;32m    220\u001b[0m         module_name\u001b[38;5;241m=\u001b[39mmodule_name,\n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m    224\u001b[0m         duration\u001b[38;5;241m=\u001b[39mtime\u001b[38;5;241m.\u001b[39mperf_counter() \u001b[38;5;241m-\u001b[39m start\n\u001b[1;32m    225\u001b[0m     )\n\u001b[1;32m    226\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m res\n\nFile \u001b[0;32m/databricks/python_shell/lib/dbruntime/dbutils.py:156\u001b[0m, in \u001b[0;36mprettify_exception_message.\u003clocals\u003e.f_with_exception_handling\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m    153\u001b[0m \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;21;01mpy4j\u001b[39;00m\u001b[38;5;21;01m.\u001b[39;00m\u001b[38;5;21;01mprotocol\u001b[39;00m \u001b[38;5;28;01mimport\u001b[39;00m Py4JJavaError\n\u001b[1;32m    155\u001b[0m \u001b[38;5;28;01mtry\u001b[39;00m:\n\u001b[0;32m--\u003e 156\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m f(\u001b[38;5;241m*\u001b[39margs, \u001b[38;5;241m*\u001b[39m\u001b[38;5;241m*\u001b[39mkwargs)\n\u001b[1;32m    157\u001b[0m \u001b[38;5;28;01mexcept\u001b[39;00m Py4JJavaError \u001b[38;5;28;01mas\u001b[39;00m e:\n\u001b[1;32m    159\u001b[0m     \u001b[38;5;28;01mclass\u001b[39;00m \u001b[38;5;21;01mExecutionError\u001b[39;00m(\u001b[38;5;167;01mException\u001b[39;00m):\n\nFile \u001b[0;32m/databricks/python_shell/lib/dbruntime/dbutils.py:513\u001b[0m, in \u001b[0;36mDBUtils.FSHandler.mkdirs\u001b[0;34m(self, dir)\u001b[0m\n\u001b[1;32m    510\u001b[0m \u001b[38;5;129m@prettify_exception_message\u001b[39m\n\u001b[1;32m    511\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mmkdirs\u001b[39m(\u001b[38;5;28mself\u001b[39m, \u001b[38;5;28mdir\u001b[39m):\n\u001b[1;32m    512\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcheck_types([(\u001b[38;5;28mdir\u001b[39m, string_types)])\n\u001b[0;32m--\u003e 513\u001b[0m     \u001b[38;5;28;01mreturn\u001b[39;00m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mprint_return(\u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mfsutils\u001b[38;5;241m.\u001b[39mmkdirs(\u001b[38;5;28mdir\u001b[39m))\n\nFile \u001b[0;32m/databricks/spark/python/lib/py4j-0.10.9.9-src.zip/py4j/java_gateway.py:1362\u001b[0m, in \u001b[0;36mJavaMember.__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1356\u001b[0m command \u001b[38;5;241m=\u001b[39m proto\u001b[38;5;241m.\u001b[39mCALL_COMMAND_NAME \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1357\u001b[0m     \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mcommand_header \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1358\u001b[0m     args_command \u001b[38;5;241m+\u001b[39m\\\n\u001b[1;32m   1359\u001b[0m     proto\u001b[38;5;241m.\u001b[39mEND_COMMAND_PART\n\u001b[1;32m   1361\u001b[0m answer \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mgateway_client\u001b[38;5;241m.\u001b[39msend_command(command)\n\u001b[0;32m-\u003e 1362\u001b[0m return_value \u001b[38;5;241m=\u001b[39m get_return_value(\n\u001b[1;32m   1363\u001b[0m     answer, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mgateway_client, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mtarget_id, \u001b[38;5;28mself\u001b[39m\u001b[38;5;241m.\u001b[39mname)\n\u001b[1;32m   1365\u001b[0m \u001b[38;5;28;01mfor\u001b[39;00m temp_arg \u001b[38;5;129;01min\u001b[39;00m temp_args:\n\u001b[1;32m   1366\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;28mhasattr\u001b[39m(temp_arg, \u001b[38;5;124m\"\u001b[39m\u001b[38;5;124m_detach\u001b[39m\u001b[38;5;124m\"\u001b[39m):\n\nFile \u001b[0;32m/databricks/spark/python/pyspark/errors/exceptions/captured.py:275\u001b[0m, in \u001b[0;36mcapture_sql_exception.\u003clocals\u003e.deco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m    271\u001b[0m converted \u001b[38;5;241m=\u001b[39m convert_exception(e\u001b[38;5;241m.\u001b[39mjava_exception)\n\u001b[1;32m    272\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(converted, UnknownException):\n\u001b[1;32m    273\u001b[0m     \u001b[38;5;66;03m# Hide where the exception came from that shows a non-Pythonic\u001b[39;00m\n\u001b[1;32m    274\u001b[0m     \u001b[38;5;66;03m# JVM exception message.\u001b[39;00m\n\u001b[0;32m--\u003e 275\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m converted \u001b[38;5;28;01mfrom\u001b[39;00m \u001b[38;5;28;01mNone\u001b[39;00m\n\u001b[1;32m    276\u001b[0m \u001b[38;5;28;01melse\u001b[39;00m:\n\u001b[1;32m    277\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m\n\n\u001b[0;31mAnalysisException\u001b[0m: [RequestId=a32aa633-753b-4886-90d2-8ca5cdf62e03 ErrorClass=INVALID_PARAMETER_VALUE.LOCATION_OVERLAP] Input path url 'abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data' overlaps with other external tables or volumes within 'CheckPathAccess' call. Conflicting tables/volumes: crea_cotizaciones_test_20261020_01a15a7c.hu_cotizaciones_test_run_runtime_attempt01_failure_success.fact_cotizaciones, crea_cotizaciones_test_20261020_01a15a7c.hu_cotizaciones_test_run_runtime_attempt01_replay.fact_cotizaciones....",
+  "metadata": {
+    "cleanup_duration": 0,
+    "creator_user_name": "srinconr@creasistemas.com",
+    "end_time": 1792533013637,
+    "execution_duration": 16000,
+    "job_id": 1026745209976083,
+    "job_run_id": 582119187788237,
+    "number_in_job": 149461545064842,
+    "run_id": 149461545064842,
+    "run_name": "validate_cotizaciones",
+    "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/1026745209976083/run/149461545064842",
+    "run_type": "SUBMIT_RUN",
+    "setup_duration": 1000,
+    "start_time": 1792532996394,
+    "state": {
+      "life_cycle_state": "TERMINATED",
+      "result_state": "FAILED",
+      "state_message": "Workload failed, see run output for details",
+      "user_cancelled_or_timedout": false
+    },
+    "status": {
+      "state": "TERMINATED",
+      "termination_details": {
+        "code": "RUN_EXECUTION_ERROR",
+        "message": "Workload failed, see run output for details",
+        "type": "CLIENT_ERROR"
+      }
+    },
+    "tasks": [
+      {
+        "attempt_number": 0,
+        "cleanup_duration": 0,
+        "cluster_instance": {
+          "cluster_id": "1020-210854-9y22c5h7",
+          "spark_context_id": "4146207448184763659"
+        },
+        "end_time": 1792533013637,
+        "execution_duration": 16000,
+        "existing_cluster_id": "1020-210854-9y22c5h7",
+        "notebook_task": {
+          "base_parameters": {
+            "allow_synthetic_writes": "true",
+            "approved_catalog": "crea_cotizaciones_test_20261020_01a15a7c",
+            "approved_compute_reference": "1020-210854-9y22c5h7",
+            "approved_schema_prefix": "hu_cotizaciones_test_run",
+            "approved_storage_root": "abfss://demo@demodldb.dfs.core.windows.net/_tests/cotizaciones/20261020_01a15a7c/data",
+            "candidate_checkout_path": "/Workspace/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout",
+            "test_run_id": "runtime_attempt02"
+          },
+          "notebook_path": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/notebooks/comercial/bronze/tests/validate_cotizaciones",
+          "source": "WORKSPACE"
+        },
+        "run_id": 149461545064842,
+        "run_page_url": "https://adb-7405606739630987.7.azuredatabricks.net/?o=7405606739630987#job/1026745209976083/run/149461545064842",
+        "setup_duration": 1000,
+        "start_time": 1792532996394,
+        "state": {
+          "life_cycle_state": "TERMINATED",
+          "result_state": "FAILED",
+          "state_message": "Workload failed, see run output for details",
+          "user_cancelled_or_timedout": false
+        },
+        "status": {
+          "state": "TERMINATED",
+          "termination_details": {
+            "code": "RUN_EXECUTION_ERROR",
+            "message": "Workload failed, see run output for details",
+            "type": "CLIENT_ERROR"
+          }
+        },
+        "task_key": "validate_cotizaciones"
+      }
+    ]
+  },
+  "notebook_output": {}
+}

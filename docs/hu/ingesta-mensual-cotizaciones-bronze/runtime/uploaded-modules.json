@@ -1,0 +1,57 @@
+[
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\__init__.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/__init__.py",
+    "sha256": "7733C324272291A439275DD4E02B2B73C22808B0F7F020E95C0CDEA4BEC0EFED"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\config.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/config.py",
+    "sha256": "8D1FA2BFE49F3DD43C8834A67C67A526B5B09CC9976A56FF91D931265AB3EA42"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\cotizaciones_contract.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/cotizaciones_contract.py",
+    "sha256": "974775C2448E0D34D9D347EE0743D2D0BC937080B474CA6465C2D5791F4C3C9F"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\cotizaciones_ingestion.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/cotizaciones_ingestion.py",
+    "sha256": "F34FDE841D1A31A10DB69AC8F50502CCC00014FB8AA2EDA3D33651583242ED69"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\delta_load.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/delta_load.py",
+    "sha256": "3FEBACF6CD2EA077DB06E995C723B802E12FF29AA27A36801E010AF44E70B4C7"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\io.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/io.py",
+    "sha256": "6C0BC462B1D664DE80AD1E25FD8E5CBA619AC39276D2B7AFECFECB6A92C9D94D"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\notebook_entry.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/notebook_entry.py",
+    "sha256": "34C1F65315B119D015B40B35DD68E0E07137ACE0A208C6FA69B3FBEC3C63A963"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\notebook_runner.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/notebook_runner.py",
+    "sha256": "F10146CF2C5B2F199721B50BCB391E7E2FC7FE5198F8EB8B958B9AF10CC3E1E3"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\schema.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/schema.py",
+    "sha256": "99E17DC620DCC4A2DAB3A4B772EA7AD226C4665D07B5E3391233FAE0FCDF1DEA"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\silver_incremental.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/silver_incremental.py",
+    "sha256": "804A55794EDF6F390BB14D80019B90A5ED48A58B601EE0AE867DDF15479B5A14"
+  },
+  {
+    "source": "C:\\Users\\Stiveen Rincon Ruge\\Documents\\ChatGPT\\Naturapet_DLH_Harness_MVP\\src\\common\\validation.py",
+    "remote": "/Users/srinconr@creasistemas.com/crea_tests/20261020_01a15a7c/checkout/src/common/validation.py",
+    "sha256": "92E9AD40583176D96ABA18BAD6F0703E1FEE00E9F0FA3D0C32B5D79B122912A0"
+  }
+]

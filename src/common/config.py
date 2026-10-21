@@ -118,3 +118,15 @@ def build_audit_table_fqn(config: Dict[str, Any]) -> str:
     return (
         f"`{config['catalog']}`.`{config['bronze_schema']}`.`{config['audit_table_name']}`"
     )
+
+
+def cotizaciones_paths(config: Dict[str, Any]) -> Dict[str, str]:
+    """Only this entity has a year-independent destination and private controls."""
+    root = config["bronze_area_root"].rstrip("/")
+    control = f"{root}/_control/cotizaciones"
+    return {
+        "main": f"{root}/fact_cotizaciones",
+        "target_table": f"`{config['catalog']}`.`{config['bronze_schema']}`.`fact_cotizaciones`",
+        **{name: f"{control}/{name}" for name in (
+            "quarantine", "file_audit", "failed_files", "record_evidence", "originals")},
+    }

@@ -1,0 +1,6 @@
+{
+  "warehouse_id": "dd74907a9f5cb481",
+  "wait_timeout": "10s",
+  "on_wait_timeout": "CONTINUE",
+  "statement": "SELECT catalog_name, schema_name FROM crea_cotizaciones_test_20261020_01a15a7c.information_schema.schemata ORDER BY schema_name"
+}
